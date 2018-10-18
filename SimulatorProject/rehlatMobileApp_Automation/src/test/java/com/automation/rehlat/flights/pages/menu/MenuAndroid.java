@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-import static com.automation.rehlat.flights.pages.menu.MenuIos.REFER_AND_EARN_SUB_MENU_ICON;
 
 public class MenuAndroid extends MenuBase {
 
@@ -338,12 +337,12 @@ public class MenuAndroid extends MenuBase {
     public void tapOnReferAndEarnIcon(){
         Logger.logAction("Tapping on refer and earn icon in the menu screen");
         try{
-            if (isElementEnabledById(REFER_AND_EARN_SUB_MENU_ICON)){
-                Logger.logComment(REFER_AND_EARN_SUB_MENU_ICON+" :- sub menu element is enabled");
-                driver.findElementById(REFER_AND_EARN_SUB_MENU_ICON).click();
+            if (isElementEnabledById(REFER_AND_EARN_SUB_MENU_BUTTON)){
+                Logger.logComment(REFER_AND_EARN_SUB_MENU_BUTTON+" :- sub menu element is enabled");
+                driver.findElementById(REFER_AND_EARN_SUB_MENU_BUTTON).click();
                 Logger.logStep("Tapped on refer and earn button");
             }else {
-                Logger.logError(REFER_AND_EARN_SUB_MENU_ICON+" :- sub menu element is not enabled");
+                Logger.logError(REFER_AND_EARN_SUB_MENU_BUTTON+" :- sub menu element is not enabled");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on refer and earn icon");

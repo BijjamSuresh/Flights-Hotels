@@ -3,6 +3,7 @@ package com.automation.rehlat.flights.pages.signIn;
 import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.flights.libCommon.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class SignInIos extends SignInBase {
     public static final String TOUCH_ID_ACCESS_MODAL_TITLE = "Would you like to login using your TouchID?";
@@ -11,8 +12,8 @@ public class SignInIos extends SignInBase {
     public static final String LOGIN_BUTTON = "Login";
     public static final String CREATE_ACCOUNT_BUTTON = "Create Account";
     public static final String NOT_REGISTERED_LABEL = "Not registered?";
-    public static final String XPATH_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeTable/XCUIElementTypeCell[2]";
-    public static final String XPATH_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeTable/XCUIElementTypeCell[3]";
+    public static final String ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN = "loginEmail";
+    public static final String ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN = "loginPassword";
 
 
     /**
@@ -114,12 +115,13 @@ public class SignInIos extends SignInBase {
     public static void enterEmailId() {
         Logger.logAction("Entering email id :-"+ Labels_Flights.EMAIL_ID_SIGN_IN);
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN)){
-                sendTextByXpath(XPATH_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN, Labels_Flights.EMAIL_ID_SIGN_IN);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN);
+                element.sendKeys(Labels_Flights.EMAIL_ID_SIGN_IN);
                 Logger.logComment(Labels_Flights.EMAIL_ID_SIGN_IN+" :- is parsed");
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError("unable to find the element name :- "+XPATH_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN);
+                Logger.logError("unable to find the element name :- "+ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN);
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter the login credentials");
@@ -132,12 +134,13 @@ public class SignInIos extends SignInBase {
     public static void enterPassword() {
         Logger.logAction("Entering password :- "+ Labels_Flights.PASSWORD);
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN)){
-                sendTextByXpath(XPATH_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN, Labels_Flights.PASSWORD);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN);
+                element.sendKeys(Labels_Flights.PASSWORD);
                 Logger.logComment(Labels_Flights.PASSWORD+" :- is parsed");
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError("unable to find the element name :- "+XPATH_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN);
+                Logger.logError("unable to find the element name :- "+ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN);
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter the login credentials");

@@ -26,6 +26,11 @@ public interface BookingPage {
      */
     void tapOnAdultAddTravellersDetailsButton()throws Exception;
 
+    /**
+     * Enable the karam points toggle
+     * @return
+     */
+    void enableKaramPointsToggleSwitch();
 
     /**
      * Tap on sign in for faster bookings button

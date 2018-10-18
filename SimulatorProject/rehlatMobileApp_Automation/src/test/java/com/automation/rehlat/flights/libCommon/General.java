@@ -187,7 +187,7 @@ public class General extends Base {
     /**
      * Accept the location access alert (if displayed)
      */
-    public static void accpetTheLocationAccessAlert() {
+    public static void acceptTheLocationAccessAlert() {
         Logger.logAction("Accepting the location access alert (if displayed) ?");
         try{
             if (platform.equalsIgnoreCase(Labels_Flights.IOS)){
@@ -212,7 +212,7 @@ public class General extends Base {
     /**
      * Accept the location access alert (if displayed)
      */
-    public static void accpetThenotificationAccessAlert() {
+    public static void acceptThenotificationAccessAlert() {
         Logger.logAction("Accepting the notification access alert (if displayed) ?");
         try{
             if (platform.equalsIgnoreCase(Labels_Flights.IOS)){
@@ -284,6 +284,22 @@ public class General extends Base {
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to accept the user location access alert");
+        }
+    }
+
+    /**
+     * Get the test data of parsing passenger number
+     * @param parsingRandomNumber
+     * @param parsingKeyOfRandomNumber
+     */
+    public static void getTheTestDataOfPassengerNumber(Integer parsingRandomNumber, String  parsingKeyOfRandomNumber){
+        Logger.logAction("Getting the test data of passenger Number");
+        try {
+
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Unable to get the test data of passenger number :- "+parsingRandomNumber);
         }
     }
 

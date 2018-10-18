@@ -18,7 +18,7 @@ public class ReviewBookingIos extends ReviewBookingBase {
     public void checkReviewBookingScreenIsDisplayed() {
         Logger.logAction("Checking the review booking screen is displayed or not ?");
         try{
-            Thread.sleep(4000);
+//            Thread.sleep(4000);
             if (isElementDisplayedByName(REVIEW_BOOKING_SCREEN_TITTLE)){
                 Logger.logStep("Review Booking screen is displayed");
             }else {

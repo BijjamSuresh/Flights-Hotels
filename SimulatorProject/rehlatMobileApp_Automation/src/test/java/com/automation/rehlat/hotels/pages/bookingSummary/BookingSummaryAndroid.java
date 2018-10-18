@@ -3,12 +3,14 @@ package com.automation.rehlat.hotels.pages.bookingSummary;
 import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import com.automation.rehlat.hotels.pages.BasePage;
+import io.appium.java_client.MobileElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class BookingSummaryAndroid extends BookingSummaryBase {
 
@@ -212,10 +214,10 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void tapOnAddGuestTravellersDetailsButton() {
         Logger.logAction("Tapping on adult add guest travellers details button");
         try{
-            Thread.sleep(1000);
-            scrollTheScreenUpwards();
             Thread.sleep(2000);
-//            scrollToAnElementById_ANDROID(ADD_GUEST_ID,true);
+            closeTheKeyboard_Android(); //Todo:- This line of code is to close the keyboard triggered while swiping
+//            scrollTheScreenUpwards();
+            scrollToAnElementById_ANDROID(ADD_GUEST_ID,true);
             if (isElementDisplayedById(ADD_GUEST_ID)){
                 WebElement locationOfDay = driver.findElementById(ADD_GUEST_ID);
                 Point table = locationOfDay.getLocation();
@@ -508,6 +510,28 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     }
 
     /**
+     * Disable the karam points toggle
+     * @return
+     */
+    @Override
+    public void disableKaramPointsToggleSwitch() {
+        Logger.logAction("Disabling the karam points toggle");
+        try
+        {
+            scrollToAnElementById_ANDROID(KARAM_POINTS_TOGGLE_BUTTON,true);
+            if (!(isKaramPointsToggleSwitchEnabled())){
+                Logger.logComment("karam points toggle button is already disabled");
+            }else {
+                WebElement karamPointsToggleSwitch = driver.findElementById(KARAM_POINTS_TOGGLE_BUTTON);
+                karamPointsToggleSwitch.click();
+                Logger.logComment("Karam points toggle button is disabled");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to enable the karam points toggle button");
+        }
+    }
+
+    /**
      * Apply coupon code
      */
     @Override
@@ -552,13 +576,20 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         Logger.logAction("Tapping on apply coupon code button");
         try {
             if (isElementDisplayedById(APPLY_COUPON_CODE_BUTTON)){
-                driver.findElementById(APPLY_COUPON_CODE_BUTTON).click();
+                List<WebElement> element = driver.findElementsById(APPLY_COUPON_CODE_BUTTON);
+//                Thread.sleep(2000);
+                element.get(0).click();
+                if (isElementDisplayedById(APPLY_COUPON_CODE_BUTTON)) { // Todo:- The below if condition are implemented because of tapping is not working on first time
+                    WebElement couponID = driver.findElementById(APPLY_COUPON_CODE_BUTTON);
+                    tapOnElementBasedOnLocation(couponID,"centerRight");
+                }
                 Logger.logComment("Tapped on apply coupon button");
                 driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR))); // Before running check this activity indicator label is correct or not?
             }else {
                 Logger.logError(APPLY_COUPON_CODE_BUTTON+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("encountered error: unable to tap on apply coupon code button");
         }
     }

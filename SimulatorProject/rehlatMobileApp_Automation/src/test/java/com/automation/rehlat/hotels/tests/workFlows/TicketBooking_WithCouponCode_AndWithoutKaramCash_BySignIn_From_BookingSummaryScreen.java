@@ -22,8 +22,8 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_Book
         }
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnSearchButton();
-        HotelsScreen.sendKeysToSearchResultsScreen("dxb");
-        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Dubai, United Arab Emirates");
+        HotelsScreen.sendKeysToSearchResultsScreen("London");
+        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("London, UNITED KINGDOM");
         HotelsScreen.checkTheSearchTextFieldIsFilledWithSelectedNameOf(selectedName);
         HotelsScreen.tapOnCheckInButton();
         HotelsScreen.tapOnCheckInOptionInCalendarView();
@@ -35,7 +35,7 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_Book
         HotelsScreen.tapOnAdultAndChildLayout();
         HotelsScreen.setTheGuestCountTo(1,1,2); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
         HotelsScreen.tapOnAddRoomButton();
-        HotelsScreen.setTheGuestCountTo(2,1,3); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
+        HotelsScreen.setTheGuestCountTo(2,1,2); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
         HotelsScreen.tapOnDoneButtonOnRoomListView();
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnCheckAvailabilityButton();
@@ -80,13 +80,14 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_Book
         }
         BookingSummaryScreen.enterUserBookingInfo();
         BookingSummaryScreen.applyTheCouponCode();
+        BookingSummaryScreen.disableKaramPointsToggleSwitch();
         BookingSummaryScreen.checkFinalFareCalculationIsCorrect();
         BookingSummaryScreen.tapOnAddGuestTravellersDetailsButton();
         GuestTravellersDetailsScreen.declineAutoFillPopulateModalIfDisplayed();
         GuestTravellersDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
         GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(1,1,2);
         GuestTravellersDetailsScreen.tapOnSaveButton();
-        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(2,1,3);
+        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(2,1,2);
         GuestTravellersDetailsScreen.tapOnSaveButton();
         BookingSummaryScreen.tapOnContinueButton();
         PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();

@@ -28,8 +28,8 @@ public class TicketBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenu
         HotelsScreen.tapOnHotelsTab();
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnSearchButton();
-        HotelsScreen.sendKeysToSearchResultsScreen("dxb");
-        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Dubai, United Arab Emirates");
+        HotelsScreen.sendKeysToSearchResultsScreen("London");
+        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("London, UNITED KINGDOM");
         HotelsScreen.checkTheSearchTextFieldIsFilledWithSelectedNameOf(selectedName);
         HotelsScreen.tapOnCheckInButton();
         HotelsScreen.tapOnCheckInOptionInCalendarView();

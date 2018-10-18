@@ -14,10 +14,11 @@ import static com.automation.rehlat.flights.tests.BaseTest.SELECT_LANGUAGE;
 
 public class FlightsIos extends FlightsBase {
 
-    public static final String XPATH_OF_FROM_TEXTFIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeButton[1]";
-    public static final String XPATH_OF_TO_TEXTFIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeButton[2]";
-    public static final String IOS_KEYBOARD = "XCUIElementTypeKeyboard";
-    public static final String IOS_KEYBOARD_XPATH = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[4]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeKeyboard";
+    public static final String FROM_TEXTFIELD_ID = "fromButton";
+    public static final String TO_TEXTFIELD_ID = "toButton";
+    public static final String DOWN_ARROW_BUTTON_ID_OF_PASSENGER_LAYOUT = "Downward Arrow";
+    public static final String XPATH_OF_ONE_WAY_BUTTON = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]";
+    public static final String XPATH_OF_TWO_WAY_BUTTON = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]";
     public static final String SEARCH_VIEW = "Rehlat.SearchView";
     public static final String IN_PROGRESS_LOADING_INDIACATOR = "In progress";
     public static final String SEARCH_TEXTFIELD = "Kuwait - Kuwait Intl - Kuwait";
@@ -25,8 +26,8 @@ public class FlightsIos extends FlightsBase {
     public static final String CONTINUE_BUTTON = "CONTINUE";
     public static final String MENU_BUTTON = "Item";
     public static final String SEARCH_BUTTON = "Search";
-    public static final String XPATH_OF_DEPARTURE = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeButton";
-    public static final String XPATH_OF_RETURN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeButton";
+    public static final String XPATH_OF_DEPARTURE = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[1]";
+    public static final String XPATH_OF_RETURN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeButton";
     public static final String DONE_BUTTON_IN_CALENDAR_VIEW = "Done";
     public static final String ONE_WAY_IN_ARABIC_LANGUAGE = "الذهاب فقط";
     public static final String ONE_WAY_IN_ENGLISH_LANGUAGE = "ONE-WAY";
@@ -38,16 +39,20 @@ public class FlightsIos extends FlightsBase {
     public static final String CALENDER_MODAL_VIEW_XPATH = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeCollectionView";
     protected static String CURRENT_MONTH = "Oct";
     public static final String[] listOfElementsInFlightsTab = {"ONE-WAY","ROUND-TRIP","FROM","TO","Departure","Return","ADULTS","CHILDREN","INFANTS","ECONOMY","BUSINESS","FIRST","Search"};
-    public static final String XPATH_OF_ADULTS_PLUS_BUTTON = "(//XCUIElementTypeButton[@name=\"+\"])[1]";
-    public static final String XPATH_OF_CHILDREN_PLUS_BUTTON = "(//XCUIElementTypeButton[@name=\"+\"])[2]";
-    public static final String XPATH_OF_INFANTS_PLUS_BUTTON = "(//XCUIElementTypeButton[@name=\"+\"])[3]";
+    public static final String PASSENGER_LAYOUT_ID = "Passenger";
+    public static final String ACCESSIBILITY_ID_OF_ADULTS_PLUS_BUTTON = "adultPlus";
+    public static final String ACCESSIBILITY_ID_OF_CHILDREN_PLUS_BUTTON = "childPlus";
+    public static final String ACCESSIBILITY_ID_OF_INFANTS_PLUS_BUTTON = "infantPlus";
+    public static final String ACCESSIBILITY_ID_OF_ADULTS_MINUS_BUTTON = "adultMinus";
+    public static final String ACCESSIBILITY_ID_OF_CHILDREN_MINUS_BUTTON = "childMinus";
+    public static final String ACCESSIBILITY_ID_OF_INFANTS_MINUS_BUTTON = "infantMinus";
     public static final String SWAP_BUTTON = "rotationalSearch";
     public static final String NOTIFICATIONS_BUTTON = "notification";
     public static final String TO_AIRPORT_NAME = "com.app.rehlat:id/toCity";
     public static final String FROM_AIRPORT_NAME = "com.app.rehlat:id/fromCity";
-    public static final String XPATH_OF_ADULTS_COUNT = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeOther[1]/XCUIElementTypeButton[2]";
-    public static final String XPATH_OF_CHILDREN_COUNT = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeOther[2]/XCUIElementTypeButton[2]";
-    public static final String XPATH_OF_INFANTS_COUNT = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeOther[3]/XCUIElementTypeButton[2]";
+    public static final String ACCESSIBILITY_ID_OF_ADULTS_COUNT = "adultCount";
+    public static final String ACCESSIBILITY_ID_OF_CHILDREN_COUNT = "childCount";
+    public static final String ACCESSIBILITY_ID_OF_INFANTS_COUNT = "infantCount";
 
 
 
@@ -94,14 +99,30 @@ public class FlightsIos extends FlightsBase {
     }
 
     /**
+     * Tap on one way trip
+     */
+    public void tapOnOneWayTrip(){
+        Logger.logAction("Tap on one way trip");
+        try {
+            boolean  status = findElementByXPathAndClick(XPATH_OF_ONE_WAY_BUTTON);
+            if (status == true){
+             Logger.logStep("Tapped on one way trip");
+            }else {
+                Logger.logError("Didn't tapped on one way trip");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on one way trip button");
+        }
+    }
+    /**
      * Tapping on menu button
      */
     @Override
     public void tapOnMenuButton() {
         Logger.logAction("Tapping on menu button");
         try {
-            if (isElementDisplayedByName(MENU_BUTTON)){
-                driver.findElementByName(MENU_BUTTON).click();
+            if (isElementDisplayedByAccessibilityId(MENU_BUTTON)){
+                driver.findElementByAccessibilityId(MENU_BUTTON).click();
                 Logger.logStep("Tapped on Menu button");
             }else{
                 Logger.logError("Menu button is not displayed in the current active screen");
@@ -119,13 +140,13 @@ public class FlightsIos extends FlightsBase {
         Logger.logAction("Checking flights screen tab is displayed");
         try {
             Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
-            if (isElementDisplayedByName(MENU_BUTTON)){
-                String menuButton = driver.findElementByName(MENU_BUTTON).getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE);
+            if (isElementDisplayedByAccessibilityId(MENU_BUTTON)){
+                String menuButton = driver.findElementByAccessibilityId(MENU_BUTTON).getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE);
 //                String menuButton = driver.findElementByName(MENU_BUTTON).getAttribute("enabled");
                 if (menuButton.equalsIgnoreCase(Labels_Flights.STATUS_TRUE)){
                     Logger.logStep("Flights Screen is displayed");
                 }else{
-                    Logger.logError("Flights screen is not displayed");
+                    Logger.logError("Flights screen is not displayed, status :- "+menuButton);
                 }
             }else{
                 Logger.logError("Menu button is not displayed in the current active screen");
@@ -199,11 +220,11 @@ public class FlightsIos extends FlightsBase {
     public void tapOnFromTextField() {
         Logger.logAction("Tapping on From text field in flights tab");
         try {
-            findElementByXPathAndClick(XPATH_OF_FROM_TEXTFIELD);
-//            if (isElementEnabledById(FROM_TEXTFIELD)){
-//                driver.findElement(By.id(FROM_TEXTFIELD)).click();
+            tapOnOneWayTrip(); //Todo:- This line of code needs to be made override once the tap on one way method is implemented in android also
+            if (isElementEnabledById(FROM_TEXTFIELD_ID)){
+                driver.findElementByAccessibilityId(FROM_TEXTFIELD_ID).click();
                 Logger.logStep("Tapped on FROM text field button");
-//            }
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on From text field in flights tab ");
         }
@@ -215,12 +236,10 @@ public class FlightsIos extends FlightsBase {
     @Override
     public void tapOnToTextField() {
         try {
-            findElementByXPathAndClick(XPATH_OF_TO_TEXTFIELD);
-
-//            if (isElementEnabledById(TO_TEXTFIELD)){
-//                driver.findElement(By.id(TO_TEXTFIELD)).click();
+            if (isElementEnabledById(TO_TEXTFIELD_ID)){
+                driver.findElementByAccessibilityId(TO_TEXTFIELD_ID).click();
                 Logger.logStep("Tapped on TO text field button");
-//            }
+            }
         }catch (Exception exception){
             Logger.logError("Encountered Error: Unable to tap on TO text field");
         }
@@ -239,6 +258,7 @@ public class FlightsIos extends FlightsBase {
 //            }else {
 //                Logger.logAction("Activity indicator is not displayed in the current active screen");
 //            }
+            Thread.sleep(2000);
             if (isKeyboardDisplayed()){
                 Logger.logComment("Keyboard is triggered");
             }else{
@@ -883,6 +903,7 @@ public class FlightsIos extends FlightsBase {
     public void setThePassengersCountTo(Integer parsingAdultsCount, Integer parsingChildrenCount,Integer parsingInfantsCount){
         Logger.logAction("Setting the passengers count");
         try {
+            tapOnPassengerLayoutInFlightsTab();
             setTheAdultPassengerCount(parsingAdultsCount);
             setTheChildrenPassengerCount(parsingChildrenCount);
             setTheInfantPassengerCount(parsingInfantsCount);
@@ -891,6 +912,7 @@ public class FlightsIos extends FlightsBase {
             Integer currentInfantPassengerCountBeforeTapping = getTheCurrentInfantsPassengerCount();
             if (currentAdultPassengerCountBeforeTapping == parsingAdultsCount && currentChildrenPassengerCountBeforeTapping == parsingChildrenCount && currentInfantPassengerCountBeforeTapping == parsingInfantsCount){
                 Logger.logStep("Passengers list is set successfully");
+                tapOnDoneButton();
             }else {
                 Logger.logComment("Adults passengers count to be set is :-"+parsingAdultsCount);
                 Logger.logComment("Adults passengers count displaying is :-"+currentAdultPassengerCountBeforeTapping);
@@ -905,6 +927,32 @@ public class FlightsIos extends FlightsBase {
         }
     }
 
+
+    /**
+     * Tap on passenger layout in flights tab
+     */
+    public void tapOnPassengerLayoutInFlightsTab() {
+        Logger.logAction("Closing the passenger layout in flights tab");
+        try {
+            findElementByAccessibilityIdAndClick(PASSENGER_LAYOUT_ID);
+            Logger.logStep("Tapped on passenger layout");
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on passenger layout in flights tab");
+        }
+    }
+
+    /**
+     * Close the passenger layout view in flights tab
+     */
+    public void closeThePassengerLayoutView() {
+        Logger.logAction("Tapping on down arrow button in passenger layout of flights tab");
+        try {
+            findElementByAccessibilityIdAndClick(DOWN_ARROW_BUTTON_ID_OF_PASSENGER_LAYOUT);
+            Logger.logStep("Tapped on down arrow button");
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on down arrow button in passenger layout of flights tab");
+        }
+    }
     /**
      * Set the adult passengers count
      * @param parsingAdultsCount
@@ -951,13 +999,14 @@ public class FlightsIos extends FlightsBase {
     public static Integer getTheCurrentAdultPassengerCount(){
         Logger.logAction("Getting the current adult passengers count");
         try {
-            String adultsCount = findElementByXpathAndReturnItsAttributeName(XPATH_OF_ADULTS_COUNT);
+            WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_ADULTS_COUNT);
+            String adultsCount = element.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             Logger.logComment("Current adult passenger count is :- "+adultsCount);
-            if (adultsCount.equalsIgnoreCase("adult")){
-                return 0;
-            }else {
+//            if (adultsCount.equalsIgnoreCase("0")){
+//                return 0;
+//            }else {
                 return Integer.parseInt(adultsCount);
-            }
+//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to set the passenger count");
         }
@@ -1010,13 +1059,14 @@ public class FlightsIos extends FlightsBase {
     public static Integer getTheCurrentChildrenPassengerCount(){
         Logger.logAction("Getting the current children passengers count");
         try {
-            String childrenCount = findElementByXpathAndReturnItsAttributeName(XPATH_OF_CHILDREN_COUNT);
+            WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_CHILDREN_COUNT);
+            String childrenCount = element.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             Logger.logComment("Current children passenger count is :- "+childrenCount);
-            if (childrenCount.equalsIgnoreCase("adult")){
-                return 0;
-            }else {
+//            if (childrenCount.equalsIgnoreCase("0")){
+//                return 0;
+//            }else {
                 return Integer.parseInt(childrenCount);
-            }
+//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to set the passenger count");
         }
@@ -1069,13 +1119,14 @@ public class FlightsIos extends FlightsBase {
     public static Integer getTheCurrentInfantsPassengerCount(){
         Logger.logAction("Getting the infants passengers count");
         try {
-            String infantsCount = findElementByXpathAndReturnItsAttributeName(XPATH_OF_INFANTS_COUNT);
+            WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_INFANTS_COUNT);
+            String infantsCount = element.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             Logger.logComment("Current infants passenger count is :- "+infantsCount);
-            if (infantsCount.equalsIgnoreCase("infant")){
-                return 0;
-            }else {
+//            if (infantsCount.equalsIgnoreCase("infant")){
+//                return 0;
+//            }else {
                 return Integer.parseInt(infantsCount);
-            }
+//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to set the passenger count");
         }
@@ -1089,7 +1140,7 @@ public class FlightsIos extends FlightsBase {
     public void tapOnAdultPlusButton(){
         Logger.logAction("Tapping on adult plus button");
         try {
-            findElementByXPathAndClick(XPATH_OF_ADULTS_PLUS_BUTTON);
+            findElementByAccessibilityIdAndClick(ACCESSIBILITY_ID_OF_ADULTS_PLUS_BUTTON);
             Logger.logStep("Tapped on adult plus button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on adult plus button");
@@ -1103,7 +1154,7 @@ public class FlightsIos extends FlightsBase {
     public void tapOnChildrenPlusButton(){
         Logger.logAction("Tapping on adult plus button");
         try {
-            findElementByXPathAndClick(XPATH_OF_CHILDREN_PLUS_BUTTON);
+            findElementByAccessibilityIdAndClick(ACCESSIBILITY_ID_OF_CHILDREN_PLUS_BUTTON);
             Logger.logStep("Tapped on children plus button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on children plus button");
@@ -1117,7 +1168,7 @@ public class FlightsIos extends FlightsBase {
     public void tapOnInfantsPlusButton(){
         Logger.logAction("Tapping on adult plus button");
         try {
-            findElementByXPathAndClick(XPATH_OF_INFANTS_PLUS_BUTTON);
+            findElementByAccessibilityIdAndClick(ACCESSIBILITY_ID_OF_INFANTS_PLUS_BUTTON);
             Logger.logStep("Tapped on infants plus button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on infants plus button");
@@ -1131,7 +1182,7 @@ public class FlightsIos extends FlightsBase {
     public void tapOnAdultMinusButton(){
         Logger.logAction("Tapping on adult plus button");
         try {
-            findElementByXPathAndClick(XPATH_OF_ADULTS_PLUS_BUTTON);
+            findElementByAccessibilityIdAndClick(ACCESSIBILITY_ID_OF_ADULTS_MINUS_BUTTON);
             Logger.logStep("Tapped on adult plus button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on adult plus button");
@@ -1145,7 +1196,7 @@ public class FlightsIos extends FlightsBase {
     public void tapOnChildrenMinusButton(){
         Logger.logAction("Tapping on adult plus button");
         try {
-            findElementByXPathAndClick(XPATH_OF_CHILDREN_PLUS_BUTTON);
+            findElementByAccessibilityIdAndClick(ACCESSIBILITY_ID_OF_CHILDREN_MINUS_BUTTON);
             Logger.logStep("Tapped on children plus button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on children plus button");
@@ -1159,7 +1210,7 @@ public class FlightsIos extends FlightsBase {
     public void tapOnInfantsMinusButton(){
         Logger.logAction("Tapping on adult plus button");
         try {
-            findElementByXPathAndClick(XPATH_OF_INFANTS_PLUS_BUTTON);
+            findElementByAccessibilityIdAndClick(ACCESSIBILITY_ID_OF_INFANTS_MINUS_BUTTON);
             Logger.logStep("Tapped on infants plus button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on infants plus button");

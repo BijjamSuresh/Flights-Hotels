@@ -230,6 +230,10 @@ public class SignUpAndroid extends SignUpBase {
                 Logger.logComment(" Tapped on signed up button");
                 waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
                 waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+                closeTheKeyboard_Android();
+                if (isElementDisplayedById(SIGN_UP_BUTTON)){
+                    Logger.logError("Sign up screen is displaying on getting the app to back ground after tapping on sign up button with valid sign up credentials");
+                }
                 declineTheSyncPreviousTravellersDataModalView_Android();
             }else {
                 Logger.logComment(SIGN_UP_BUTTON+" - element name is not displayed in the current active screen");

@@ -41,7 +41,7 @@ import static com.automation.rehlat.flights.pages.constructors.PageConstructor.i
  */
 public class BaseTest extends Base {
     ////////////////////////////// Common Strings Used In All The Tests //////////////////////////////////////
-    public static final String SELECT_LANGUAGE = "Select Language";
+    public static final String SELECT_LANGUAGE = "Language";
     public static final String IOS_USER_LOCATION_ACCESS = "Allow “Rehlat” to access your location while you are using the app?";
     public static final String ANDROID_USER_LOCATION_ACCESS = "Allow Rehlat to access this device's location?";
     public static final String NOTIFICATION_ACCEPTANCE = "“Rehlat” Would Like to Send You Notifications";
@@ -62,8 +62,8 @@ public class BaseTest extends Base {
     public static final String KUWAIT_AIRPORT_NAME_XPATH_IN_SEARCH_RESULTS = "//XCUIElementTypeStaticText[@name=\"Kuwait - Kuwait Intl - Kuwait\"]";
     public static final String DEPARTURE_DAY = "2";
     public static final String RETURN_DAY = "5";
-    public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS = "2"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
-    public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS_WHEN_SOLDOUT_POPUP_INTERRUPTRED = "1"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
+    public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS = "1"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
+    public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS_WHEN_SOLDOUT_POPUP_INTERRUPTRED = "2"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
     public static final String TESTING_BANK_CARD = "Knet Test Card [KNET1]";
 
 

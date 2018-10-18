@@ -27,8 +27,8 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_Menu
         HotelsScreen.tapOnHotelsTab();
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnSearchButton();
-        HotelsScreen.sendKeysToSearchResultsScreen("dxb");
-        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Dubai, United Arab Emirates");
+        HotelsScreen.sendKeysToSearchResultsScreen("hyd");
+        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Hyderabad, India");
         HotelsScreen.checkTheSearchTextFieldIsFilledWithSelectedNameOf(selectedName);
         HotelsScreen.tapOnCheckInButton();
         HotelsScreen.tapOnCheckInOptionInCalendarView();
@@ -38,9 +38,9 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_Menu
         HotelsScreen.selectCheckOutDate(CHECK_OUT_MONTH,CHECK_OUT_DAY);
         HotelsScreen.tapOnDoneButtonInCalendarView();
         HotelsScreen.tapOnAdultAndChildLayout();
-        HotelsScreen.setTheGuestCountTo(1,1,2); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
-        HotelsScreen.tapOnAddRoomButton();
-        HotelsScreen.setTheGuestCountTo(2,1,0); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
+        HotelsScreen.setTheGuestCountTo(1,1,0); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
+//        HotelsScreen.tapOnAddRoomButton();
+//        HotelsScreen.setTheGuestCountTo(2,1,0); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
         HotelsScreen.tapOnDoneButtonOnRoomListView();
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnCheckAvailabilityButton();
@@ -60,14 +60,14 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_Menu
         HotelsProfileScreen.compareSelectedHotelPriceInSRPAndInHotelProfileScreens();
         HotelsProfileScreen.tapOnSelectRoomButton();
         SelectRoomsScreen.checkSelectRoomScreenIsDisplayed();
-        SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(2,1); // Todo:- Yet to discuss with the dev as multiple individual rooms selection is not possible [Eg: One user, multiple types of room selections are not possible]
+        SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(1,1); // Todo:- Yet to discuss with the dev as multiple individual rooms selection is not possible [Eg: One user, multiple types of room selections are not possible]
         SelectRoomsScreen.compareSelectedRoomPriceInSelectRoomScreenAndHotelProfileScreen(1);
         SelectRoomsScreen.tapOnContinueButton();
         if (SelectRoomsScreen.isHotelsSoldOutAlertIsDisplayed()){
             Logger.logStep("Sold out alert is displayed in select rooms screen where as not displayed in the SRP or hotel profile screen");
             SelectRoomsScreen.tapOnChangeYourRoomTypeButtonInSoldOutAlert();
-            SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(2,2);
-            SelectRoomsScreen.compareSelectedRoomPriceInSelectRoomScreenAndHotelProfileScreen(1);
+            SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(1,2);
+            SelectRoomsScreen.compareSelectedRoomPriceInSelectRoomScreenAndHotelProfileScreen(1); //Todo:- Checking the price with the selected room with the price in the footer view
             SelectRoomsScreen.tapOnContinueButton();
             if (SelectRoomsScreen.isHotelsSoldOutAlertIsDisplayed()) {
                 Logger.logError("Tried two times but still the sold out alert is displaying");
@@ -79,14 +79,15 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_Menu
         }
         BookingSummaryScreen.enterUserBookingInfo();
         BookingSummaryScreen.applyTheCouponCode();
+        BookingSummaryScreen.disableKaramPointsToggleSwitch();
         BookingSummaryScreen.checkFinalFareCalculationIsCorrect();
         BookingSummaryScreen.tapOnAddGuestTravellersDetailsButton();
         GuestTravellersDetailsScreen.declineAutoFillPopulateModalIfDisplayed();
         GuestTravellersDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(1,1,2);
+        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(1,1,0);
         GuestTravellersDetailsScreen.tapOnSaveButton();
-        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(2,1,0);
-        GuestTravellersDetailsScreen.tapOnSaveButton();
+//        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(2,1,0);
+//        GuestTravellersDetailsScreen.tapOnSaveButton();
         BookingSummaryScreen.tapOnContinueButton();
         PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
         PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();

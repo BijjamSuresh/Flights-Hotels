@@ -4,19 +4,20 @@ import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.flights.libCommon.Logger;
 import com.automation.rehlat.flights.pages.flights.FlightsIos;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class SignUpIos extends SignUpBase {
 
     public static final String TOUCH_ID__AS_SIGN_UP_BUTTON = "USE TOUCHID FOR SIGN UP";
     public static final String FACE_ID__AS_SIGN_UP_BUTTON = "USE FACEID FOR SIGN UP";
-    public static final String SIGN_UP_BUTTON = "Sign Up";
-    public static final String XPATH_OF_FIRST_NAME_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[3]/XCUIElementTypeTable/XCUIElementTypeCell[1]";
-    public static final String XPATH_OF_LAST_NAME_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[3]/XCUIElementTypeTable/XCUIElementTypeCell[2]";
-    public static final String XPATH_OF_EMAIL_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[3]/XCUIElementTypeTable/XCUIElementTypeCell[3]";
-    public static final String XPATH_OF_PASSWORD_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[3]/XCUIElementTypeTable/XCUIElementTypeCell[4]";
-    public static final String XPATH_OF_REPEAT_PASSWORD_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[3]/XCUIElementTypeTable/XCUIElementTypeCell[5]";
-    public static final String XPATH_OF_SELECT_DOMAIN_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[3]/XCUIElementTypeTable/XCUIElementTypeCell[6]";
-    public static final String XPATH_OF_REFERRAL_CODE_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[3]/XCUIElementTypeTable/XCUIElementTypeCell[7]/XCUIElementTypeTextField";
+    public static final String SIGN_UP_BUTTON = "signupButton";
+    public static final String ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD = "signupFirstName";
+    public static final String ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD = "signupLastName";
+    public static final String ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD = "signupEmail";
+    public static final String ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD = "signupPassword";
+    public static final String ACCESSIBILITY_ID_OF_REPEAT_PASSWORD_TEXT_FIELD = "signupRepeatPassword";
+    public static final String ACCESSIBILITY_ID_OF_SELECT_DOMAIN_TEXT_FIELD = "signupDomain";
+    public static final String ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD = "signupReferral";
 
 
     /**
@@ -27,7 +28,7 @@ public class SignUpIos extends SignUpBase {
         Logger.logAction("Checking the sign in or sign up screen is displayed or not ?");
         try {
             scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
-            if (isElementDisplayedByName(SIGN_UP_BUTTON) && isElementDisplayedByXPath(XPATH_OF_REPEAT_PASSWORD_TEXT_FIELD) && isElementDisplayedByName(TOUCH_ID__AS_SIGN_UP_BUTTON) || isElementDisplayedByName(FACE_ID__AS_SIGN_UP_BUTTON)){
+            if (isElementDisplayedByAccessibilityId(SIGN_UP_BUTTON) && isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_REPEAT_PASSWORD_TEXT_FIELD) && isElementDisplayedByName(TOUCH_ID__AS_SIGN_UP_BUTTON) || isElementDisplayedByName(FACE_ID__AS_SIGN_UP_BUTTON)){
                 Logger.logStep("Sign Up screen is displayed");
             }else {
                 Logger.logError("Sign Up screen is not displayed");
@@ -64,11 +65,12 @@ public class SignUpIos extends SignUpBase {
     public void enterUserFirstName() {
         Logger.logAction("Entering user first name");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_FIRST_NAME_TEXT_FIELD)){
-                sendTextByXpath(XPATH_OF_FIRST_NAME_TEXT_FIELD, Labels_Flights.FIRST_NAME);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD);
+                element.sendKeys(Labels_Flights.FIRST_NAME);
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError(XPATH_OF_FIRST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
+                Logger.logError(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -82,11 +84,12 @@ public class SignUpIos extends SignUpBase {
     public void enterUserLastName() {
         Logger.logAction("Entering user last name");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_LAST_NAME_TEXT_FIELD)){
-                sendTextByXpath(XPATH_OF_LAST_NAME_TEXT_FIELD, Labels_Flights.LAST_NAME);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD);
+                element.sendKeys(Labels_Flights.LAST_NAME);
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError(XPATH_OF_LAST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
+                Logger.logError(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -100,11 +103,12 @@ public class SignUpIos extends SignUpBase {
     public void enterUserEmailId() {
         Logger.logAction("Entering user email id");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_EMAIL_TEXT_FIELD)){
-                sendTextByXpath(XPATH_OF_EMAIL_TEXT_FIELD, Labels_Flights.EMAIL_ID_SIGN_UP);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD);
+                element.sendKeys(Labels_Flights.EMAIL_ID_SIGN_UP);
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError(XPATH_OF_EMAIL_TEXT_FIELD+" - element name is not displayed in the current active screen");
+                Logger.logError(ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -118,11 +122,12 @@ public class SignUpIos extends SignUpBase {
     public void enterUserPassword() {
         Logger.logAction("Entering user sign up password");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_PASSWORD_TEXT_FIELD)){
-                sendTextByXpath(XPATH_OF_PASSWORD_TEXT_FIELD, Labels_Flights.PASSWORD);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD);
+                element.sendKeys(Labels_Flights.PASSWORD);
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError(XPATH_OF_PASSWORD_TEXT_FIELD+" - element name is not displayed in the current active screen");
+                Logger.logError(ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -136,11 +141,12 @@ public class SignUpIos extends SignUpBase {
     public void enterUserRepeatPassword() {
         Logger.logAction("Entering user sign up repeat password");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_REPEAT_PASSWORD_TEXT_FIELD)){
-                sendTextByXpath(XPATH_OF_REPEAT_PASSWORD_TEXT_FIELD, Labels_Flights.REPEAT_PASSWORD);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_REPEAT_PASSWORD_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_REPEAT_PASSWORD_TEXT_FIELD);
+                element.sendKeys(Labels_Flights.REPEAT_PASSWORD);
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError(XPATH_OF_REPEAT_PASSWORD_TEXT_FIELD+" - element name is not displayed in the current active screen");
+                Logger.logError(ACCESSIBILITY_ID_OF_REPEAT_PASSWORD_TEXT_FIELD+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -154,11 +160,12 @@ public class SignUpIos extends SignUpBase {
     public void selectDomain() {
         Logger.logAction("Selecting user country domain");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_SELECT_DOMAIN_TEXT_FIELD)){
-                driver.findElementByXPath(XPATH_OF_SELECT_DOMAIN_TEXT_FIELD).click();
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_SELECT_DOMAIN_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_SELECT_DOMAIN_TEXT_FIELD);
+                element.click();
                 selectCountryNameAndTapOnContinueButton();
             }else {
-                Logger.logError(XPATH_OF_SELECT_DOMAIN_TEXT_FIELD+" - element name is not displayed in the current active screen");
+                Logger.logError(ACCESSIBILITY_ID_OF_SELECT_DOMAIN_TEXT_FIELD+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -171,8 +178,10 @@ public class SignUpIos extends SignUpBase {
     public static void selectCountryNameAndTapOnContinueButton() {
         Logger.logAction("Selecting user country domain and tap on tap on continue button");
         try {
-            findElementByNameAndClick(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL);
-            findElementByNameAndClick(FlightsIos.CONTINUE_BUTTON);
+            WebElement element = driver.findElementByAccessibilityId(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL);
+            tapOnElementBasedOnLocation(element,"bottomRight");
+//            findElementByNameAndClick(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL);
+            findElementByAccessibilityIdAndClick(FlightsIos.CONTINUE_BUTTON);
 
 //            if (isElementDisplayedByName(Labels_Hotels.KUWAIT_LANGUAGE_COUNTRY_LABEL)){
 //                driver.findElement(By.name(Labels_Hotels.KUWAIT_LANGUAGE_COUNTRY_LABEL)).click();
@@ -192,11 +201,13 @@ public class SignUpIos extends SignUpBase {
     public void enterReferralCode() {
         Logger.logAction("Entering referral code");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_REFERRAL_CODE_TEXT_FIELD)){
-                sendTextByXpath(XPATH_OF_REFERRAL_CODE_TEXT_FIELD, Labels_Flights.REFERRAL_CODE);
+            Thread.sleep(2000);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_SELECT_DOMAIN_TEXT_FIELD);
+                element.sendKeys(Labels_Flights.REFERRAL_CODE);
                 closeTheKeyboard_iOS();
             }else {
-                Logger.logError(XPATH_OF_REFERRAL_CODE_TEXT_FIELD +" - element name is not displayed in the current active screen");
+                Logger.logError(ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD +" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -211,8 +222,8 @@ public class SignUpIos extends SignUpBase {
         Logger.logAction("Taping on create account button");
         try {
             scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
-            if (isElementDisplayedByName(SIGN_UP_BUTTON)){
-                driver.findElement(By.name(SIGN_UP_BUTTON)).click();
+            if (isElementDisplayedByAccessibilityId(SIGN_UP_BUTTON)){
+                driver.findElementByAccessibilityId(SIGN_UP_BUTTON).click();
                 waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
             }else {
                 Logger.logError(SIGN_UP_BUTTON+" - element name is not displayed in the current active screen");

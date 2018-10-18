@@ -4,6 +4,8 @@ import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.WebElement;
 
+import java.util.List;
+
 public class GuestTravellersDetailsAndroid extends GuestTravellersDetailsBase {
 
     public static final String TRAVELLERS_FIRST_NAME="com.app.rehlat:id/travellerFirstNameEditText";
@@ -201,25 +203,41 @@ public class GuestTravellersDetailsAndroid extends GuestTravellersDetailsBase {
                     sendTextById(TRAVELLERS_FIRST_NAME, Labels_Hotels.ADULT_TRAVELLERS_FIRST_NAME);
                     closeTheKeyboard_Android();
                 }else if (travellersType.equalsIgnoreCase("Child")){
+                    Thread.sleep(1000);
                     sendTextById(TRAVELLERS_FIRST_NAME, Labels_Hotels.CHILD_TRAVELLERS_FIRST_NAME);
                     closeTheKeyboard_Android();
                 }else {
                     Logger.logError("Incorrect travellers type is parsed");
                 }
             }else if (parsingTravellersNumber < 4){
+                Integer textFieldNumber = parsingTravellersNumber-1;
             if (travellersType.equalsIgnoreCase("Adult")){
-                findElementByXPathAndClick(xpathOfParsingTravellersFirstName);
-                sendTextById(TRAVELLERS_FIRST_NAME, Labels_Hotels.ADULT_TRAVELLERS_FIRST_NAME);
+                List<WebElement> lastNameFieldLists = driver.findElementsById("com.app.rehlat:id/travellerFirstNameEditText");
+                Thread.sleep(1000);
+                lastNameFieldLists.get(textFieldNumber).click();
+                lastNameFieldLists.get(0).sendKeys(Labels_Hotels.ADULT_TRAVELLERS_FIRST_NAME);
+//                findElementByXPathAndClick(xpathOfParsingTravellersFirstName);
+//                sendTextById(TRAVELLERS_FIRST_NAME, Labels_Hotels.ADULT_TRAVELLERS_FIRST_NAME);
                 closeTheKeyboard_Android();
             }else if (travellersType.equalsIgnoreCase("Child")){
-                findElementByXPathAndClick(xpathOfParsingTravellersFirstName);
-                sendTextById(TRAVELLERS_FIRST_NAME, Labels_Hotels.ADULT_TRAVELLERS_FIRST_NAME);
+                List<WebElement> lastNameFieldLists = driver.findElementsById("com.app.rehlat:id/travellerFirstNameEditText");
+                Thread.sleep(1000);
+                try {
+                    lastNameFieldLists.get(textFieldNumber).click();
+                    lastNameFieldLists.get(0).sendKeys(Labels_Hotels.CHILD_TRAVELLERS_FIRST_NAME);
+                }catch (Exception exceptionTwo){
+                    lastNameFieldLists.get(textFieldNumber-1).click();
+                    lastNameFieldLists.get(0).sendKeys(Labels_Hotels.CHILD_TRAVELLERS_FIRST_NAME);
+                }
+//                findElementByXPathAndClick(xpathOfParsingTravellersFirstName);
+//                sendTextById(TRAVELLERS_FIRST_NAME, Labels_Hotels.CHILD_TRAVELLERS_FIRST_NAME);
                 closeTheKeyboard_Android();
             }else {
                 Logger.logError("Incorrect travellers type is parsed");
             }
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to enter the travellers first name");
         }
     }
@@ -233,28 +251,46 @@ public class GuestTravellersDetailsAndroid extends GuestTravellersDetailsBase {
             String xpathOfParsingTravellersLastName = XPATH_OF_TRAVELLERS_CARD_VIEW_WITHOUT_INDEX+parsingTravellersNumber+XPATH_OF_TRAVELLERS_Last_NAME_WITHOUT_XPATH_OF_CARD_NUMBER;
             if (parsingTravellersNumber == 1){
                 if (travellersType.equalsIgnoreCase("Adult")){
+                    List<WebElement> lastNameFieldLists = driver.findElementsById("com.app.rehlat:id/travellerLastNameEditText");
                     sendTextById(TRAVELLERS_LAST_NAME, Labels_Hotels.ADULT_TRAVELLERS_LAST_NAME);
                     closeTheKeyboard_Android();
                 }else if (travellersType.equalsIgnoreCase("Child")){
+                    List<WebElement> lastNameFieldLists = driver.findElementsById("com.app.rehlat:id/travellerLastNameEditText");
                     sendTextById(TRAVELLERS_LAST_NAME, Labels_Hotels.CHILD_TRAVELLERS_LAST_NAME);
                     closeTheKeyboard_Android();
                 }else {
                     Logger.logError("Incorrect travellers type is parsed");
                 }
             }else if (parsingTravellersNumber < 4){
-            if (travellersType.equalsIgnoreCase("Adult")){
-                findElementByXPathAndClick(xpathOfParsingTravellersLastName);
-                sendTextById(TRAVELLERS_LAST_NAME, Labels_Hotels.ADULT_TRAVELLERS_LAST_NAME);
+                Integer textFieldNumber = parsingTravellersNumber-1;
+                if (travellersType.equalsIgnoreCase("Adult")){
+                List<WebElement> lastNameFieldLists = driver.findElementsById("com.app.rehlat:id/travellerLastNameEditText");
+                lastNameFieldLists.get(textFieldNumber).click();
+                    Thread.sleep(1000);
+                    lastNameFieldLists.get(0).sendKeys(Labels_Hotels.ADULT_TRAVELLERS_LAST_NAME);
+//                findElementByXPathAndClick(xpathOfParsingTravellersLastName);
+//                sendTextById(TRAVELLERS_LAST_NAME, Labels_Hotels.ADULT_TRAVELLERS_LAST_NAME);
                 closeTheKeyboard_Android();
             }else if (travellersType.equalsIgnoreCase("Child")){
-                findElementByXPathAndClick(xpathOfParsingTravellersLastName);
-                sendTextById(TRAVELLERS_LAST_NAME, Labels_Hotels.CHILD_TRAVELLERS_LAST_NAME);
+                List<WebElement> lastNameFieldLists = driver.findElementsById("com.app.rehlat:id/travellerLastNameEditText");
+                    try {
+                        lastNameFieldLists.get(textFieldNumber).click();
+                        Thread.sleep(1000);
+                        lastNameFieldLists.get(0).sendKeys(Labels_Hotels.CHILD_TRAVELLERS_LAST_NAME);
+                    }catch (Exception exceptionTwo){
+                        lastNameFieldLists.get(textFieldNumber).click();
+                        Thread.sleep(1000);
+                        lastNameFieldLists.get(0).sendKeys(Labels_Hotels.CHILD_TRAVELLERS_LAST_NAME);
+                    }
+//                findElementByXPathAndClick(xpathOfParsingTravellersLastName);
+//                sendTextById(TRAVELLERS_LAST_NAME, Labels_Hotels.CHILD_TRAVELLERS_LAST_NAME);
                 closeTheKeyboard_Android();
             }else {
                 Logger.logError("Incorrect travellers type is parsed");
             }
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to enter the travellers last name");
         }
     }
@@ -266,6 +302,7 @@ public class GuestTravellersDetailsAndroid extends GuestTravellersDetailsBase {
     public void tapOnSaveButton() {
         Logger.logAction("Tapping on save travellers details button");
         try{
+            Thread.sleep(3000);
             if (isElementDisplayedById(SAVE_BUTTON)){
                 driver.findElementById(SAVE_BUTTON).click();
                 Logger.logComment(SAVE_BUTTON+" :- element name is selected");

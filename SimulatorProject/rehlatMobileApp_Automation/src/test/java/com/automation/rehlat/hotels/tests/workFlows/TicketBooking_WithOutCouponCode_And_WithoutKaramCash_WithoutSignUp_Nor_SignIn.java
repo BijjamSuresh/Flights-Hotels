@@ -69,8 +69,8 @@ public class TicketBooking_WithOutCouponCode_And_WithoutKaramCash_WithoutSignUp_
             }
         }
         BookingSummaryScreen.checkBookingPageScreenIsDisplayed();
-        BookingSummaryScreen.applyTheCouponCode();
         BookingSummaryScreen.enterUserBookingInfo();
+        BookingSummaryScreen.disableKaramPointsToggleSwitch();
         BookingSummaryScreen.checkFinalFareCalculationIsCorrect();
         BookingSummaryScreen.tapOnAddGuestTravellersDetailsButton();
         GuestTravellersDetailsScreen.declineAutoFillPopulateModalIfDisplayed();

@@ -494,7 +494,8 @@ public class BookingSummaryIos extends BookingSummaryBase {
      * Disable the karam points toggle
      * @return
      */
-    public static void disableKaramPointsToggleSwitch() {
+    @Override
+    public void disableKaramPointsToggleSwitch() {
         Logger.logAction("Enabling the karam points toggle");
         try
         {

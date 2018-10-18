@@ -38,7 +38,7 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
         FlightsScreen.selectDepartureDate(DEPARTURE_MONTH,DEPARTURE_DAY); // Automation Defect: Due to improper element names in calendar view unable to tap on accurate departure date
         FlightsScreen.tapOnDoneButton();
         FlightsScreen.checkFlightsTabIsDisplayed();
-        FlightsScreen.setThePassengersCountTo(1,1,1); // This should be same as travellers details passengers count
+        FlightsScreen.setThePassengersCountTo(1,1,0); // This should be same as travellers details passengers count
         FlightsScreen.tapOnSearchButton();
         FlightsSearchResultsScreen.checkFlightsSearchResultsScreenIsDisplayed();
         FlightsSearchResultsScreen.tapOnACellInFlightSearchResults(CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS); //Change this method to tap on a flight cell by sending the cell number as string/integer like this : //  FlightsSearchResultsIos.getTheBookingCostOfSelectedFlightInSearchResults("6");
@@ -61,7 +61,7 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
         BookingPageScreen.checkBookingPageScreenIsDisplayed();
         BookingPageScreen.enterUserBookingInfo();
         BookingPageScreen.tapOnAdultAddTravellersDetailsButton();
-        TravellerDetailsScreen.EnterTravellersDetailsForPassengers(3); // This should be same as passengers count in flights tab
+        TravellerDetailsScreen.EnterTravellersDetailsForPassengers(2); // This should be same as passengers count in flights tab
         TravellerDetailsScreen.tapOnSaveButton();
         BookingPageScreen.checkBookingPageScreenIsDisplayed();
         BookingPageScreen.checkFinalFareCalculationIsCorrect();
@@ -87,7 +87,7 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
             BookingPageScreen.checkBookingPageScreenIsDisplayed();
             BookingPageScreen.enterUserBookingInfo();
             BookingPageScreen.tapOnAdultAddTravellersDetailsButton();
-            TravellerDetailsScreen.EnterTravellersDetailsForPassengers(3); // This should be same as passengers count in flights tab
+            TravellerDetailsScreen.EnterTravellersDetailsForPassengers(2); // This should be same as passengers count in flights tab
             TravellerDetailsScreen.tapOnSaveButton();
             BookingPageScreen.checkBookingPageScreenIsDisplayed();
             BookingPageScreen.checkFinalFareCalculationIsCorrect();
@@ -98,7 +98,8 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
             }else {
                 PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
                 PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
-                // KNET PAYMENT PROCESS
+                if (Labels_Flights.platform.equalsIgnoreCase(IOS)){
+                    // KNET PAYMENT PROCESS
 //                PaymentOptionsScreen.tapOnKnetPaymentGateWay();
 //                PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
 //                PaymentOptionsScreen.selectingBankName(TESTING_BANK_CARD);
@@ -109,18 +110,19 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
 //                PaymentOptionsScreen.tapOnConfirmButton();
 //                PaymentOptionsScreen.checkTheKnetBookingProcessIsSuccess();
 
-                // CREDIT OR DEBIT CARD PAYMENT PROCESS
-//            PaymentOptionsScreen.enterCreditOrDebitCardDetails();
-//            PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
-//            PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
-//            PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
-//        }
+                    // CREDIT OR DEBIT CARD PAYMENT PROCESS
+            PaymentOptionsScreen.enterCreditOrDebitCardDetails();
+            PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
+            PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
+            PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
+                }
             }
         }else {
             Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
             PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
             PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
-            // KNET PAYMENT PROCESS
+            if (Labels_Flights.platform.equalsIgnoreCase(IOS)){
+                // KNET PAYMENT PROCESS
 //            PaymentOptionsScreen.tapOnKnetPaymentGateWay();
 //            PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
 //            PaymentOptionsScreen.selectingBankName(TESTING_BANK_CARD);
@@ -131,11 +133,12 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
 //            PaymentOptionsScreen.tapOnConfirmButton();
 //            PaymentOptionsScreen.checkTheKnetBookingProcessIsSuccess();
 
-            // CREDIT OR DEBIT CARD PAYMENT PROCESS
-//            PaymentOptionsScreen.enterCreditOrDebitCardDetails();
-//            PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
-//            PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
-//            PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
+                // CREDIT OR DEBIT CARD PAYMENT PROCESS
+            PaymentOptionsScreen.enterCreditOrDebitCardDetails();
+            PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
+            PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
+            PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
+            }
         }
         Logger.endTest("- Ticket booking without coupon code and with sign in from bookings page");
 

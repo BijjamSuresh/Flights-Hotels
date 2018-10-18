@@ -16,7 +16,7 @@ public class HotelsAndroid extends HotelsBase {
     public static final String XPATH_OF_HOTELS_TAB_WITHOUT_TAB_VIEW_XPATH = "/android.widget.LinearLayout/android.support.v7.app.ActionBar.Tab[2]/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.TextView";
     public static final String SEARCH_TEXT_FIELD_ID_IN_HOTELS_HOME_SCREEN = "com.app.rehlat:id/search_edit_text";
     public static final String SEARCH_TEXT_FIELD_ID_IN_HOTELS_SEARCH_SCREEN = "com.app.rehlat:id/searchFlightEditText";
-    public static final String XPATH_OF_FIRST_CITY_NAME_IN_SEARCH_RESULTS = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView";
+    public static final String XPATH_OF_FIRST_CITY_NAME_IN_SEARCH_RESULTS = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView";
     public static final String CHECK_IN_BUTTON_ID_IN_HOTELS_HOME_SCREEN = "com.app.rehlat:id/hotelCheckInLayout";
     public static final String CHECK_OUT_BUTTON_ID_IN_HOTELS_HOME_SCREEN = "com.app.rehlat:id/hotelCheckoutlayout";
     public static final String CHECK_IN_BUTTON_ID_IN_CALENDER_VIEW = "com.app.rehlat:id/onwardJrnDialogLayout";
@@ -58,7 +58,7 @@ public class HotelsAndroid extends HotelsBase {
         Logger.logAction("Check hotel screen is displayed");
         try {
             runAppInBackground(1);
-//            Thread.sleep(2000);
+            Thread.sleep(3000);
             if (isElementDisplayedById(CHECK_IN_BUTTON_ID_IN_HOTELS_HOME_SCREEN) && isElementDisplayedById(CHECK_OUT_BUTTON_ID_IN_HOTELS_HOME_SCREEN)){
                 Logger.logStep("Hotels screen is displayed");
             }else {
@@ -76,6 +76,8 @@ public class HotelsAndroid extends HotelsBase {
     public void tapOnHotelsTab(){
         Logger.logAction("Tapping on hotels tab");
         try {
+            runAppInBackground(1);
+            Thread.sleep(3000);
             String xpathOfHotelsTab = XPATH_OF_TAB_VIEW+XPATH_OF_HOTELS_TAB_WITHOUT_TAB_VIEW_XPATH;
             String isSelectedAttribute = findElementByXpathAndReturnItsAttributeSelected(xpathOfHotelsTab);
             if (isSelectedAttribute.equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
@@ -128,7 +130,7 @@ public class HotelsAndroid extends HotelsBase {
      */
     @Override
     public void sendKeysToSearchResultsScreen(String parsingValue){
-        Logger.logAction("Sending keys to search results screen"+parsingValue);
+        Logger.logAction("Sending keys to search results screen - "+parsingValue);
         try {
             sendTextById(SEARCH_TEXT_FIELD_ID_IN_HOTELS_SEARCH_SCREEN,parsingValue);
             Logger.logStep("Parsed the keys as :- "+parsingValue);

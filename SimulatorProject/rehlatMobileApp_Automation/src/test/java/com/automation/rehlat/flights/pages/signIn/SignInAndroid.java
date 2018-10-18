@@ -154,7 +154,7 @@ public class SignInAndroid extends SignInBase{
         try {
             if (isElementDisplayedById(LOGIN_BUTTON)){
                 driver.findElement(By.id(LOGIN_BUTTON)).click();
-                Logger.logComment("Tapped on logout button");
+                Logger.logComment("Tapped on login button");
                 waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
                 waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
                 declineTheSyncPreviousTravellersDataModalView_Android();

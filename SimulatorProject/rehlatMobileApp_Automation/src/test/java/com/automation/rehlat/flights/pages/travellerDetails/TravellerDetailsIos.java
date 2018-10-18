@@ -12,20 +12,20 @@ import static com.automation.rehlat.flights.tests.BaseTest.INTERNATIONALS_TRAVEL
 
 public class TravellerDetailsIos extends TravellerDetailsBase {
 
-    public static final String TRAVELLERS_FIRST_NAME="First Name";
-    public static final String TRAVELLERS_MIDDLE_NAME="Middle Name";
-    public static final String TRAVELLERS_LAST_NAME="Last Name";
-    public static final String TRAVELLERS_DATEOFBIRTH_NAME="Date Of Birth";
-    public static final String TRAVELLERS_PASSPORT_NUMBER="Passport Number";
-    public static final String TRAVELLERS_PASSPORT_EXPIRY_NUMBER="Passport Expiry Date";
-    public static final String TRAVELLERS_PASSPORT_ISSUING_COUNTRY="Issuing Country";
-    public static final String TRAVELLERS_NATIONALITY="Nationality";
+    public static final String TRAVELLERS_FIRST_NAME="infoFirstName";
+    public static final String TRAVELLERS_MIDDLE_NAME="infoMiddleName";
+    public static final String TRAVELLERS_LAST_NAME="infoLastName";
+    public static final String TRAVELLERS_DATEOFBIRTH_NAME="infoDOB";
+    public static final String TRAVELLERS_PASSPORT_NUMBER="infoPassportNum";
+    public static final String TRAVELLERS_PASSPORT_EXPIRY_NUMBER="infoPassportValidity";
+    public static final String TRAVELLERS_PASSPORT_ISSUING_COUNTRY="infoPasspostCountry";
+    public static final String TRAVELLERS_NATIONALITY="infoNationality";
     public static final String CHOOSE_COUNTRY_MODAL="Choose Country";
     public static final String SAVE_BUTTON="Save";
     public static final String NEXT_BUTTON="Next";
     public static final String PICKER_WHEEL = "XCUIElementTypePickerWheel";
-    public static final String TRAVELLERS_DETAILS_SCREEN_TITLE ="Traveller Details";
-    public static final String TRAVELLERS_PRE_POPULLATE_MODAL_VIEW = "Populate the fields with your previous inputs?";
+    public static final String XPATH_OF_TRAVELLERS_DETAILS_SCREEN_TITLE ="//XCUIElementTypeNavigationBar[@name=\"Traveller Details\"]";
+    public static final String TRAVELLERS_PRE_POPULLATE_MODAL_VIEW = "Do you want to fill the data automatically from previous entry?";
     public static final String XPATH_OF_TRAVELLERS_DETAILS_MODAL ="//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther";
 
 
@@ -37,7 +37,7 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
         Logger.logAction("Checking the travellers details screen is displayed or not ?");
         try {
             Thread.sleep(2000);
-            if (isElementEnabledByName(TRAVELLERS_DETAILS_SCREEN_TITLE)){
+            if (isElementDisplayedByXPath(XPATH_OF_TRAVELLERS_DETAILS_SCREEN_TITLE)){
                 Logger.logStep("Travellers details screen is displayed");
             } else {
                 Logger.logError("Travellers details screen is not displayed");
@@ -206,9 +206,9 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     public static void enterTravellersFirstName() {
         Logger.logAction("Entering travellers first name");
         try{
-            if (isElementDisplayedByName(TRAVELLERS_FIRST_NAME)){
+            if (isElementDisplayedByAccessibilityId(TRAVELLERS_FIRST_NAME)){
                 WebElement firstName = driver.findElementByAccessibilityId(TRAVELLERS_FIRST_NAME);
-                tapOnElementBasedOnLocation(firstName,"bottomRight");
+//                tapOnElementBasedOnLocation(firstName,"bottomRight");
                 firstName.sendKeys(Labels_Flights.TRAVELLERS_FIRST_NAME);
                 Logger.logComment(Labels_Flights.TRAVELLERS_FIRST_NAME+" :- is parsed");
                 closeTheKeyboard_iOS();
@@ -227,9 +227,9 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     public static void enterTravellersMiddleName() {
         Logger.logAction("Entering travellers middle name");
         try{
-            if (isElementDisplayedByName(TRAVELLERS_MIDDLE_NAME)){
+            if (isElementDisplayedByAccessibilityId(TRAVELLERS_MIDDLE_NAME)){
                 WebElement middleName = driver.findElementByAccessibilityId(TRAVELLERS_MIDDLE_NAME);
-                tapOnElementBasedOnLocation(middleName,"bottomRight");
+//                tapOnElementBasedOnLocation(middleName,"bottomRight");
                 middleName.sendKeys(Labels_Flights.TRAVELLERS_MIDDLE_NAME);
                 Logger.logComment(Labels_Flights.TRAVELLERS_MIDDLE_NAME+" :- is parsed");
                 closeTheKeyboard_iOS();
@@ -247,9 +247,9 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     public static void enterTravellersLastName() {
         Logger.logAction("Entering travellers last name");
         try{
-            if (isElementDisplayedByName(TRAVELLERS_LAST_NAME)){
+            if (isElementDisplayedByAccessibilityId(TRAVELLERS_LAST_NAME)){
                 WebElement lastName = driver.findElementByAccessibilityId(TRAVELLERS_LAST_NAME);
-                tapOnElementBasedOnLocation(lastName,"bottomRight");
+//                tapOnElementBasedOnLocation(lastName,"bottomRight");
                 lastName.sendKeys(Labels_Flights.TRAVELLERS_LAST_NAME);
                 Logger.logComment(Labels_Flights.TRAVELLERS_LAST_NAME+" :- is parsed");
                 closeTheKeyboard_iOS();
@@ -297,9 +297,9 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     public static void enterTravellersPassportNumber() {
         Logger.logAction("Entering travellers passport number");
         try{
-            if (isElementDisplayedByName(TRAVELLERS_PASSPORT_NUMBER)){
+            if (isElementDisplayedByAccessibilityId(TRAVELLERS_PASSPORT_NUMBER)){
                 WebElement passportNumber = driver.findElementByAccessibilityId(TRAVELLERS_PASSPORT_NUMBER);
-                tapOnElementBasedOnLocation(passportNumber,"bottomRight");
+//                tapOnElementBasedOnLocation(passportNumber,"bottomRight");
                 passportNumber.sendKeys(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER);
                 Logger.logComment(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER+" :- is parsed");
                 closeTheKeyboard_iOS();
@@ -316,9 +316,10 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     public static void enterTravellersPassportExpiryDate() {
         Logger.logAction("Entering travellers passport expiry date");
         try{
-            if (isElementDisplayedByName(TRAVELLERS_PASSPORT_EXPIRY_NUMBER)){
+            if (isElementDisplayedByAccessibilityId(TRAVELLERS_PASSPORT_EXPIRY_NUMBER)){
                 WebElement passportExpiryNumber = driver.findElementByAccessibilityId(TRAVELLERS_PASSPORT_EXPIRY_NUMBER);
-                tapOnElementBasedOnLocation(passportExpiryNumber,"bottomRight");
+                passportExpiryNumber.click();
+//                tapOnElementBasedOnLocation(passportExpiryNumber,"bottomRight");
                 Logger.logComment("Tapped on Travellers passport expiry text field");
                 if (isDatePickerDisplayed()){
                     List<IOSElement> wheels = (List) driver.findElements(By.className(PICKER_WHEEL));
@@ -347,9 +348,10 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     public static void selectPassportIssuingCountry(String passportIssuingCountryName) {
         Logger.logAction("Selecting the passport issuing country");
         try{
-            if (isElementDisplayedByName(TRAVELLERS_PASSPORT_ISSUING_COUNTRY)){
+            if (isElementDisplayedByAccessibilityId(TRAVELLERS_PASSPORT_ISSUING_COUNTRY)){
                 WebElement passportIssuingNumber = driver.findElementByAccessibilityId(TRAVELLERS_PASSPORT_ISSUING_COUNTRY);
-                tapOnElementBasedOnLocation(passportIssuingNumber,"bottomRight");
+                passportIssuingNumber.click();
+//                tapOnElementBasedOnLocation(passportIssuingNumber,"bottomRight");
                 Logger.logComment("Tapped on Issuing country text field");
                 if (isElementDisplayedByName(CHOOSE_COUNTRY_MODAL)) {
                     chooseCountry(passportIssuingCountryName);
@@ -370,9 +372,10 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     public static void selectTravellersNationality(String travellersNationality) {
         Logger.logAction("Selecting the travellers nationality");
         try{
-            if (isElementDisplayedByName(TRAVELLERS_NATIONALITY)){
+            if (isElementDisplayedByAccessibilityId(TRAVELLERS_NATIONALITY)){
                 WebElement travellersNationalityField = driver.findElementByAccessibilityId(TRAVELLERS_NATIONALITY);
-                tapOnElementBasedOnLocation(travellersNationalityField,"bottomRight");
+                travellersNationalityField.click();
+//                tapOnElementBasedOnLocation(travellersNationalityField,"bottomRight");
                 Logger.logComment("Tapped on travellers nationality country field");
                 if (isElementDisplayedByName(CHOOSE_COUNTRY_MODAL)) {
                     chooseCountry(travellersNationality);

@@ -23,8 +23,8 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Book
         }
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnSearchButton();
-        HotelsScreen.sendKeysToSearchResultsScreen("dxb");
-        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Dubai, United Arab Emirates");
+        HotelsScreen.sendKeysToSearchResultsScreen("kuwait");
+        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Kuwait, Kuwait");
         HotelsScreen.checkTheSearchTextFieldIsFilledWithSelectedNameOf(selectedName);
         HotelsScreen.tapOnCheckInButton();
         HotelsScreen.tapOnCheckInOptionInCalendarView();
@@ -83,6 +83,7 @@ public class TicketBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Book
         }
         BookingSummaryScreen.enterUserBookingInfo();
         BookingSummaryScreen.applyTheCouponCode();
+        BookingSummaryScreen.disableKaramPointsToggleSwitch();
         BookingSummaryScreen.checkFinalFareCalculationIsCorrect();
         BookingSummaryScreen.tapOnAddGuestTravellersDetailsButton();
         GuestTravellersDetailsScreen.declineAutoFillPopulateModalIfDisplayed();

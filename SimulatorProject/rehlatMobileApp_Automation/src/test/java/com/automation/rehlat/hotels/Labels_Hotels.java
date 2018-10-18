@@ -53,7 +53,7 @@ public class Labels_Hotels extends Base {
 
     ////////Common ///////////
     // Port 1 and Port 2 email id's are used while running multiple scripts where as on single run we use port one as default
-    public static String EMAIL_ID_SIGN_UP_PORT_1 = "rehlatAutomationSimu1TestingEmail193@gmail.com"; // This is for port one connected device [Either iOS or Android]
+    public static String EMAIL_ID_SIGN_UP_PORT_1 = "rehlatAutomationSimu1TestingEmail210@gmail.com"; // This is for port one connected device [Either iOS or Android]
     public static String EMAIL_ID_SIGN_UP_PORT_2 = "rehlatAutomationSimu2TestingEmail180@gmail.com"; // This is for port two connected device [Either iOS or Android]
 
 
@@ -268,12 +268,16 @@ public class Labels_Hotels extends Base {
     ///////////////// Kuwait Country Labels_Hotels /////////////////
 //    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
 //    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
-    public static final String CURRENT_USER_CURRENCY_TYPE = "KWD";
-    public static final String CURRENT_USER_COUNTRY_NAME = "KUWAIT";
+    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "SAUDI ARABIA";
+    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Saudi Arabia";
+//    public static final String CURRENT_USER_CURRENCY_TYPE = "KWD";
+//    public static final String CURRENT_USER_COUNTRY_NAME = "KUWAIT";
+    public static final String CURRENT_USER_COUNTRY_NAME = "SAR";
+    public static final String CURRENT_USER_CURRENCY_TYPE = "SAR";
 //    public static final String CURRENT_USER_COUNTRY_NAME = "UAE";
 //    public static final String CURRENT_USER_CURRENCY_TYPE = "AED";
-    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
-    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
+//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
+//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
     public static final String KUWAIT_AIRPORT_NAME_FOR_IOS = "Kuwait";
     public static final String KUWAIT_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
     public static final String CAIRO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
@@ -315,8 +319,7 @@ public class Labels_Hotels extends Base {
     public static final String FIRST_NAME = "Suresh";
     public static final String LAST_NAME = "Reddy";
     public static String EMAIL_ID_SIGN_UP = "rehlatAutomationPort0TestingEmail103@gmail.com";
-    public static final String EMAIL_ID_SIGN_IN = "rehlatAutomationTestingEmail1@gmail.com";  // Live user email
-    //    public static final String EMAIL_ID_SIGN_IN = "rehlatAutomationTestEmail1@gmail.com";  // Always add the two digit email number so that on every test script a new email id is generated for to test sign up
+    public static final String EMAIL_ID_SIGN_IN = "rehlatAutomationTestEmail1@gmail.com";  // Always add the two digit email number so that on every test script a new email id is generated for to test sign up
     public static final String PASSWORD = "testPasswordFromLabels";
     public static final String REPEAT_PASSWORD="testPasswordFromLabels";
     public static final String REFERRAL_CODE = "chaitu";

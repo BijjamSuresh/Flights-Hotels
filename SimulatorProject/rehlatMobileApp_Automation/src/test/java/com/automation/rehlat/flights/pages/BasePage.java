@@ -63,8 +63,8 @@ public class BasePage extends Base {
     public static String TRIP_TYPE ;
     public static String SELECTED_AIRLINE_NAME_IN_SRP;
     public static boolean isUserSignedIn;
-    public static final String SRP_ONE_WAY_VIEW = "Rehlat.SRPOneWayView";
-    public static final String SRP_TWO_WAY_VIEW = "Rehlat.SRPRoundTripView";
+    public static final String SRP_ONE_WAY_VIEW = "SRPOneWayCell";
+    public static final String SRP_TWO_WAY_VIEW = "SRPRoundTripCell";
     public static final String NO_BUTTON = "No";
     public static final String YES_BUTTON = "Yes";
 
@@ -295,6 +295,65 @@ public class BasePage extends Base {
     }
 
     /**
+     * Scroll to an element by id // Scrolling the screen is based on screen size which are hard coded values
+     * @param down
+     */
+    public static void scrollToAnElementByAccessibiltiyId_IOS(String parsingId,boolean down){
+        try {
+            if(!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                int counter = 0;
+                if (down) {
+                    while (!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                        Logger.logComment(counter + "  time trying to find the calender month and year - " + parsingId +" - by scrolling down ");
+                        scrollTheCalenderPageUpByAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
+                        counter++;
+                        if (counter > 8) {
+                            break;
+                        }
+                    }
+                    if (!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                        while (!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                            Logger.logComment(counter + "  time trying to find the calender month and year - " + parsingId +" - by scrolling up ");
+                            scrollTheCalenderPageDownAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
+                            counter++;
+                            if (counter > 13) {
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    while (!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                        Logger.logComment(counter + "  time trying to find the calender month and year - " + parsingId +" - by scrolling up ");
+                        scrollTheCalenderPageDownAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
+                        counter++;
+                        if (counter > 8) {
+                            break;
+                        }
+                    }
+                    if (!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                        Logger.logComment(counter + "  time trying to find the calender month and year - " + parsingId +" - by scrolling down ");
+                        while (!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                            scrollTheCalenderPageUpByAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
+                            counter++;
+                            if (counter > 13) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
+                    Logger.logWarning(parsingId+" - element name is not displayed in the current active screen.., So moving to the next action");
+                }else {
+                    Logger.logComment(parsingId+ " - element is displayed");
+                }
+            }else {
+                Logger.logComment(parsingId+ " - element is already displayed");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to find the element name in the current active screen :- " +parsingId);
+        }
+    }
+    /**
      * Close the keyboard for Android Platform
      */
     public static boolean closeTheKeyboard_Android() {
@@ -429,7 +488,7 @@ public class BasePage extends Base {
      * @throws Exception
      */
     public static void waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(String parsingClassName, Integer checkingIterationCounts) throws Exception{
-        int count =1;
+        int count =0;
         while (count < checkingIterationCounts){
             try{
                 if (isElementDisplayedByClassName(parsingClassName)){
@@ -456,7 +515,7 @@ public class BasePage extends Base {
         WebElement bookingFlightCell;
         WebElement flightCellType;
         List<WebElement> flightCellDetails;
-        String actualAmountPrice;
+        String actualAmountPrice = null;
         try{
             int cellIndex;
             // The below if condition is because  footer view cell number is changed to "2" when user is signed in and is "3" when user is not signed in...To handle this logic implemented below if condition.
@@ -464,10 +523,17 @@ public class BasePage extends Base {
                 footerViewCellNumber = footerViewCellNumber -1;
             }
             bookingFlightCell = driver.findElementByXPath("//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther["+footerViewCellNumber+"]");
-            flightCellDetails = bookingFlightCell.findElements(By.className("XCUIElementTypeStaticText"));
+            flightCellDetails = bookingFlightCell.findElements(By.className(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_STATIC_TEXT));
             for (cellIndex=0;cellIndex<flightCellDetails.size();cellIndex++){
                 flightCellType = flightCellDetails.get(cellIndex);
                 flightCellTypeText = flightCellType.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                if (flightCellTypeText.contains("updating")){
+                    try {
+                        waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,2);
+                    }catch (Exception exception){
+                        Logger.logComment("Exception happened on Updating element...,");
+                    }
+                }
                 if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE) && flightCellTypeText.contains(Labels_Flights.DOT_STRING)){
                     actualAmountPrice = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
                     if (actualAmountPrice.contains(Labels_Flights.STRING_COMMA)){
@@ -478,6 +544,10 @@ public class BasePage extends Base {
                     return Double.valueOf(actualAmountPrice);
                 }else if(flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
                     actualAmountPrice = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
+                    if (actualAmountPrice.contains(Labels_Flights.STRING_COMMA)){
+                        String actualAmountWithoutComma = actualAmountPrice.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
+                        actualAmountPrice = actualAmountWithoutComma;
+                    }
                     Logger.logComment("Final Fare cost of booking flight in footer view is :- "+actualAmountPrice);
                     return Double.valueOf(actualAmountPrice);
                 }

@@ -83,7 +83,7 @@ public class Base {
             capabilities.setCapability("platformVersion", Labels_Flights.ANDROID_CAPABILITIES_PLATFORM_VERSION);
 //            capabilities.setCapability("appPackage", Labels_Hotels.ANDROID_CAPABILITIES_PACKAGE_NAME);
 //            capabilities.setCapability("autoAcceptAlerts", true);
-            app = new File("../app_debug.apk");
+            app = new File(ANDROID_CAPABILITIES_APP_PATH);
             appPAthPathCapability = app.getAbsolutePath();
             capabilities.setCapability("app", appPAthPathCapability);
             capabilities.setCapability("orientation", PORTRAIT_ORIENTATION);
@@ -333,7 +333,7 @@ public class Base {
                 element = driver.findElementByAccessibilityId(elementId);
 //                    return true;
 //                }
-                if (element.isDisplayed()) {
+                if (element.isDisplayed() || element.isEnabled()) {
                     Logger.logComment(elementId + " - element id is displayed and moving forward to next step");
                     return true;
                 }
@@ -372,6 +372,37 @@ public class Base {
                 }
             } catch (Exception e) {
                 Logger.logComment( " One time trying to find the element id of - " + elementId);
+//            }
+//            counter++;
+        }
+        Logger.logWarning(elementId + " - element id is not displayed in the current active screen");
+        return false;
+    }
+    /**
+     * Verify element is displayed in screen using element id for ios and android.
+     * @param elementId element name for ios and element text for android.
+     * @return status returns true if element displayed else false.
+     */
+    public static boolean isElementDisplayedByAccessibilityIdWithOneTimeChecking(String elementId) {
+        Logger.logAction("Checking - "+ elementId+" - element id is displayed");
+//        int counter = 0;
+//        WebElement element = null;
+//        while (counter < 0) {
+        try {
+//                if (Labels_Hotels.platform.equals(Labels_Hotels.ANDROID)) {
+//                    element = ((AndroidDriver) driver).findElementByAndroidUIAutomator("new UiSelector().text(\"" + elementId + "\")");
+////                    return true;
+//                } else {
+//                Thread.sleep(Labels_Hotels.WAIT_TIME_DEFAULT);
+            WebElement element = driver.findElementByAccessibilityId(elementId);
+//                    return true;
+//                }
+            if (element.isDisplayed()) {
+                Logger.logComment(elementId + " - element id is displayed and moving forward to next step");
+                return true;
+            }
+        } catch (Exception e) {
+            Logger.logComment( " One time trying to find the element id of - " + elementId);
 //            }
 //            counter++;
         }
@@ -1286,7 +1317,7 @@ public class Base {
         while (counter < Labels_Flights.MIN_ATTEMPTS) {
             try {
                 WebElement element = driver.findElementByXPath(XPath);
-                if (element.isDisplayed()) {
+                if (element.isDisplayed()|| element.isEnabled()) {
                     Logger.logComment("Element is displayed on and going to tap on it");
                     element.click();
                     Logger.logComment("Tapped on the element by xpath :- "+XPath);
@@ -1752,6 +1783,31 @@ public class Base {
     }
 
     /**
+     * Verify tapping element using element accessibility as parameter.
+     * @param elementAccessibility element accessibility.
+     * @return status returns true if element is tapped else false.
+     * @throws Exception
+     */
+    public static boolean findElementByAccessibilityIdAndClick(String elementAccessibility) throws Exception {
+        int counter = 0;
+        WebElement element = null;
+        while (counter < Labels_Flights.MIN_ATTEMPTS) {
+            try {
+                element = driver.findElementByAccessibilityId(elementAccessibility);
+                if (element.isEnabled()){
+                    element.click();
+                    return true;
+                }
+            } catch (Exception e) {
+                Logger.logComment(counter + " time trying to find " + elementAccessibility);
+            }
+            counter++;
+            Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
+        }
+        return false;
+    }
+
+    /**
      * Verify tapping element using element name as parameter.
      * @param elementId element class name.
      * @return status returns true if element is tapped else false.
@@ -1837,6 +1893,30 @@ public class Base {
             try {
                 elementValue = driver.findElementByXPath(elementName).getAttribute(Labels_Flights.NAME_ATTRIBUTE);
                 if (!elementValue.isEmpty()){
+                    return elementValue;
+                }
+            } catch (Exception e) {
+                Logger.logComment(counter + " time trying to find " + elementName);
+            }
+            counter++;
+            Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
+        }
+        return elementValue;
+    }
+    /**
+     * Verify finding element using element xpath as parameter and returning its text attribute.
+     * @param elementName element class name.
+     * @return status returns true if element is found else false.
+     * @throws Exception
+     */
+    public static String findElementByXpathAndReturnItsAttributeResourceId(String elementName) throws Exception {
+        Logger.logAction("Finding the "+elementName+" element name and returning its value");
+        int counter = 0;
+        String elementValue = null;
+        while (counter < Labels_Flights.MIN_ATTEMPTS) {
+            try {
+                elementValue = driver.findElementByXPath(elementName).getAttribute(Labels_Flights.RESOURCE_ID_ATTRIBUTE);
+                if (!(elementValue.isEmpty())){
                     return elementValue;
                 }
             } catch (Exception e) {

@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-import static com.automation.rehlat.hotels.pages.menu.MenuIos.REFER_AND_EARN_SUB_MENU_ICON;
 
 public class MenuAndroid extends MenuBase {
 
@@ -152,9 +151,10 @@ public class MenuAndroid extends MenuBase {
         Logger.logAction("Tapping on Settings button");
         try {
 //            if (isElementDisplayedByClassName(SCROLL_VIEW_IN_MENU_SCREEN)){
-//                if (isElementDisplayedById(SETTINGS_OPTION)){  //Todo:- This line of code needs to be enabled (below line of code is to be disabled) after the implementation of menu screen for both flights and hotels screens
-            if (isElementDisplayedByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[5]/android.widget.CheckedTextView")){
-                    driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[5]/android.widget.CheckedTextView").click();
+                if (isElementDisplayedById(SETTINGS_OPTION)){  //Todo:- This line of code needs to be enabled (below line of code is to be disabled) after the implementation of menu screen for both flights and hotels screens
+//            if (isElementDisplayedByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[5]/android.widget.CheckedTextView")){
+//                    driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[5]/android.widget.CheckedTextView").click();
+                    driver.findElementById(SETTINGS_OPTION).click();
                     Logger.logComment("Tapped on Settings button");
                 }else {
                     scrollTheMenuViewUp(XPATH_OF_SCROLL_VIEW_IN_MENU_SCREEN);
@@ -340,12 +340,12 @@ public class MenuAndroid extends MenuBase {
     public void tapOnReferAndEarnIcon(){
         Logger.logAction("Tapping on refer and earn icon in the menu screen");
         try{
-            if (isElementEnabledById(REFER_AND_EARN_SUB_MENU_ICON)){
-                Logger.logComment(REFER_AND_EARN_SUB_MENU_ICON+" :- sub menu element is enabled");
-                driver.findElementById(REFER_AND_EARN_SUB_MENU_ICON).click();
+            if (isElementEnabledById(REFER_AND_EARN_SUB_MENU_BUTTON)){
+                Logger.logComment(REFER_AND_EARN_SUB_MENU_BUTTON+" :- sub menu element is enabled");
+                driver.findElementById(REFER_AND_EARN_SUB_MENU_BUTTON).click();
                 Logger.logStep("Tapped on refer and earn button");
             }else {
-                Logger.logError(REFER_AND_EARN_SUB_MENU_ICON+" :- sub menu element is not enabled");
+                Logger.logError(REFER_AND_EARN_SUB_MENU_BUTTON+" :- sub menu element is not enabled");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on refer and earn icon");

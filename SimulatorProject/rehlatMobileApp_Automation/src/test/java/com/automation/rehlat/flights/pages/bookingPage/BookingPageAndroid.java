@@ -469,7 +469,8 @@ public class BookingPageAndroid extends BookingPageBase {
      * Enable the karam points toggle
      * @return
      */
-    public static void enableKaramPointsToggleSwitch() {
+    @Override
+    public void enableKaramPointsToggleSwitch() {
         Logger.logAction("Enabling the karam points toggle");
         try
         {
@@ -662,7 +663,7 @@ public class BookingPageAndroid extends BookingPageBase {
         Logger.logAction("Getting the booking price displayed in footer view");
         try{
             if (isElementDisplayedById(REVIEW_BOOKING_PRICE_IN_FOOTER_VIEW_CELL)){
-                Double reviewBookingPriceInFooterView = Double.valueOf(driver.findElementById(REVIEW_BOOKING_PRICE_IN_FOOTER_VIEW_CELL).getText());
+                Double reviewBookingPriceInFooterView = Double.valueOf(driver.findElementById(REVIEW_BOOKING_PRICE_IN_FOOTER_VIEW_CELL).getText().replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL));
                 return reviewBookingPriceInFooterView;
             }else {
                 Logger.logError(REVIEW_BOOKING_PRICE_IN_FOOTER_VIEW_CELL+" :- element is not displayed in the current screen");

@@ -47,7 +47,7 @@ public class HotelsProfileAndroid extends HotelsProfileBase {
             }else {
                 Logger.logComment("Selected hotel price in SRP screen is :- "+selectedHotelPriceInSRP);
                 Logger.logComment("Selected hotel price in hotel profile page :- "+hotelPriceInHotelProfilePage);
-                Logger.logStep("Selected hotel price in SRP and Hotel profile screen are not same but continuing with the latest price");
+                Logger.logStep("Selected hotel price in SRP and Hotel profile screen are not same but continuing with the latest hotel price as :- "+hotelPriceInHotelProfilePage);
                 Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN = String.valueOf(hotelPriceInHotelProfilePage);
             }
         }catch (Exception exception){

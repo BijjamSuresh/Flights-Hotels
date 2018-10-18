@@ -9,13 +9,13 @@ import static com.automation.rehlat.flights.pages.reviewBooking.ReviewBookingIos
 public class BookingPageIos extends BookingPageBase {
 
     public static final String XPATH_OF_EMAIL_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeTextField[1]";
-    public static final String XPATH_OF_PHONENUMBER_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeTextField[2]";
-    public static final String PLACEHOLDER_TEXT_OF_PHONENUMBER_TEXTFIELD = "Enter your PhoneNumber";
-    public static final String ADULT_BUTTON = "Adult";
+    public static final String XPATH_OF_PHONE_NUMBER_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeTextField[2]";
+    public static final String OFFERS_AND_DISCOUNTS_LAYOUT_ID = "OffersAndDiscountsSection";
+    public static final String ADULT_TRAVELLERS_BUTTON = "Adult";
     public static final String CONTACT_DETAILS_VIEW ="Contact Details";
     public static final String ADD_TRAVELLERS_DETAILS = "Add Travellers Details";
     public static final String SIGNED_IN_FOR_FAST_BOOKINGS_BUTTON = "Sign in for faster bookings";
-    public static final String APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT = "(-) KWD ";
+    public static final String CONTINUE_BUTTON_IN_BOOKING_PAGE = "Continue";
     public static final String XPATH_OF_COUPON_CODE_TEXT_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[2]/XCUIElementTypeTextField";
     public static final String APPLY_COUPON_CODE_BUTTON = "Apply";
     public static final String COUPON_CODE_FAILED_LABEL = "Coupon is invalid or expired";
@@ -31,9 +31,9 @@ public class BookingPageIos extends BookingPageBase {
     public static final String CHOOSE_COUNTRY_MODAL="Choose Country";
 
     // These are used in multiple methods, be on caution while editing these values
-    public static Integer indexOfActualFareElementXPath = null;
-    public static Integer indexOfFinalFareElementXPath = null;
-    public static Integer indexOfAppliedCouponAmountElementXPath = null;
+//    public static Integer indexOfActualFareElementXPath = null;
+//    public static Integer indexOfFinalFareElementXPath = null;
+//    public static Integer indexOfAppliedCouponAmountElementXPath = null;
 
     /**
      * Check booking page screen is displayed
@@ -101,7 +101,14 @@ public class BookingPageIos extends BookingPageBase {
     public void enterTextInPhoneNumberTextField() {
         Logger.logAction("Entering the text in phone number text field");
         try {
-            sendTextByXpath(XPATH_OF_PHONENUMBER_FIELD, Labels_Flights.phoneNumber);
+//            if (isElementDisplayedByAccessibilityId(XPATH_OF_PHONE_NUMBER_FIELD)){
+//                WebElement element = driver.findElementByAccessibilityId(XPATH_OF_PHONE_NUMBER_FIELD);
+//                String elementName = element.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+//                if (elementName.equalsIgnoreCase("Enter your email id"))
+//            }else {
+//                Logger.logError("Email Field is not displayed");
+//            }
+            sendTextByXpath(XPATH_OF_PHONE_NUMBER_FIELD, Labels_Flights.phoneNumber);
             Logger.logComment(Labels_Flights.phoneNumber+" :- is parsed");
             closeTheKeyboard_iOS();
         }catch (Exception exception){
@@ -131,12 +138,12 @@ public class BookingPageIos extends BookingPageBase {
     public void tapOnContinueButton() {
         Logger.logAction("Tapping on continue button");
         try{
-//            Thread.sleep(2000); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
-//            compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout(); // After iOS is implemented by "Online Check In toggle button", this method needs to be removed from here and call it as a step of TC from workflows directly
-            if (isElementDisplayedByName(CONTINUE_BUTTON)){
-                driver.findElementByName(CONTINUE_BUTTON).click();
-                if (isElementDisplayedByName(CONTINUE_BUTTON)) { //Todo :- On first  tap continue button is scrolling the screen upwards. so to navigate to payment screen re tapping on continue button
-                    driver.findElementByName(CONTINUE_BUTTON).click();
+            Thread.sleep(2000); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
+            compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout(); // After iOS is implemented by "Online Check In toggle button", this method needs to be removed from here and call it as a step of TC from workflows directly
+            if (isElementDisplayedByName(CONTINUE_BUTTON_IN_BOOKING_PAGE)){
+                driver.findElementByName(CONTINUE_BUTTON_IN_BOOKING_PAGE).click();
+                if (isElementDisplayedByName(CONTINUE_BUTTON_IN_BOOKING_PAGE)) { //Todo :- On first  tap continue button is scrolling the screen upwards. so to navigate to payment screen re tapping on continue button
+                    driver.findElementByName(CONTINUE_BUTTON_IN_BOOKING_PAGE).click();
                 }
 //                if (Labels_Hotels.DEVICENAME.equalsIgnoreCase("iPhone 5s")){ // Todo :- On first  tap in iPhone 5S continue button is doing incorrect functionality
 //                    driver.findElementByName(CONTINUE_BUTTON).click();
@@ -158,8 +165,9 @@ public class BookingPageIos extends BookingPageBase {
         Logger.logStep("Tapping on adult add travellers details button");
         try{
             scrollDown();
-            if (isElementDisplayedByName(ADULT_BUTTON)){
-                driver.findElementByName(ADULT_BUTTON).click();
+//            scrollToAnElementByAccessibiltiyId_IOS(ADULT_BUTTON,true);
+            if (isElementDisplayedByName(ADULT_TRAVELLERS_BUTTON)){
+                driver.findElementByName(ADULT_TRAVELLERS_BUTTON).click();
                 Logger.logComment("Tapped on adult button");
             }else{
                 Logger.logError("Unable to tap on add travellers details button");
@@ -199,56 +207,63 @@ public class BookingPageIos extends BookingPageBase {
             Logger.logComment("Cost of ticket in Booking page is :- "+reviewBookingPriceInFooterView);
 
             ////// Below code is to check the values of math calculation done in offers and discounts layout /////
-            Logger.logComment("Unable to check the final fare calculation due to improper elements implementation on multiple probabilities and conditions...,");
-//            Double bookingSeatCostInReviewBookingScreen = null;
-//            Double couponAmount;
-//            Double finalDisplayedFare;
-//            Double displayedActualFare;
-//            Double karamPoints;
-//
-//           // Checking and getting the booking cost displaying in review booking screen
-//            if (Labels_Hotels.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN == null){
-//                Logger.logError("Booking cost displaying in the review booking screen is :- "+Labels_Hotels.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
-//            }else {
-//                bookingSeatCostInReviewBookingScreen = Double.valueOf(Labels_Hotels.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
-//            }
+//            Logger.logComment("Unable to check the final fare calculation due to improper elements implementation on multiple probabilities and conditions...,");
+            Double bookingSeatCostInReviewBookingScreen = null;
+            Double couponAmount;
+            Double finalDisplayedFare;
+            Double displayedActualFare;
+            Double karamPoints;
+
+           // Checking and getting the booking cost displaying in review booking screen
+            if (Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN == null){
+                Logger.logError("Booking cost displaying in the review booking screen is :- "+Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
+            }else {
+                bookingSeatCostInReviewBookingScreen = Double.valueOf(Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
+            }
+            scrollUp();
+//            scrollToAnElementByXPath(XPATH_OF_PHONE_NUMBER_FIELD,false);
 //            setTheXpathIndexesForPriceDetailsInOffersAndDiscountsCell();
-//            couponAmount = getThePriceOf("couponAmount", indexOfAppliedCouponAmountElementXPath);
-//            finalDisplayedFare = getThePriceOf("finalDisplayedFare", indexOfFinalFareElementXPath);
-//            displayedActualFare = getThePriceOf("displayedActualFare", indexOfActualFareElementXPath);
-//            if (isUserIsSignedIn()){
-//                karamPoints = Double.valueOf(getKaramPoints()); // Implement if condition after developer enable the karam points price element visibility
-//            }else {
-//                karamPoints = 0.00;
-//                Logger.logComment("User is not logged in. So applied karam points are:- "+karamPoints);
-//            }
-//            Logger.logStep("Flights booking details are :- ");
-//            Logger.logComment("Actual Fare cost of booking flight :- "+displayedActualFare);
-//            Logger.logComment("Applied Coupon amount of booking flight :- "+couponAmount);
-//            Logger.logComment("Applied Karam points cost of booking flight :- "+karamPoints);
-//            Logger.logComment("Final Fare cost of booking flight (Displaying value) :- "+finalDisplayedFare);
+            couponAmount = getThePriceOf("couponAmount");
+            finalDisplayedFare = getThePriceOf("finalDisplayedFare");
+            displayedActualFare = getThePriceOf("displayedActualFare");
+            if (isUserIsSignedIn()){
+                if (isKaramPointsToggleSwitchEnabled()){
+                    karamPoints = getThePriceOf("karamCash"); // Implement if condition after developer enable the karam points price element visibility
+                }else {
+                    karamPoints = 0.00;
+                    Logger.logComment("User is logged in, but karam points toggle switch is disabled. So applied karam points are:- "+karamPoints);
+                }
+            }else {
+                karamPoints = 0.00;
+                Logger.logComment("User is not logged in. So applied karam points are:- "+karamPoints);
+            }
+            Logger.logStep("Flights booking details are :- ");
+            Logger.logComment("Actual Fare cost of booking flight :- "+displayedActualFare);
+            Logger.logComment("Applied Coupon amount of booking flight :- "+couponAmount);
+            Logger.logComment("Applied Karam points cost of booking flight :- "+karamPoints);
+            Logger.logComment("Final Fare cost of booking flight (Displaying value) :- "+finalDisplayedFare);
 //            if (finalDisplayedFare.equals(0.00)){
 //                finalDisplayedFare = displayedActualFare;
 //                Logger.logComment("Final Fare cost of booking flight (For Math Calculation) :- "+finalDisplayedFare);
 //                Logger.logAction("All the values are ready for to calculate the math");
 //            }else {
-//              Logger.logAction("All the values are ready for to calculate the math");
+              Logger.logAction("All the values are ready for to calculate the math");
 //            }
-//            if (displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
-//                Double finalFareMathCalculation = (displayedActualFare)-(couponAmount)-(karamPoints); // Internal math calculation logic
-//                Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
-//                if (finalFareMathCalculation.equals(finalDisplayedFare)){
-//                    Labels_Hotels.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
-//                    Logger.logStep("Final fare calculation is correct");
-//                }else if (finalFareMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
-//                    Labels_Hotels.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
-//                    Logger.logStep("Final fare calculation is correct");
-//                }else {
-//                    Logger.logError("Final fare calculation is in-correct");
-//                }
-//            }else {
-//                Logger.logError("Booking seat cost in review booking screen is not matching with the cost displaying in booking page..,i.e.., Booking seat cost in Booking page screen & Review Booking screen is:- "+displayedActualFare+" & "+Labels_Hotels.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
-//            }
+            if (displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
+                Double finalFareMathCalculation = (displayedActualFare)-(couponAmount)-(karamPoints); // Internal math calculation logic
+                Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
+                if (finalFareMathCalculation.equals(finalDisplayedFare)){
+                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                    Logger.logStep("Final fare calculation is correct");
+                }else if (finalFareMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
+                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                    Logger.logStep("Final fare calculation is correct");
+                }else {
+                    Logger.logError("Final fare calculation is in-correct");
+                }
+            }else {
+                Logger.logError("Booking seat cost in review booking screen is not matching with the cost displaying in booking page..,i.e.., Booking seat cost in Booking page screen & Review Booking screen is:- "+displayedActualFare+" & "+Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
+            }
         }catch (Exception exception){
             exception.printStackTrace();
             Logger.logError("Encountered error: Unable to check the final fare calculation");
@@ -258,193 +273,204 @@ public class BookingPageIos extends BookingPageBase {
     /**
      * Get the price based on price type and element xpath index value
      * @param priceType
-     * @param indexOfAPriceDisplayingInOffersAndDiscountsCell
      * @return
      */
-    public Double getThePriceOf(String priceType, Integer indexOfAPriceDisplayingInOffersAndDiscountsCell) {
-        Logger.logAction("Getting the price of element :-"+indexOfAPriceDisplayingInOffersAndDiscountsCell);
+    public Double getThePriceOf(String priceType) {
+        Logger.logAction("Getting the price of element :-"+priceType);
         Double priceValue = null;
         try{
-            if (priceType.equals("couponAmount")){
+            if (priceType.equals("displayedActualFare")){
                 // Checking and getting the applied coupon amount
-                if (indexOfAppliedCouponAmountElementXPath == null){
-                    priceValue = 0.00;
-                    return  priceValue;
+                if (isElementDisplayedByAccessibilityId("actualFare")){
+                    String fareWithCurrency = driver.findElementByAccessibilityId("actualFare").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                    Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                    return  fareWithoutCurrency;
                 }else {
-                    priceValue = Double.valueOf(getCouponAmount(indexOfAppliedCouponAmountElementXPath));
-                    return  priceValue;
+                    Logger.logError("Actual Fare element is not displayed");
                 }
             }
-            if (priceType.equals("displayedActualFare")){
+            if (priceType.equals("couponAmount")){
                 //Checking and getting the actual displaying fare of booking flight
-                if (indexOfActualFareElementXPath == null){
-                    Logger.logError("Actual displaying Booking cost is :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
+                if (isElementDisplayedByAccessibilityId("couponAmount")){
+                    String fareWithCurrency = driver.findElementByAccessibilityId("couponAmount").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                    Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.MINUS_WITH_IN_BRACKETS+Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                    return  fareWithoutCurrency;
                 }else {
-                    priceValue = Double.valueOf(getDisplayedActualFare(indexOfActualFareElementXPath));
-                    return  priceValue;
+                    Logger.logError("Coupon amount element is not displayed");
+                }
+            }
+            if (priceType.equals("karamCash")){
+                //Checking and getting the final displaying fare of booking flight
+                if (isElementDisplayedByAccessibilityId("karamCash")){
+                    String fareWithCurrency = driver.findElementByAccessibilityId("karamCash").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                    Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.MINUS_WITH_IN_BRACKETS+Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                    return  fareWithoutCurrency;
+                }else {
+                    Logger.logError("Karam amount element is not displayed");
                 }
             }
             if (priceType.equals("finalDisplayedFare")){
                 //Checking and getting the final displaying fare of booking flight
-                if (indexOfFinalFareElementXPath == null){
-                    priceValue = 0.00;
-                    return  priceValue;
+                if (isElementDisplayedByAccessibilityId("finalAmount")){
+                    String fareWithCurrency = driver.findElementByAccessibilityId("finalAmount").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                    Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                    return  fareWithoutCurrency;
                 }else {
-                    priceValue = Double.valueOf(getFinalDisplayedFare(indexOfFinalFareElementXPath));
-                    return  priceValue;
+                    Logger.logError("Final amount element is not displayed");
                 }
             }
             else {
                 Logger.logError("For the price of :- "+priceType+" - is not listed in this method");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to get the price of element :- "+indexOfAPriceDisplayingInOffersAndDiscountsCell);
+            exception.printStackTrace();
+            Logger.logError("Encountered error: Unable to get the price of element :- "+priceType);
         }
         return  priceValue;
     }
 
-    /**
-     * Set the xpath indexes for price details in offers and discounts
-     */
-    public void setTheXpathIndexesForPriceDetailsInOffersAndDiscountsCell() {
-        Logger.logAction("Setting xpath indexes for price details in offers and discounts cell");
-        try {
-            if (isUserIsSignedIn()){
-                if (isCouponCodeApplied() && isKaramPointsToggleSwitchEnabled()){
-                    indexOfActualFareElementXPath = 6;
-                    indexOfFinalFareElementXPath = 8;
-                    indexOfAppliedCouponAmountElementXPath = 7;
-                    // Add karam points xpath integer value also after enabling the element detection by developer
-                }else if (isCouponCodeApplied() && !(isKaramPointsToggleSwitchEnabled())){
-                    indexOfActualFareElementXPath = 6;
-                    indexOfFinalFareElementXPath = 8;
-                    indexOfAppliedCouponAmountElementXPath = 7;
-                } else {
-                    indexOfActualFareElementXPath = 3;
-                }
-            }else {
-                if (isCouponCodeApplied()){
-                    indexOfActualFareElementXPath = 6;
-                    indexOfFinalFareElementXPath = 8;
-                    indexOfAppliedCouponAmountElementXPath = 7;
-                } else {
-                    indexOfActualFareElementXPath = 3;
-                }
-            }
-        }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to set the xpath indexes for price details in offers and discounts cell");
-        }
-    }
+//    /**
+//     * Set the xpath indexes for price details in offers and discounts
+//     */
+//    public void setTheXpathIndexesForPriceDetailsInOffersAndDiscountsCell() {
+//        Logger.logAction("Setting xpath indexes for price details in offers and discounts cell");
+//        try {
+//            if (isUserIsSignedIn()){
+//                if (isCouponCodeApplied() && isKaramPointsToggleSwitchEnabled()){
+//                    indexOfActualFareElementXPath = 6;
+//                    indexOfFinalFareElementXPath = 8;
+//                    indexOfAppliedCouponAmountElementXPath = 7;
+//                    // Add karam points xpath integer value also after enabling the element detection by developer
+//                }else if (isCouponCodeApplied() && !(isKaramPointsToggleSwitchEnabled())){
+//                    indexOfActualFareElementXPath = 6;
+//                    indexOfFinalFareElementXPath = 8;
+//                    indexOfAppliedCouponAmountElementXPath = 7;
+//                } else {
+//                    indexOfActualFareElementXPath = 3;
+//                }
+//            }else {
+//                if (isCouponCodeApplied()){
+//                    indexOfActualFareElementXPath = 6;
+//                    indexOfFinalFareElementXPath = 8;
+//                    indexOfAppliedCouponAmountElementXPath = 7;
+//                } else {
+//                    indexOfActualFareElementXPath = 3;
+//                }
+//            }
+//        }catch (Exception exception){
+//            Logger.logError("Encountered error: Unable to set the xpath indexes for price details in offers and discounts cell");
+//        }
+//    }
 
-    /**
-     * Get the actual displaying fare
-     * @return
-     */
-    public static String getDisplayedActualFare(Integer indexOfActualFareElementXPAth) {
-        Logger.logAction("Getting the displayed actual fare");
-        String actualDisplayingFare = null;
-        try
-        {
-            String xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfActualFareElementXPAth+"]"; // "indexOfActualFareElementXPath" is the hard coded value of actual fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
-            String ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-            String actualAmountPrice = ActualFareWithCurrentName.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.STRING_NULL, Labels_Flights.STRING_NULL);
-            Logger.logComment("Actual Fare cost of booking flight :- "+actualAmountPrice);
-            actualDisplayingFare = actualAmountPrice;
-            return actualDisplayingFare;
-        }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to get the actual displayed fare");
-        }
-        return actualDisplayingFare;
-    }
+//    /**
+//     * Get the actual displaying fare
+//     * @return
+//     */
+//    public static String getDisplayedActualFare(Integer indexOfActualFareElementXPAth) {
+//        Logger.logAction("Getting the displayed actual fare");
+//        String actualDisplayingFare = null;
+//        try
+//        {
+//            String xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfActualFareElementXPAth+"]"; // "indexOfActualFareElementXPath" is the hard coded value of actual fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
+//            String ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+//            String actualAmountPrice = ActualFareWithCurrentName.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.STRING_NULL, Labels_Flights.STRING_NULL);
+//            Logger.logComment("Actual Fare cost of booking flight :- "+actualAmountPrice);
+//            actualDisplayingFare = actualAmountPrice;
+//            return actualDisplayingFare;
+//        }catch (Exception exception){
+//            Logger.logError("Encountered error: Unable to get the actual displayed fare");
+//        }
+//        return actualDisplayingFare;
+//    }
 
-    /**
-     * Get the coupon applied amount
-     * @return
-     */
-    public static String getCouponAmount(Integer indexOfAppliedCouponAmountElementXPAth) {
-        Logger.logAction("Getting the coupon amount");
-        String couponAmount = "0";
-        String xPathOfActualFare;
-        String ActualFareWithCurrentName;
-        try
-        {
-            xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfAppliedCouponAmountElementXPAth+"]"; // "indexOfFinalFareElementXPath" is the hard coded value of final fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
-            try {
-                ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-                if(ActualFareWithCurrentName.contains(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT)){
-                    String couponAmountPrice = ActualFareWithCurrentName.replace(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT,"");
-                    Logger.logComment("Applied Coupon amount of booking flight :- "+couponAmountPrice);
-                    couponAmount = couponAmountPrice;
-                    return couponAmount;
-                }else {
-                    indexOfAppliedCouponAmountElementXPAth = indexOfAppliedCouponAmountElementXPAth+1;
-                    xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfAppliedCouponAmountElementXPAth+"]"; // "indexOfFinalFareElementXPath" is the hard coded value of final fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
-                    ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-                    if (ActualFareWithCurrentName.contains(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT)){
-                        String couponAmountPrice = ActualFareWithCurrentName.replace(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT,"");
-                        Logger.logComment("Applied Coupon amount of booking flight :- "+couponAmountPrice);
-                        couponAmount = couponAmountPrice;
-                        indexOfFinalFareElementXPath = 7;
-                        return couponAmount;
-                    }
-                    else {
-                        Logger.logError(ActualFareWithCurrentName+" - element is not matching with the coupon amount nor with the actual fare");
-                    }
-                }
-            }catch (Exception exception){
-                Logger.logComment("Coupon code is not applied..,");
-                return couponAmount;
-            }
-        }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to get the Coupon amount");
-        }
-        return couponAmount;
-    }
+//    /**
+//     * Get the coupon applied amount
+//     * @return
+//     */
+//    public static String getCouponAmount(Integer indexOfAppliedCouponAmountElementXPAth) {
+//        Logger.logAction("Getting the coupon amount");
+//        String couponAmount = "0";
+//        String xPathOfActualFare;
+//        String ActualFareWithCurrentName;
+//        try
+//        {
+//            xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfAppliedCouponAmountElementXPAth+"]"; // "indexOfFinalFareElementXPath" is the hard coded value of final fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
+//            try {
+//                ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+//                if(ActualFareWithCurrentName.contains(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT)){
+//                    String couponAmountPrice = ActualFareWithCurrentName.replace(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT,"");
+//                    Logger.logComment("Applied Coupon amount of booking flight :- "+couponAmountPrice);
+//                    couponAmount = couponAmountPrice;
+//                    return couponAmount;
+//                }else {
+//                    indexOfAppliedCouponAmountElementXPAth = indexOfAppliedCouponAmountElementXPAth+1;
+//                    xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfAppliedCouponAmountElementXPAth+"]"; // "indexOfFinalFareElementXPath" is the hard coded value of final fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
+//                    ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+//                    if (ActualFareWithCurrentName.contains(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT)){
+//                        String couponAmountPrice = ActualFareWithCurrentName.replace(APPLIED_COUPON_AMOUNT_CURRENCY_WIHOUT_AMOUNT,"");
+//                        Logger.logComment("Applied Coupon amount of booking flight :- "+couponAmountPrice);
+//                        couponAmount = couponAmountPrice;
+//                        indexOfFinalFareElementXPath = 7;
+//                        return couponAmount;
+//                    }
+//                    else {
+//                        Logger.logError(ActualFareWithCurrentName+" - element is not matching with the coupon amount nor with the actual fare");
+//                    }
+//                }
+//            }catch (Exception exception){
+//                Logger.logComment("Coupon code is not applied..,");
+//                return couponAmount;
+//            }
+//        }catch (Exception exception){
+//            Logger.logError("Encountered error: Unable to get the Coupon amount");
+//        }
+//        return couponAmount;
+//    }
 
-    /**
-     * Get the applied karam points
-     * @return
-     */
-    public static String getKaramPoints() {
-        Logger.logAction("Getting the karam points");
-        String karamPoints = "0";
-        try
-        {
-            if (isKaramPointsToggleSwitchEnabled()){
-                Logger.logWarning("Karam points locator is invisible in inspector, discuss with developer and implement a method to get the displaying karam points");
-                Logger.logComment("Currently hardcoding the karam points as:- " + Labels_Flights.IOS_APPLIED_KARAM_POINTS);
-                karamPoints = Labels_Flights.IOS_APPLIED_KARAM_POINTS;
-                Logger.logComment("Applied Karam points cost of booking flight :- "+karamPoints);
-                return karamPoints;
-            }else {
-                Logger.logComment("Karam points toggle switch is disabled.So, the applied karam points are :- "+karamPoints);
-            }
-        }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to get the karam points");
-        }
-        return karamPoints;
-    }
+//    /**
+//     * Get the applied karam points
+//     * @return
+//     */
+//    public static String getKaramPoints() {
+//        Logger.logAction("Getting the karam points");
+//        String karamPoints = "0";
+//        try
+//        {
+//            if (isKaramPointsToggleSwitchEnabled()){
+//                Logger.logWarning("Karam points locator is invisible in inspector, discuss with developer and implement a method to get the displaying karam points");
+//                Logger.logComment("Currently hardcoding the karam points as:- " + Labels_Flights.IOS_APPLIED_KARAM_POINTS);
+//                karamPoints = Labels_Flights.IOS_APPLIED_KARAM_POINTS;
+//                Logger.logComment("Applied Karam points cost of booking flight :- "+karamPoints);
+//                return karamPoints;
+//            }else {
+//                Logger.logComment("Karam points toggle switch is disabled.So, the applied karam points are :- "+karamPoints);
+//            }
+//        }catch (Exception exception){
+//            Logger.logError("Encountered error: Unable to get the karam points");
+//        }
+//        return karamPoints;
+//    }
 
-    /**
-     * Get the final displaying fare
-     * @return
-     */
-    public static String getFinalDisplayedFare(Integer indexOfFinalFareElementXPAth) {
-        Logger.logAction("Getting the displayed final fare");
-        String finalDisplayedFare = null;
-        try
-        {
-            String xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfFinalFareElementXPAth+"]"; // "indexOfFinalFareElementXPath" is the hard coded value of final fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
-            String ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-            String actualAmountPrice = ActualFareWithCurrentName.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.STRING_NULL, Labels_Flights.STRING_NULL);
-            finalDisplayedFare = actualAmountPrice;
-            Logger.logComment("Final Fare cost of booking flight :- "+finalDisplayedFare);
-            return finalDisplayedFare;
-        }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to get the final displayed fare");
-        }
-        return finalDisplayedFare;
-    }
+//    /**
+//     * Get the final displaying fare
+//     * @return
+//     */
+//    public static String getFinalDisplayedFare(Integer indexOfFinalFareElementXPAth) {
+//        Logger.logAction("Getting the displayed final fare");
+//        String finalDisplayedFare = null;
+//        try
+//        {
+//            String xPathOfActualFare = XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW+"/XCUIElementTypeStaticText["+indexOfFinalFareElementXPAth+"]"; // "indexOfFinalFareElementXPath" is the hard coded value of final fare currency label when coupon code is applied (Doesn't matter whether karam is applied or not)
+//            String ActualFareWithCurrentName = driver.findElementByXPath(xPathOfActualFare).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+//            String actualAmountPrice = ActualFareWithCurrentName.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.STRING_NULL, Labels_Flights.STRING_NULL);
+//            finalDisplayedFare = actualAmountPrice;
+//            Logger.logComment("Final Fare cost of booking flight :- "+finalDisplayedFare);
+//            return finalDisplayedFare;
+//        }catch (Exception exception){
+//            Logger.logError("Encountered error: Unable to get the final displayed fare");
+//        }
+//        return finalDisplayedFare;
+//    }
 
     /**
      * Check karam points toggle is enabled
@@ -471,7 +497,8 @@ public class BookingPageIos extends BookingPageBase {
      * Enable the karam points toggle
      * @return
      */
-    public static void enableKaramPointsToggleSwitch() {
+    @Override
+    public void enableKaramPointsToggleSwitch() {
         Logger.logAction("Enabling the karam points toggle");
         try
         {
@@ -550,7 +577,7 @@ public class BookingPageIos extends BookingPageBase {
         Logger.logAction("Tapping on apply coupon code");
         try {
             if (isElementDisplayedById(APPLY_COUPON_CODE_BUTTON)){
-                driver.findElement(By.id(APPLY_COUPON_CODE_BUTTON)).click();
+                driver.findElementById(APPLY_COUPON_CODE_BUTTON).click();
                 Logger.logComment("Tapped on apply coupon code button");
                 waitForAnElementToDisappear_ById(APPLY_COUPON_CODE_BUTTON);
 //                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(APPLY_COUPON_CODE_BUTTON)));
@@ -568,9 +595,9 @@ public class BookingPageIos extends BookingPageBase {
     public static boolean isCouponCodeApplied() {
         Logger.logAction("Checking coupon code is applied successfully");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW)){
+            if (isElementDisplayedByAccessibilityId("OffersAndDiscountsSection")){
                 try{
-                    WebElement offersAndDiscountsXpath = driver.findElementByXPath(XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW);
+                    WebElement offersAndDiscountsXpath = driver.findElementByAccessibilityId("X");
                     boolean status = offersAndDiscountsXpath.findElement(By.id(Labels_Flights.COUPON_CODE)).isDisplayed();
                     if (status==true){
                         return true;

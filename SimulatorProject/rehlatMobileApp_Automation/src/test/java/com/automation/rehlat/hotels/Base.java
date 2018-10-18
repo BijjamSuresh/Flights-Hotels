@@ -1,6 +1,7 @@
 package com.automation.rehlat.hotels;
 
 
+import com.automation.rehlat.flights.pages.BasePage;
 import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import io.appium.java_client.AppiumDriver;
@@ -129,6 +130,7 @@ public class Base {
             Logger.logComment(" Failure in the script, so taking the screenshot");
             String nameOfTestCase = getTestCaseName();
             Thread.sleep(1000);
+//            BasePage.closeTheKeyboard_Android();
 //            String pathOfScreenshot = "Screenshots/"+ nameOfTestCase + "_" + getPlatform();
 //            String pathOfScreenshot = "Screenshots/NexusEmulator/"+ nameOfTestCase + "_" + getPlatform();
             String pathOfScreenshot = "Screenshots/PixelEmulator/"+ nameOfTestCase + "_" + getPlatform();

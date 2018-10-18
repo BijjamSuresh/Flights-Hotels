@@ -40,6 +40,12 @@ public interface BookingSummary {
     void enableKaramPointsToggleSwitch();
 
     /**
+     * Disable the karam points toggle
+     * @return
+     */
+    void disableKaramPointsToggleSwitch();
+
+    /**
      * Check booking page screen is displayed
      * @throws Exception
      */

@@ -132,7 +132,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 Logger.logAction("Total amount payable price linear layout is displayed");
                 String xPathOfFinalPaymentPrice = XPATH_OF_FINAL_PAYMENT_CELL_IN_PAYMENT_OPTIONS_SCREEN+"/XCUIElementTypeStaticText[3]";
                 if (isElementDisplayedByXPath(xPathOfFinalPaymentPrice)){
-                    Double finalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(driver.findElementByXPath(xPathOfFinalPaymentPrice).getText());
+                    Double finalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(driver.findElementByXPath(xPathOfFinalPaymentPrice).getText().replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL));
                     Double ticketAmountDisplayedInBookingPageScreen = Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
                     Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalAmountPayablePriceInPaymentCheckOutScreen);
                     Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);

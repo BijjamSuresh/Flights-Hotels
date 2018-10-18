@@ -56,15 +56,15 @@ public class Labels_Flights extends Base{
 
     ////////Common ///////////
     // Port 1 and Port 2 email id's are used while running multiple scripts where as on single run we use port one as default
-    public static String EMAIL_ID_SIGN_UP_PORT_1 = "rehlatAutomationPort1TestingEmail111@gmail.com"; // This is for port one connected device [Either iOS or Android]
-    public static String EMAIL_ID_SIGN_UP_PORT_2 = "rehlatAutomationPort2TestingEmail111@gmail.com"; // This is for port two connected device [Either iOS or Android]
+    public static String EMAIL_ID_SIGN_UP_PORT_1 = "rehlatAutomationPort1TestingEmail221@gmail.com"; // This is for port one connected device [Either iOS or Android]
+    public static String EMAIL_ID_SIGN_UP_PORT_2 = "rehlatAutomationPort2TestingEmail223@gmail.com"; // This is for port two connected device [Either iOS or Android]
 
 
                                                                          ////////////////////  Types of devices ////////////////////
     public static final String IOS="iOS";
     public static final String ANDROID="Android";
-//    public static final String DEFAULT_PLATFORM = "Android"; // Need to change the default type every time w.r.t. the testing device platform
-    public static final String DEFAULT_PLATFORM = "iOS";
+    public static final String DEFAULT_PLATFORM = "Android"; // Need to change the default type every time w.r.t. the testing device platform
+//    public static final String DEFAULT_PLATFORM = "iOS";
 
                                                                                 //////  APPIUM  iOS app capabilities//////////
     public static final String IOS_BUNDLE_ID="com.Rehlat.RehlatMobile";
@@ -87,16 +87,17 @@ public class Labels_Flights extends Base{
 //    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "SamsungGalaxy8";
 //        public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Pixel_2_API_24"; //Pixel emulator
     public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Nexus_6_API_25"; // Nexus emulator
-    public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "6.0"; // Pixel emulator version
+//    public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "6.0"; // Pixel emulator version
 //    public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "6.0.1"; // Sony version
-//        public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "7.1.1"; // Nexus emulator version
+        public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "7.1.1"; // Nexus emulator version
     public static final String ANDROID_CAPABILITIES_APPIUM_VERSION = "1.8.1";
     public static final String APPIUM_PORT_NUMBER = System.getProperty("port", APPIUM_PORT_NUMBER_DEFAULT);
     protected static final String ANDROID_CAPABILITIES_DEVICE_ID = System.getProperty("deviceId", APPIUM_DEVICE_ID_DEFAULT);
     public static final String ANDROID_CAPABILITIES_URL = "http://localhost:" + APPIUM_PORT_NUMBER + "/wd/hub";
     public static final String ANDROID_CAPABILITIES_PACKAGE_NAME = "com.app.rehlat";
     public static final String ANDROID_CAPABILITIES_PLATFORM_NAME = "Android";
-    public static final String ANDROID_CAPABILITIES_APP_PATH = "app/app_debug.apk";
+//    public static final String ANDROID_CAPABILITIES_APP_PATH = "app/app_debug.apk";
+    public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_release.apk";
     protected static final String ANDROID_NAVIGATION_BAR_PARTY_VIEW = ANDROID_CAPABILITIES_PACKAGE_NAME + ":id/toolbar_party_view";
     public static final String ANDROID_NAVIGATION_BAR = ANDROID_CAPABILITIES_PACKAGE_NAME + ":id/toolbar";
     public static final int DEFAULT_TAP_DURATION = 50;
@@ -170,9 +171,11 @@ public class Labels_Flights extends Base{
     public static final String CHECKED_ATTRIBUTE = "checked";
     public static final String VISIBLE_ATTRIBUTE="visible";
     public static final String NAME_ATTRIBUTE = "name";
+    public static final String RESOURCE_ID_ATTRIBUTE = "resource-id";
     public static final String STATUS_TRUE="true";
     public static final String STATUS_FALSE="false";
     public static final String STRING_NULL = "";
+    public static final String MINUS_WITH_IN_BRACKETS = "(-) ";
     public static final String STRING_COMMA = ",";
     public static final String DOT_STRING = ".";
     public static String TRAVELLERS_TYPE;
@@ -256,12 +259,16 @@ public class Labels_Flights extends Base{
                                                                                     /////////////// Kuwait Country Labels_Hotels /////////////////
 //    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
 //    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
-    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "UAE";
-    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "UAE";
+//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "UAE";
+//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "UAE";
+    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "SAUDI ARABIA";
+    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Saudi Arabia";
 //  public static final String CURRENT_USER_CURRENCY_TYPE = "KWD";
 //  public static final String CURRENT_USER_COUNTRY_NAME = "KUWAIT";
-    public static final String CURRENT_USER_COUNTRY_NAME = "UAE";
-    public static final String CURRENT_USER_CURRENCY_TYPE = "AED";
+//    public static final String CURRENT_USER_COUNTRY_NAME = "UAE";
+////    public static final String CURRENT_USER_CURRENCY_TYPE = "AED";
+    public static final String CURRENT_USER_COUNTRY_NAME = "SAR";
+    public static final String CURRENT_USER_CURRENCY_TYPE = "SAR";
     public static final String KUWAIT_AIRPORT_NAME_FOR_IOS = "Kuwait";
     public static final String KUWAIT_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
     public static final String CAIRO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
@@ -285,10 +292,16 @@ public class Labels_Flights extends Base{
     public static final String JEDDAH_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
     public static final String RIYADH_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
     public static final String RIYADH_AIRPORT_NAME_FOR_IOS = "Riyadh";
+//    public static final String JEDDAH_AIRPORT_NAME_FOR_IOS = "Jeddah";
+//    public static final String JEDDAH_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
+//    public static final String RIYADH_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
+//    public static final String RIYADH_AIRPORT_NAME_FOR_IOS = "Riyadh";
     public static final String HYDERABAD_AIRPORT_CODE = "HYD";
     public static final String BANGALORE_AIRPORT_CODE = "BLR";
     public static final String JEDDAH_AIRPORT_CODE = "JED";
     public static final String RIYADH_AIRPORT_CODE = "RUH";
+//    public static final String JEDDAH_AIRPORT_CODE = "JED";
+//    public static final String RIYADH_AIRPORT_CODE = "RUH";
     public static final String DOMESTIC_FLIGHT_BOOKING = "Domestic";
     public static final String OTHERS_COUNTRY_LABEL = "OTHERS";
     public static final String ENGLISH_LANGUAGE = "English";
@@ -309,7 +322,7 @@ public class Labels_Flights extends Base{
     public static final String REFERRAL_CODE = "chaitu";
     public static final String NEW_REFERRAL_CODE = "rehHYD";
     public static String phoneNumber = "8050510545";
-    public static final String COUPON_CODE = "automate"; // Both for international and national flights searching should be the same
+    public static final String COUPON_CODE = "app8"; // Both for international and national flights searching should be the same
     public static final String IOS_APPLIED_KARAM_POINTS = "1";
     public static final String[] ONLINE_CHECKIN_AIRLINES_LIST = {"AIR CHINA", "ALL NIPPON AIRWAYS", "TAP PORTUGAL","CHINA SOUTHERN AIRLINES", "PRECISION AIR", "AIR BALTIC", "LAM MOZAMBIQUE", "BRUSSELS AIRLINES", "AZUL LINHAS AEREAS", "BRASILEIRAS", "CROATIA AIRLINES", "VIRGIN AUSTRALIA INTL", "VIETNAM AIRLINES", "VIRGIN ATLANTIC", "RWANDAIR EXPRESS", "AIR SEYCHELLES", "QANTAS AIRWAYS", "NESMA AIRLINES", "SAUDI GULF AIRLINES", "ROYAL JORDANIAN", "QATAR AIRWAYS", "EMIRATES", "JAZEERA AIRWAYS", "GULF AIR", "TURKISH AIRLINES", "SAUDI ARABIAN AIRLINES", "EGYPTAIR", "JET AIRWAYS", "FLYNAS", "OMAN AIR", "KUWAIT AIRWAYS", "FLY DUBAI", "AIR INDIA", "ETIHAD AIRWAYS", "SRILANKAN AIRLINES"};
 

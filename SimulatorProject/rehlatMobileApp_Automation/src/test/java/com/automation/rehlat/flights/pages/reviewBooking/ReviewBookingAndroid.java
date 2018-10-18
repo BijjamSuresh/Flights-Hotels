@@ -245,7 +245,7 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
 //                Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);
                 if (isElementDisplayedById(REVIEW_BOOKING_PRICE)){
                     WebElement reviewBookingPriceLabel = driver.findElementById(REVIEW_BOOKING_PRICE);
-                    String reviewBookingPrice = reviewBookingPriceLabel.getText();
+                    String reviewBookingPrice = reviewBookingPriceLabel.getText().replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
 //                if (reviewBookingPrice.contains(".")){
 //                    Logger.logComment("Displayed booking cost is: " +reviewBookingPrice);
                     flightCellTypeText = reviewBookingPrice;

@@ -12,7 +12,7 @@ public class VerifyUserLocationCountryNameIsDisplayedInFifthPlaceOfSelectCountry
         Logger.beginTest("Verify user location country name is displayed in the fifth place of select country layout");
         reInstallApp();
         General.launchApp();
-        General.accpetTheLocationAccessAlert();
+        General.acceptTheLocationAccessAlert();
         General.acceptTheNotificationAccessAlert();
         if(FlightsScreen.isSelectLanguageModalIsDisplayed()){
             String nameOfTheLastCountryNameInSelectCountryLayout = FlightsScreen.getTheLastPositionCountryNameInSelectCountryLayout();

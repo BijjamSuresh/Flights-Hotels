@@ -7,13 +7,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
+
 import static com.automation.rehlat.flights.Labels_Flights.WAIT_TIME_MIN;
 
 public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
-    public static final String XPATH_OF_ALL_AIRLINES_TAB_BAR = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeCollectionView";
+    public static final String ACTUAL_PRICE_RESOURCE_ID = "com.app.rehlat:id/international_price";
     public static final String XPATH_OF_CARD_VIEW_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.FrameLayout[";
     public static final String XPATH_OF_ONLY_DEPARTURE_CARD_PRICE_VIEW_WITHOUT_CARD_VIEW_XPATH = "/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.LinearLayout[2]/android.widget.TextView[3]";
-    public static final String XPATH_OF_DEPARTURE_AND_RETURN_CARD_PRICE_VIEW_WITHOUT_CARD_VIEW_XPATH = "/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.LinearLayout/android.widget.TextView[2]";
+    public static final String XPATH_OF_DEPARTURE_AND_RETURN_CARD_PRICE_VIEW_WITHOUT_CARD_VIEW_XPATH = "/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.LinearLayout[2]";
     public static final String TWO_WAY_LIST_VIEW = "com.app.rehlat:id/internationalTwoWayListView";
     public static final String DOMESTIC_ONE_WAY_RECYCLER_VIEW = "com.app.rehlat:id/domesticOneWayRecyclerView";
     public static final String SRP_LOADING_PROGRESS_BAR = "com.app.rehlat:id/progress";
@@ -127,61 +129,21 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
      */
     public static String getTheBookingCostOfSelectingOnlyDepartureFlightInSearchResults(String parsingFlightCellTypeNumber) {
         Logger.logAction("Getting the booking cost of second flight in search results");
-        String xPathOfBookingFlightCellType = XPATH_OF_CARD_VIEW_WITHOUT_INDEX+ parsingFlightCellTypeNumber + "]";
-        String xPathOfBookingFlightPrice = xPathOfBookingFlightCellType+ XPATH_OF_ONLY_DEPARTURE_CARD_PRICE_VIEW_WITHOUT_CARD_VIEW_XPATH;
         try{
             scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true);
             try{
-                if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
-                    Logger.logStep("Selecting flights cell is displayed in the current search results and moving forward to get the booking seat cost of selected flight");
-                    if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                        WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                        String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                        String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                        Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                        return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                    }else {
-                        scrollTheFlightSearchResultsScreenDownByACardGap_Android();
-                        if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                            WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                            String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                            String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                            Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                            Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                            return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                        }else {
-                            Logger.logError("Tried two times but unable to get the flight cost of flight cell number:- " +parsingFlightCellTypeNumber);
-                        }
-                    }
-                } else {
-                    Logger.logComment("Selecting flights cell is not displayed in the current search results, so scrolling the search results screen for to find the needed flight cell");
-                    scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true);
-                    if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
-                        Logger.logComment("Selecting flights cell is displayed in the current search results and moving forward to get the booking seat cost of selected flight");
-                        if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                            WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                            String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                            String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                            Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                            Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                            return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                        }else {
-                            scrollTheFlightSearchResultsScreenDownByACardGap_Android();
-                            if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                                WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                                String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                                String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                                Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                                Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                                return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                            }else {
-                                Logger.logError("Tried two times but unable to get the flight cost of flight cell number:- " +parsingFlightCellTypeNumber);
-                            }
-                        }
-                    }else {
-                        Logger.logError("Tried two times but unable to scroll to the flight cell number :- "+parsingFlightCellTypeNumber);
-                    }
+                List<WebElement> priceLists = driver.findElementsById(ACTUAL_PRICE_RESOURCE_ID);
+               String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(Integer.parseInt(parsingFlightCellTypeNumber)));
+                String bookingFlightPrice = bookingCostOfParsingRoomNumber.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+                if (bookingFlightPrice.contains(Labels_Flights.STRING_COMMA)){
+                    String bookingFlightPriceWithoutComma = bookingFlightPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
+                    Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPriceWithoutComma);
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPriceWithoutComma;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
+                }else {
+                    Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
                 }
             }catch (Exception exception){
                 scrollTheFlightSearchResultsScreenDownByACardGap_Android();
@@ -200,61 +162,21 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
      */
     public static String getTheBookingCostOfSelectingDepartureAndReturnFlightInSearchResults(String parsingFlightCellTypeNumber) {
         Logger.logAction("Getting the booking cost of first flight in search results");
-        String xPathOfBookingFlightCellType = XPATH_OF_CARD_VIEW_WITHOUT_INDEX+ parsingFlightCellTypeNumber + "]";
-        String xPathOfBookingFlightPrice = xPathOfBookingFlightCellType+ XPATH_OF_DEPARTURE_AND_RETURN_CARD_PRICE_VIEW_WITHOUT_CARD_VIEW_XPATH;
         try{
             scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true);
             try{
-                if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
-                    Logger.logStep("Selecting flights cell is displayed in the current search results and moving forward to get the booking seat cost of selected flight");
-                    if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                        WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                        String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                        String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                        Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                        return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                    }else {
-                        scrollTheFlightSearchResultsScreenDownByACardGap_Android();
-                        if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                            WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                            String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                            String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                            Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                            Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                            return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                        }else {
-                            Logger.logError("Tried two times but unable to get the flight cost of flight cell number:- " +parsingFlightCellTypeNumber);
-                        }
-                    }
-                } else {
-                    Logger.logComment("Selecting flights cell is not displayed in the current search results, so scrolling the search results screen for to find the needed flight cell");
-                    scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true);
-                    if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
-                        Logger.logComment("Selecting flights cell is displayed in the current search results and moving forward to get the booking seat cost of selected flight");
-                        if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                            WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                            String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                            String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                            Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                            Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                            return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                        }else {
-                            scrollTheFlightSearchResultsScreenDownByACardGap_Android();
-                            if (isElementDisplayedByXPath(xPathOfBookingFlightPrice)){
-                                WebElement bookingFlightPriceXpath = driver.findElementByXPath(xPathOfBookingFlightPrice);
-                                String bookingFlightPriceWithCurrencyType = bookingFlightPriceXpath.getText();
-                                String bookingFlightPrice = bookingFlightPriceWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                                Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                                Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                                return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
-                            }else {
-                                Logger.logError("Tried two times but unable to get the flight cost of flight cell number:- " +parsingFlightCellTypeNumber);
-                            }
-                        }
-                    }else {
-                        Logger.logError("Tried two times but unable to scroll to the flight cell number :- "+parsingFlightCellTypeNumber);
-                    }
+                List<WebElement> priceLists = driver.findElementsById(ACTUAL_PRICE_RESOURCE_ID);
+                String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(Integer.parseInt(parsingFlightCellTypeNumber)-1).getText());
+                String bookingFlightPrice = bookingCostOfParsingRoomNumber.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+                if (bookingFlightPrice.contains(Labels_Flights.STRING_COMMA)){
+                    String bookingFlightWithoutComma = bookingFlightPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
+                    Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightWithoutComma);
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightWithoutComma;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
+                }else {
+                    Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
                 }
             }catch (Exception exception){
                 scrollTheFlightSearchResultsScreenDownByACardGap_Android();
