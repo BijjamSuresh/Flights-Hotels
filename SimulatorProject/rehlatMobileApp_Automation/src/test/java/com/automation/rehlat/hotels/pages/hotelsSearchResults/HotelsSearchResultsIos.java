@@ -2,14 +2,19 @@ package com.automation.rehlat.hotels.pages.hotelsSearchResults;
 
 import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
 
-    public static final String SRP_SEARCH_PROGRESS_ID = "com.app.rehlat:id/search_result_progrss";
-    public static final String SRP_SEARCH_TEXT_FIELD_ID = "com.app.rehlat:id/filter_search_edit_text";
-    public static final String LOADING_INDICATOR_OF_EACH_HOTEL_PRICE_ID = "com.app.rehlat:id/brb_progressbar";
-    public static final String XPATH_OF_HOTEL_CARD_VIEW_LAYOUT_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ListView/android.widget.RelativeLayout[";
-    public static final String XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH = "]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.TextView";
+    public static final String SRP_SEARCH_LOADER_CELL_ID = "HotelLoaderCell";
+    public static final String SRP_SEARCH_TEXT_FIELD_ID = "Search Anything Ex : 4 Star Hotel";
+    public static final String SHOW_INFO_PROGRESS_ID = "showInfo";
+    public static final String SRP_SCREEN_TITLE_ID = "SRPScreen";
+    public static final String EMPTY_LIST_ID = "Empty list";
+    public static final String PRICE_ID = "priceLabel";
+    public static final String XPATH_OF_HOTEL_CARD_VIEW_LAYOUT_WITHOUT_INDEX = "(//XCUIElementTypeCell[@name=\"HotelList\"])[";
+    public static final String XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH = "(//XCUIElementTypeStaticText[@name=\"SRPFinalPrice\"])[";
 
     /**
      * Check the hotel srp is displayed
@@ -18,8 +23,10 @@ public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
     public void checkTheHotelsSRPScreenIsDisplayed() {
         Logger.logAction("Checking hotels search results screen is displayed or not ?");
         try {
-           waitTillTheProgressIndicatorIsInvisibleById_ANDROID(SRP_SEARCH_PROGRESS_ID,1);
-            if (isElementDisplayedById(SRP_SEARCH_TEXT_FIELD_ID)){
+//           waitTillTheProgressIndicatorIsInvisibleById_ANDROID(SRP_SEARCH_LOADER_CELL_ID,2);
+            waitForAnElementToDisappear_ByName(SRP_SEARCH_LOADER_CELL_ID,2);
+            runAppInBackground(2);
+            if (isElementDisplayedByAccessibilityId(SRP_SCREEN_TITLE_ID)){
                 Logger.logStep("Hotels SRP is displayed");
             }else {
                 Logger.logError("Hotels SRP is not displayed");
@@ -37,17 +44,40 @@ public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
     public void getThePriceOfHotelAndTapOnItsCardView(Integer parsingCardNumber){
         Logger.logAction("Getting the price of hotel and tap on its card view");
         try {
-            waitForAnElementToDisappear_ById(LOADING_INDICATOR_OF_EACH_HOTEL_PRICE_ID);
-            String xpathOfParsingCellNumber = XPATH_OF_HOTEL_CARD_VIEW_LAYOUT_WITHOUT_INDEX+parsingCardNumber+XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH;
-            String priceOfParsingCellNumber = findElementByXpathAndReturnItsAttributeText(xpathOfParsingCellNumber);
+            if (isElementDisplayedByAccessibilityId(EMPTY_LIST_ID)){
+                Logger.logError("SRP list is empty");
+            }
+//            waitTillTheHotelsAreLoadedWithPrice(); //Todo:- Appium will wait till the hotels srp page is loaded with the prices because of Xcode interaction with app is blocked until the 'price loading' indicator is visible
+            String xpathOfParsingCellNumber = XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH+parsingCardNumber+"]";
+            String priceOfParsingCellNumber = findElementByXpathAndReturnItsAttributeValue(xpathOfParsingCellNumber);
             if (priceOfParsingCellNumber.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
                 findElementByXPathAndClick(xpathOfParsingCellNumber);
-                Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = priceOfParsingCellNumber;
+                String selectedHotelPriceWithoutCurrencyType = priceOfParsingCellNumber.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL).trim();
+                if (selectedHotelPriceWithoutCurrencyType.contains(Labels_Hotels.STRING_COMMA)){
+                    String selectedHotelPriceWithoutComma = selectedHotelPriceWithoutCurrencyType.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL).trim();
+                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutComma;
+                }else {
+                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutCurrencyType;
+                }
             }else {
                 Logger.logError("Parsing currency is not an :- "+ Labels_Hotels.CURRENT_USER_CURRENCY_TYPE+", it is showing as :- "+priceOfParsingCellNumber);
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error :- Unable to get the price of hotel and tap on its card view");
         }
     }
+
+    /**
+     * Wait till the hotels are loaded with the price
+     */
+    public static void waitTillTheHotelsAreLoadedWithPrice(){
+        Logger.logAction("Waiting till the hotels are loaded with the price labels");
+        try {
+//            driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(PRICE_ID))); //Todo:- This line of code needs to be enabled after dev set the price identifier for each hotel in stage
+        }catch (Exception exception){
+            Logger.logError("waited 30 seconds..,Hotel with the price labels is not displayed");
+        }
+    }
+
 }

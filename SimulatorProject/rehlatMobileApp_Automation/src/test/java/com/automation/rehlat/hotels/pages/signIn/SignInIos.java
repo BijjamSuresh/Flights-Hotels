@@ -135,7 +135,7 @@ public class SignInIos extends SignInBase {
         Logger.logAction("Entering password :- "+ Labels_Hotels.PASSWORD);
         try {
             if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN)){
-                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN);
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_PASSWORD_TEXT_FIELD_OF_SIGN_IN_SCREEN);
                 element.sendKeys(Labels_Hotels.PASSWORD);
                 Logger.logComment(Labels_Hotels.PASSWORD+" :- is parsed");
                 closeTheKeyboard_iOS();

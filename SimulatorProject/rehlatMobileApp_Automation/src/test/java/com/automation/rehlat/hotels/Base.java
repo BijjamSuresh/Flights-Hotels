@@ -1,7 +1,6 @@
 package com.automation.rehlat.hotels;
 
 
-import com.automation.rehlat.flights.pages.BasePage;
 import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import io.appium.java_client.AppiumDriver;
@@ -62,8 +61,8 @@ public class Base {
             capabilities.setCapability("udid", Labels_Hotels.udid);
             capabilities.setCapability("app", Labels_Hotels.IOS_BUNDLE_ID);
             capabilities.setCapability("waitForAppScript", true);
-            capabilities.setCapability("autoGrantPermissions",true );
-            capabilities.setCapability("autoAcceptAlerts", true);
+//            capabilities.setCapability("autoGrantPermissions",true );
+//            capabilities.setCapability("autoAcceptAlerts", true);
             capabilities.setCapability("showXcodeLog", true);
             app = new File(Labels_Hotels.IOS_CAPABILITIES_APP_PATH);
             appPAthPathCapability = app.getAbsolutePath();
@@ -83,7 +82,7 @@ public class Base {
             capabilities.setCapability("deviceId", Labels_Hotels.ANDROID_CAPABILITIES_DEVICE_ID);
             capabilities.setCapability("platformVersion", Labels_Hotels.ANDROID_CAPABILITIES_PLATFORM_VERSION);
 //            capabilities.setCapability("appPackage", Labels_Hotels.ANDROID_CAPABILITIES_PACKAGE_NAME);
-            capabilities.setCapability("autoAcceptAlerts", true);
+//            capabilities.setCapability("autoAcceptAlerts", true);
             app = new File(Labels_Hotels.ANDROID_CAPABILITIES_APP_PATH);
             appPAthPathCapability = app.getAbsolutePath();
             capabilities.setCapability("app", appPAthPathCapability);
@@ -126,14 +125,18 @@ public class Base {
      * @return void
      */
     public static void takeScreenshot() {
+        Logger.logComment(" Failure in the script, so taking the screenshot");
         try {
-            Logger.logComment(" Failure in the script, so taking the screenshot");
             String nameOfTestCase = getTestCaseName();
+            String pathOfScreenshot = "Screenshots/NexusEmulator/"+ nameOfTestCase + "_" + getPlatform();
             Thread.sleep(1000);
 //            BasePage.closeTheKeyboard_Android();
 //            String pathOfScreenshot = "Screenshots/"+ nameOfTestCase + "_" + getPlatform();
-//            String pathOfScreenshot = "Screenshots/NexusEmulator/"+ nameOfTestCase + "_" + getPlatform();
-            String pathOfScreenshot = "Screenshots/PixelEmulator/"+ nameOfTestCase + "_" + getPlatform();
+            if (platform.equalsIgnoreCase(IOS)){
+               pathOfScreenshot = "Screenshots/iOS/"+ nameOfTestCase + "_" + getPlatform();
+            }else if (platform.equalsIgnoreCase(ANDROID)){
+                pathOfScreenshot = "Screenshots/Android/"+ nameOfTestCase + "_" + getPlatform();
+            }
             String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
             System.out.println(new File(pathOfScreenshot + "_" + time + ".jpg"));
             File screenshot = driver.getScreenshotAs(OutputType.FILE);
@@ -573,7 +576,7 @@ public class Base {
         while (counter < Labels_Hotels.MIN_ATTEMPTS) {
             try {
                 WebElement status = driver.findElementByXPath(elementPath);
-                if (status.isDisplayed()) {
+                if (status.isDisplayed() || status.isEnabled()) {
                     Logger.logComment("Element is displayed and moving to next action");
                     return true;
                 }
@@ -602,7 +605,7 @@ public class Base {
      * @param size
      * @return
      */
-    public int getTheRandomValue(int size) {
+    public static int getTheRandomValue(int size) {
         int randomValue= new Random().nextInt(size);
 
         return randomValue;
@@ -911,7 +914,7 @@ public class Base {
                     swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
 //                    scrollDown();
                     counter++;
-                    if (counter > 6) {
+                    if (counter > 10) {
                         break;
                     }
                 }
@@ -921,7 +924,7 @@ public class Base {
                         swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
 //                        scrollUp();
                         counter++;
-                        if (counter > 10) {
+                        if (counter > 15) {
                             break;
                         }
                     }
@@ -932,7 +935,7 @@ public class Base {
 //                    scrollUp();
                     swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
                     counter++;
-                    if (counter > 7) {
+                    if (counter > 9) {
                         break;
                     }
                 }
@@ -942,7 +945,7 @@ public class Base {
 //                        scrollDown();
                         swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
                         counter++;
-                        if (counter > 10) {
+                        if (counter > 15) {
                             break;
                         }
                     }
@@ -1719,6 +1722,30 @@ public class Base {
         }
         return false;
     }
+    /**
+     * Return element text using element accessibility id as parameter.
+     * @param elementId element class name.
+     * @param attributeType is the tye of the attribute of parsing element
+     * @return status returns true if element is having parsing attribute else false.
+     * @throws Exception
+     */
+    public static String findElementByAccessibilityIdAndReturnText(String elementId, String attributeType) throws Exception {
+        int counter = 0;
+        WebElement element = null;
+        while (counter < Labels_Hotels.MIN_ATTEMPTS) {
+            try {
+                element = driver.findElementByAccessibilityId(elementId);
+                if (!element.getText().isEmpty()){
+                    return element.getAttribute(attributeType);
+                }
+            } catch (Exception e) {
+                Logger.logComment(counter + " time trying to find " + elementId);
+            }
+            counter++;
+            Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);
+        }
+        return null;
+    }
 
     /**
      * Verify tapping element using element accessibility as parameter.
@@ -1777,7 +1804,7 @@ public class Base {
      */
     public static String findElementByXpathAndReturnItsAttributeValue(String elementName) throws Exception {
         int counter = 0;
-        String elementValue = null;
+        String elementValue = Labels_Hotels.STRING_NULL;
         while (counter < Labels_Hotels.MIN_ATTEMPTS) {
             try {
                 elementValue = driver.findElementByXPath(elementName).getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
@@ -1801,7 +1828,7 @@ public class Base {
     public static String findElementByXpathAndReturnItsAttributeText(String elementName) throws Exception {
         Logger.logAction("Finding the "+elementName+" element name and returning its value");
         int counter = 0;
-        String elementValue = null;
+        String elementValue = Labels_Hotels.STRING_NULL;
         while (counter < Labels_Hotels.MIN_ATTEMPTS) {
             try {
                 elementValue = driver.findElementByXPath(elementName).getText();
@@ -1826,7 +1853,7 @@ public class Base {
     public static String findElementByXpathAndReturnItsAttributeName(String elementName) throws Exception {
         Logger.logAction("Finding the "+elementName+" element name and returning its name");
         int counter = 0;
-        String elementValue = null;
+        String elementValue = Labels_Hotels.STRING_NULL;
         while (counter < Labels_Hotels.MIN_ATTEMPTS) {
             try {
                 elementValue = driver.findElementByXPath(elementName).getAttribute(Labels_Hotels.NAME_ATTRIBUTE);
@@ -1851,7 +1878,7 @@ public class Base {
     public static String findElementByXpathAndReturnItsAttributeSelected(String elementName) throws Exception {
         Logger.logAction("Finding the "+elementName+" element name and returning its selecting attribute");
         int counter = 0;
-        String elementValue = null;
+        String elementValue = Labels_Hotels.STRING_NULL;
         while (counter < Labels_Hotels.MIN_ATTEMPTS) {
             try {
                 elementValue = driver.findElementByXPath(elementName).getAttribute(Labels_Hotels.SELECTED_ATTRIBUTE);
@@ -2134,15 +2161,16 @@ public class Base {
      * Wait till the element (name) is invisible
      * @throws Exception
      */
-    public static void waitForAnElementToDisappear_ByName(String parsingName) throws Exception{
+    public static void waitForAnElementToDisappear_ByName(String parsingName, Integer parsingIterationsCount) throws Exception{
         int count =0;
-        while (count < Labels_Hotels.MIN_ATTEMPTS){
+        while (count < parsingIterationsCount){
             try{
                 if (isElementDisplayedByName(parsingName)){
                     Logger.logStep("Waiting till the "+parsingName+" is invisible in the current active screen");
                     driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.name(parsingName)));
                 }else {
                     Logger.logComment(parsingName+" is not displayed in the current active screen");
+                    break;
                 }
             }catch (Exception exception){
                 Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);

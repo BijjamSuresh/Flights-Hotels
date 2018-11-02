@@ -5,6 +5,8 @@ import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import static com.automation.rehlat.hotels.Labels_Hotels.*;
@@ -12,8 +14,8 @@ import static com.automation.rehlat.hotels.Labels_Hotels.*;
 
 public class HotelsAndroid extends HotelsBase {
 
-    public static final String XPATH_OF_TAB_VIEW = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.HorizontalScrollView";
-    public static final String XPATH_OF_HOTELS_TAB_WITHOUT_TAB_VIEW_XPATH = "/android.widget.LinearLayout/android.support.v7.app.ActionBar.Tab[2]/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.TextView";
+    public static final String TAB_VIEW_ID = "com.app.rehlat:id/tab";
+    public static final String HOTELS_TAB_ID ="Hotels";
     public static final String SEARCH_TEXT_FIELD_ID_IN_HOTELS_HOME_SCREEN = "com.app.rehlat:id/search_edit_text";
     public static final String SEARCH_TEXT_FIELD_ID_IN_HOTELS_SEARCH_SCREEN = "com.app.rehlat:id/searchFlightEditText";
     public static final String XPATH_OF_FIRST_CITY_NAME_IN_SEARCH_RESULTS = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView";
@@ -45,6 +47,14 @@ public class HotelsAndroid extends HotelsBase {
     public static final String XPATH_OF_CHILD_AGE_CELL_NUMBER_EXCEPT_FIRST_CHILD_AGE_CELL_WITHOUT_ROOM_CELL_NUMBER_XPATH = "]/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[";
     public static final String CHECK_AVAILABILITY_BUTTON_ID = "com.app.rehlat:id/checkavailability_btn";
     public static final String XPATH_OF_CLOSE_BUTTON_OF_ROOM_LAYOUT_WITHOUT_ROOM_INDEX = "]/android.widget.RelativeLayout/android.widget.ImageView";
+    public static final String XPATH_OF_COUNTRY_NAME = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.ListView/android.widget.RelativeLayout[";
+    public static final String DOMAIN_LIST_VIEW = "com.app.rehlat:id/domainListView";
+    public static final String OTHER_COUNTRY_OPTION ="Other";
+    public static final String BOOK_NOW_BUTTON_IN_PROMOTIONAL_DIALOG = "com.app.rehlat:id/promotionalMessageBookNowTextView";
+    public static final String DEPARTURE_DAY_IN_CALENDAR_VIEW = "com.app.rehlat:id/onwardDayDialogTextView";
+    public static final String DEPARTURE_MONTH_IN_CALENDAR_VIEW = "com.app.rehlat:id/onwardMonthDialogTextView";
+    public static final String RETURN_DAY_IN_CALENDAR_VIEW = "com.app.rehlat:id/returnDayDialogTextView";
+    public static final String RETURN_MONTH_IN_CALENDAR_VIEW = "com.app.rehlat:id/returnMonthDialogTextView";
     public Integer ROOMS_COUNT_IN_HOTELS_SCREEN;
     public Integer ROOMS_COUNT_IN_ROOM_LIST_VIEW = 1;
     public Integer TOTAL_VISIBLE_ROOM_CELLS_COUNT;
@@ -59,6 +69,7 @@ public class HotelsAndroid extends HotelsBase {
         try {
             runAppInBackground(1);
             Thread.sleep(3000);
+            closeThePromotionalDialogIfDisplayed();
             if (isElementDisplayedById(CHECK_IN_BUTTON_ID_IN_HOTELS_HOME_SCREEN) && isElementDisplayedById(CHECK_OUT_BUTTON_ID_IN_HOTELS_HOME_SCREEN)){
                 Logger.logStep("Hotels screen is displayed");
             }else {
@@ -66,6 +77,23 @@ public class HotelsAndroid extends HotelsBase {
             }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to check the hotel screen is displayed or not?");
+        }
+    }
+
+    /**
+     * Close the promotional dialog
+     */
+    public static void closeThePromotionalDialogIfDisplayed(){
+        Logger.logAction("Closing the promotional dialog if displayed");
+        try {
+            boolean status = findElementByIdAndClick(BOOK_NOW_BUTTON_IN_PROMOTIONAL_DIALOG);
+            if (status == true){
+                Logger.logStep("Promotional dialog is displayed and closed it by tapping on book now button");
+            }else {
+                Logger.logComment("Promotional dialog is not displayed");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered Error:- Unable to close the promotional dialog");
         }
     }
 
@@ -78,13 +106,17 @@ public class HotelsAndroid extends HotelsBase {
         try {
             runAppInBackground(1);
             Thread.sleep(3000);
-            String xpathOfHotelsTab = XPATH_OF_TAB_VIEW+XPATH_OF_HOTELS_TAB_WITHOUT_TAB_VIEW_XPATH;
-            String isSelectedAttribute = findElementByXpathAndReturnItsAttributeSelected(xpathOfHotelsTab);
-            if (isSelectedAttribute.equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
-                Logger.logStep("Hotels tab is already displayed");
-            }else {
-                findElementByXPathAndClick(xpathOfHotelsTab);
-                Logger.logStep("Hotels tab is selected");
+            List<WebElement> tabsList = driver.findElementsById(TAB_VIEW_ID);
+            for (int count=0;count<=tabsList.size()-1;count++){
+                String tabName = tabsList.get(count).getText();
+                if (tabName.equalsIgnoreCase(HOTELS_TAB_ID)){
+                    tabsList.get(count).click();
+                    Logger.logStep("Hotels tab is selected");
+                    break;
+                }
+                if (count == tabsList.size()-1){
+                    Logger.logError("Hotels tab is not displayed in the tabs list");
+                }
             }
         }catch (Exception exception){
             exception.printStackTrace();
@@ -241,15 +273,15 @@ public class HotelsAndroid extends HotelsBase {
                 }
                 scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,true);
                 if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                    tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                    tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
                 }else {
                     scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,false);
                     if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                        tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                        tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
                     }else {
                         Logger.logWarning("Unable to select the accurate departure date :- " +departureDay+ "," + departureMonthAndYear+"..., Going with the random selected date after scrolling the calender view");
                         scrollTheCalenderPageDownAMonthGap_Android();
-                        tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                        tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
                     }
                 }
             }else{
@@ -270,11 +302,11 @@ public class HotelsAndroid extends HotelsBase {
             if (isElementDisplayedById(CALENDER_MODAL_VIEW)){
                 scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,true);
                 if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                    tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                    tapOnDayInTheCalender("RETURN", departureMonthAndYear, departureDay);
                 }else {
                     scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,false);
                     if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                        tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                        tapOnDayInTheCalender("RETURN", departureMonthAndYear, departureDay);
                     }else {
                         Logger.logWarning("Unable to select the accurate return date :- " +departureDay+ "," + departureMonthAndYear+"..., Going with the default selected date");
                     }
@@ -292,53 +324,125 @@ public class HotelsAndroid extends HotelsBase {
      * @param parsingMonthAndYear
      * @param parsingDay
      */
-    public static void tapOnDayInTheCalender(String parsingMonthAndYear, String parsingDay) {
+    public static void tapOnDayInTheCalender(String journeyType, String parsingMonthAndYear, String parsingDay) {
         Logger.logAction("Trying to tap on the day "+parsingDay+" in the calender view");
+        int iterations = 0;
+        boolean parsingDateSelectionStatus = false;
+        String departureMonthName = Labels_Hotels.STRING_NULL;
+        String departureDayValue = Labels_Hotels.STRING_NULL;
         try{
-            Thread.sleep(WAIT_TIME_MIN);
-            WebElement calenderView = driver.findElement(By.id(CALENDER_MODAL_VIEW));
+            WebElement calenderView = driver.findElementById(CALENDER_MODAL_VIEW);
             try {
                 List<WebElement> monthTitle = calenderView.findElements(By.className(ANDROID_LINEAR_LAYOUT));
-                for (int index = 0; index <= monthTitle.size()-1; index++) {
-                    WebElement monthCalenderLayout = monthTitle.get(index);
-                    WebElement monthCalenderTitleLayout = monthCalenderLayout.findElement(By.className(Labels_Hotels.ANDROID_TEXT_VIEW));
-                    String monthCalenderTitleValue = monthCalenderTitleLayout.getText();
-                    if (monthCalenderTitleValue.equals(parsingMonthAndYear)){
-                        WebElement daysCalenderLayout = monthCalenderLayout.findElement(By.className(ANDROID_VIEW_GROUP));
-                        List<WebElement> groupViewOfDaysIncludingRows = daysCalenderLayout.findElements(By.className(ANDROID_VIEW_GROUP));
-                        for (int row = 0; row <= groupViewOfDaysIncludingRows.size()-1; row++) {
-                            WebElement eachRowInaGroupView = groupViewOfDaysIncludingRows.get(row);
-                            List<WebElement> listOfRowsInMonthCalender = eachRowInaGroupView.findElements(By.className(Labels_Hotels.ANDROID_TEXT_VIEW));
-                            for (int text = 0; text <= listOfRowsInMonthCalender.size()-1; text++) {
-                                String valueOfEachDay = listOfRowsInMonthCalender.get(text).getText();
-                                if (valueOfEachDay.equals(parsingDay)){
-                                    index = index+1;
-                                    row = row+1;
-                                    text = text+1;
-                                    String xpathOfDay = CALENDER_VIEW_XPATH+"android.widget.LinearLayout["+index+"]/"+"android.view.ViewGroup/android.view.ViewGroup["+row+"]/"+"android.widget.TextView["+text+"]";
-                                    WebElement locationOfDay = driver.findElement(By.xpath(xpathOfDay));
-                                    Point table = locationOfDay.getLocation();
-                                    int elementYAxisValue = table.getY();
-                                    if (Labels_Hotels.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_20_PERCENT <= elementYAxisValue){
-                                        scrollTheCalenderPageUpByDaysGap_Android();
-                                        tapOnDayInTheCalender(parsingMonthAndYear,parsingDay);
-                                    }else {
-                                        driver.findElementByXPath(xpathOfDay).click();
+                while (iterations < 7)
+                {
+                    if (!(iterations == 0)){
+                        scrollTheCalenderPageUpByDaysGap_Android();
+                    }
+                    for (int index = 0; index <= monthTitle.size()-1; index++)
+                    {
+                        try{
+                            WebElement monthCalenderLayout = monthTitle.get(index);
+                            WebElement monthCalenderTitleLayout = monthCalenderLayout.findElement(By.className(Labels_Hotels.ANDROID_TEXT_VIEW));
+                            String monthCalenderTitleValue = monthCalenderTitleLayout.getText();
+                            if (monthCalenderTitleValue.equals(parsingMonthAndYear)){
+                                WebElement daysCalenderLayout = monthCalenderLayout.findElement(By.className(ANDROID_VIEW_GROUP));
+                                List<WebElement> groupViewOfDaysIncludingRows = daysCalenderLayout.findElements(By.className(ANDROID_VIEW_GROUP));
+                                for (int row = 0; row <= groupViewOfDaysIncludingRows.size()-1; row++) {
+                                    WebElement eachRowInaGroupView = groupViewOfDaysIncludingRows.get(row);
+                                    List<WebElement> listOfRowsInMonthCalender = eachRowInaGroupView.findElements(By.className(Labels_Hotels.ANDROID_TEXT_VIEW));
+                                    for (int text = 0; text <= listOfRowsInMonthCalender.size()-1; text++) {
+                                        String valueOfEachDay = listOfRowsInMonthCalender.get(text).getText();
+                                        if (valueOfEachDay.equals(parsingDay)){
+                                            index = index+1;
+                                            row = row+1;
+                                            text = text+1;
+                                            String xpathOfDay = CALENDER_VIEW_XPATH+"android.widget.LinearLayout["+index+"]/"+"android.view.ViewGroup/android.view.ViewGroup["+row+"]/"+"android.widget.TextView["+text+"]";
+                                            WebElement locationOfDay = driver.findElement(By.xpath(xpathOfDay));
+                                            Point table = locationOfDay.getLocation();
+                                            int elementYAxisValue = table.getY();
+                                            if (Labels_Hotels.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValue)
+                                            {
+                                                locationOfDay.click();
+                                            }else {
+                                                for (int count =0 ; count <=5; count++){
+                                                    scrollTheCalenderPageUpByDaysGap_Android();
+                                                    WebElement locationOfDayAfterScrolling = driver.findElement(By.xpath(xpathOfDay));
+                                                    Point tableAfterScrolling = locationOfDayAfterScrolling.getLocation();
+                                                    int elementYAxisValueAfterScrolling = tableAfterScrolling.getY();
+                                                    if (Labels_Hotels.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValueAfterScrolling)
+                                                    {
+                                                        locationOfDayAfterScrolling.click();
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            if (journeyType == "ONWARD"){
+                                                departureMonthName = getTheDepartureMonthDisplayedInCalenderView();
+                                                departureDayValue = getTheDepartureDayDisplayedInCalenderView();
+                                            }else if (journeyType == "RETURN"){
+                                                departureMonthName = getTheReturnMonthDisplayedInCalenderView();
+                                                departureDayValue = getTheReturnDayDisplayedInCalenderView();
+                                            }else {
+                                                Logger.logError("Parsing journey type is neither onward nor return");
+                                            }
+                                            if (departureMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
+                                                if (Integer.valueOf(departureDayValue) == Integer.valueOf(parsingDay)){
+                                                    Logger.logComment("Tapped on correct departure day:- "+parsingDay);
+                                                    parsingDateSelectionStatus = true;
+                                                    break;
+                                                }else {
+                                                    Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                                }
+                                            }else {
+                                                Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                                if (iterations <= 6){
+                                                }else {
+                                                    Logger.logError("Tried "+iterations+" times didn't find the exact date");
+                                                }
+                                            }
+                                        }else {
+                                            continue;
+                                        }
+                                    }
+                                    if (parsingDateSelectionStatus == true){
+                                        iterations = 7;
                                         break;
                                     }
-                                }else {
-                                    continue;
                                 }
+                            }else {
+                                continue;
+                            }
+                            if (parsingDateSelectionStatus == true){
+                                iterations = 7;
+                            }
+
+                        }catch (Exception exception){
+                            if (parsingDateSelectionStatus == true){
+                                iterations = 7;
                             }
                         }
-                    }else {
-                        continue;
                     }
-                    Thread.sleep(WAIT_TIME_MIN);
+                    if (parsingDateSelectionStatus == true){
+                        iterations = 7;
+                        break;
+                    }
+                    else {
+                        iterations ++;
+                    }
                 }
             }catch (Exception exception){
-                scrollTheCalenderPageUpByDaysGap_Android();
-                tapOnDayInTheCalender(parsingMonthAndYear,parsingDay);
+                if (parsingDateSelectionStatus == true){
+                    iterations = 7;
+                }
+                else {
+                    iterations ++;
+                }
+            }
+            if (parsingDateSelectionStatus == true){
+                Logger.logComment("Tapped on correct date and going for next action");
+            }else {
+                Logger.logError("Tapped on in-correct date");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on the calender day");
@@ -396,7 +500,7 @@ public class HotelsAndroid extends HotelsBase {
                         Logger.logComment(counter + "  time trying to find the calender month and year - " + flightBookingMonthAndYear +" - by scrolling down ");
                         scrollTheCalenderPageUpByAMonthGap_Android();
                         counter++;
-                        if (counter > 6) {
+                        if (counter > 10) {
                             break;
                         }
                     }
@@ -415,7 +519,7 @@ public class HotelsAndroid extends HotelsBase {
                         Logger.logComment(counter + "  time trying to find the calender month and year - " + flightBookingMonthAndYear +" - by scrolling up ");
                         scrollTheCalenderPageDownAMonthGap_Android();
                         counter++;
-                        if (counter > 6) {
+                        if (counter > 10) {
                             break;
                         }
                     }
@@ -814,5 +918,124 @@ public class HotelsAndroid extends HotelsBase {
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to tap on check availability button");
         }
+    }
+
+    /**
+     * Set the domain as per the parsing domain
+     * @param parsingDomain
+     */
+    @Override
+    public void setTheDomainAs(String parsingDomain){
+        Logger.logAction("Setting the domain as :- "+parsingDomain);
+        try {
+            HotelsScreen.tapOnMenuButton();
+            MenuScreen.tapOnSettingsButton();
+            SettingsScreen.tapOnChangeCountryOption();
+            SettingsScreen.selectTheDomain(parsingDomain);
+            SettingsScreen.tapOnContinueButton();
+            driver.navigate().back();
+        }catch (Exception exception){
+            Logger.logError("Unable to set the domain as :- "+parsingDomain);
+        }
+    }
+
+    /**
+     * Selects the country name of the user
+     * @param userCountryName
+     */
+    public static void selectCountryOfUser(String userCountryName) {
+        Logger.logAction("selecting the country of user");
+        try{
+            runAppInBackground(1);
+            if (isElementDisplayedById(DOMAIN_LIST_VIEW)) {
+                WebElement displayedCountriesListView = driver.findElementById(DOMAIN_LIST_VIEW);
+                if (userCountryName.equalsIgnoreCase(Labels_Hotels.INDIA_LANGUAGE_COUNTRY_LABEL)) {
+                    List<WebElement> displayedCountriesList = displayedCountriesListView.findElements(By.className(Labels_Hotels.ANDROID_TEXT_VIEW));
+                    for (int index = 0; index <= displayedCountriesList.size(); index++) {
+                        WebElement countryNameTextView = displayedCountriesList.get(index);
+                        String countryNameLabel = countryNameTextView.getText();
+                        if (countryNameLabel.equalsIgnoreCase(userCountryName) || countryNameLabel.equalsIgnoreCase(OTHER_COUNTRY_OPTION)) {
+                            Logger.logComment("Tapping on element - " + userCountryName);
+                            index = index + 1;
+                            driver.findElement(By.xpath(XPATH_OF_COUNTRY_NAME + index + "]")).click();
+                            Logger.logStep("Tapped on element - "+userCountryName);
+                            break;
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    List<WebElement> displayedCountriesList = displayedCountriesListView.findElements(By.className(Labels_Hotels.ANDROID_TEXT_VIEW));
+                    for (int index = 0; index <= displayedCountriesList.size(); index++) {
+                        WebElement countryNameTextView = displayedCountriesList.get(index);
+                        String countryNameLabel = countryNameTextView.getText();
+                        if (countryNameLabel.equalsIgnoreCase(userCountryName)) {
+                            Logger.logComment("Tapping on element - " + userCountryName);
+                            index = index + 1;
+                            driver.findElement(By.xpath(XPATH_OF_COUNTRY_NAME + index + "]")).click();
+                            Logger.logStep("Tapped on element - "+userCountryName);
+                            break;
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+            }else {
+                Logger.logError(DOMAIN_LIST_VIEW+" - element name is not displayed in the current active screen");
+            }
+        }catch (Exception exception){
+            Logger.logError("Error in selecting the user country from select country modal");
+        }
+    }
+
+
+    /**
+     * Get the departure month displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheDepartureMonthDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the onward month displayed in the calendar view");
+        String departureMonth = findElementByIdAndReturnText(DEPARTURE_MONTH_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
+        return departureMonth;
+    }
+
+    /**
+     * Get the departure day displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheDepartureDayDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the onward day displayed in the calendar view");
+        String departureDay = findElementByIdAndReturnText(DEPARTURE_DAY_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected day value in calendar view is :- "+departureDay);
+        return departureDay;
+    }
+
+
+
+    /**
+     * Get the return month displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheReturnMonthDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the return month displayed in the calendar view");
+        String departureMonth = findElementByIdAndReturnText(RETURN_MONTH_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
+        return departureMonth;
+    }
+
+    /**
+     * Get the return day displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheReturnDayDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the return day displayed in the calendar view");
+        String departureDay = findElementByIdAndReturnText(RETURN_DAY_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected day value in calendar view is :- "+departureDay);
+        return departureDay;
     }
 }

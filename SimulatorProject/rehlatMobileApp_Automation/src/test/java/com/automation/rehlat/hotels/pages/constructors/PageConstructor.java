@@ -16,6 +16,8 @@ import com.automation.rehlat.hotels.pages.paymentsOptions.PaymentOptionsAndroid;
 import com.automation.rehlat.hotels.pages.paymentsOptions.PaymentOptionsIos;
 import com.automation.rehlat.hotels.pages.selectRooms.SelectRoomsAndroid;
 import com.automation.rehlat.hotels.pages.selectRooms.SelectRoomsIos;
+import com.automation.rehlat.hotels.pages.settings.SettingsAndroid;
+import com.automation.rehlat.hotels.pages.settings.SettingsIos;
 import com.automation.rehlat.hotels.pages.signIn.SignInAndroid;
 import com.automation.rehlat.hotels.pages.signIn.SignInIos;
 import com.automation.rehlat.hotels.pages.signUp.SignUpAndroid;
@@ -156,11 +158,11 @@ public class PageConstructor {
                 break;
             case "settings":
                 if (platform.equals(Labels_Hotels.ANDROID)){
-//                    BasePage.SettingsScreen = new SettingsAndroid();
-//                    BaseTest.SettingsScreen = new SettingsAndroid();
+                    BasePage.SettingsScreen = new SettingsAndroid();
+                    BaseTest.SettingsScreen = new SettingsAndroid();
                 }else{
-//                    BasePage.SettingsScreen = new SettingsIos();
-//                    BaseTest.SettingsScreen = new SettingsIos();
+                    BasePage.SettingsScreen = new SettingsIos();
+                    BaseTest.SettingsScreen = new SettingsIos();
                 }
                 break;
             case "appSupport":

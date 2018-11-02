@@ -59,7 +59,12 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
         SignInScreen.tapOnLoginButton();
         BookingPageScreen.checkBookingPageScreenIsDisplayed();
         BookingPageScreen.enterUserBookingInfo();
-        BookingPageScreen.applyTheCouponCode();
+        BookingPageScreen.enableKaramPointsToggleSwitch();
+        if (Labels_Flights.FLIGHT_BOOKING_TYPE == INTERNATIONAL_FLIGHT_BOOKING){
+            BookingPageScreen.applyTheCouponCode();
+        }else {
+            Logger.logComment("No coupon codes for domestic flights of live/stage configuration");
+        }
         BookingPageScreen.tapOnAdultAddTravellersDetailsButton();
         TravellerDetailsScreen.EnterTravellersDetailsForPassengers(2); // This should be same as passengers count in flights tab
         TravellerDetailsScreen.tapOnSaveButton();
@@ -68,7 +73,7 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
         BookingPageScreen.tapOnContinueButton();
         if (PaymentOptionsScreen.isTicketSoldOutPopUpIsDisplayed()){
             PaymentOptionsScreen.tapOnOkButtonInTicketSoldOutPopup();
-            Logger.logComment("Second time selecting the seat for different flight");
+            Logger.logStep("Second time selecting the seat for different flight");
             FlightsSearchResultsScreen.checkFlightsSearchResultsScreenIsDisplayed();
             FlightsSearchResultsScreen.tapOnACellInFlightSearchResults(CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS_WHEN_SOLDOUT_POPUP_INTERRUPTRED); //Change this method to tap on a flight cell by sending the cell number as string/integer like this : //  FlightsSearchResultsIos.getTheBookingCostOfSelectedFlightInSearchResults("6");
             if ( FlightsSimilarOptionsSearchResultsScreen.checkFlightsSimilarOptionsSearchResultsScreenIsDisplayed()){
@@ -80,15 +85,24 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
             ReviewBookingScreen.compareTheSelectedBookingSeatCostInSearchResultsScreenDisplayedInReviewBookingScreen();
             ReviewBookingScreen.tapOnContinueButton();
             BookingPageScreen.checkBookingPageScreenIsDisplayed();
-            BookingPageScreen.tapOnSignInForFasterBookingsButton();
-            SignInScreen.checkSignInScreenIsDisplayed();
-            SignInScreen.enterLoginCredentials();
-            SignInScreen.tapOnLoginButton();
-            BookingPageScreen.checkBookingPageScreenIsDisplayed();
+//            BookingPageScreen.tapOnSignInForFasterBookingsButton(); // This line of code is not necessary as user is already signed in or signed up before sold out alert
+//            SignInScreen.checkSignInScreenIsDisplayed();
+//            SignInScreen.enterLoginCredentials();
+//            SignInScreen.tapOnLoginButton();
+//            BookingPageScreen.checkBookingPageScreenIsDisplayed();
             BookingPageScreen.enterUserBookingInfo();
-            BookingPageScreen.applyTheCouponCode();
+            BookingPageScreen.enableKaramPointsToggleSwitch();
+            if (Labels_Flights.FLIGHT_BOOKING_TYPE == INTERNATIONAL_FLIGHT_BOOKING){
+                BookingPageScreen.applyTheCouponCode();
+            }else {
+                Logger.logComment("No coupon codes for domestic flights of live/stage configuration");
+            }
             BookingPageScreen.tapOnAdultAddTravellersDetailsButton();
-            TravellerDetailsScreen.EnterTravellersDetailsForPassengers(2); // This should be same as passengers count in flights tab
+            if (platform.equalsIgnoreCase(Labels_Flights.IOS)){
+                TravellerDetailsScreen.acceptAutoFillPopulateModalIfDisplayed(2);
+            }else {
+                TravellerDetailsScreen.EnterTravellersDetailsForPassengers(2); // This should be same as passengers count in flights tab
+            }
             TravellerDetailsScreen.tapOnSaveButton();
             BookingPageScreen.checkBookingPageScreenIsDisplayed();
             BookingPageScreen.checkFinalFareCalculationIsCorrect();
@@ -101,21 +115,21 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
                 PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
                 if (Labels_Flights.platform.equalsIgnoreCase(IOS)){
                     // KNET PAYMENT PROCESS
-//                PaymentOptionsScreen.tapOnKnetPaymentGateWay();
-//                PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
-//                PaymentOptionsScreen.selectingBankName(TESTING_BANK_CARD);
-//                PaymentOptionsScreen.enterCardNumber(); // Automation Defect: Card number text field is not intractable in iOS Platform
-//                PaymentOptionsScreen.enterPinNumber();
-//                PaymentOptionsScreen.tapOnSubmitButton();
-//                PaymentOptionsScreen.checkPostTransactionScreenIsDisplayed();
-//                PaymentOptionsScreen.tapOnConfirmButton();
-//                PaymentOptionsScreen.checkTheKnetBookingProcessIsSuccess();
+                PaymentOptionsScreen.tapOnKnetPaymentGateWay();
+                PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
+                PaymentOptionsScreen.selectingBankName(TESTING_BANK_CARD);
+                PaymentOptionsScreen.enterCardNumber(); // Automation Defect: Card number text field is not intractable in iOS Platform
+                PaymentOptionsScreen.enterPinNumber();
+                PaymentOptionsScreen.tapOnSubmitButton();
+                PaymentOptionsScreen.checkPostTransactionScreenIsDisplayed();
+                PaymentOptionsScreen.tapOnConfirmButton();
+                PaymentOptionsScreen.checkTheKnetBookingProcessIsSuccess();
 
                     // CREDIT OR DEBIT CARD PAYMENT PROCESS
-                    PaymentOptionsScreen.enterCreditOrDebitCardDetails();
-                    PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
-                    PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
-                    PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
+//                    PaymentOptionsScreen.enterCreditOrDebitCardDetails();
+//                    PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
+//                    PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
+//                    PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
                 }
             }
         }else {
@@ -124,21 +138,21 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
             PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
             if (Labels_Flights.platform.equalsIgnoreCase(IOS)){
                 // KNET PAYMENT PROCESS
-//            PaymentOptionsScreen.tapOnKnetPaymentGateWay();
-//            PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
-//            PaymentOptionsScreen.selectingBankName(TESTING_BANK_CARD);
-//            PaymentOptionsScreen.enterCardNumber(); // Automation Defect: Card number text field is not intractable in iOS Platform
-//            PaymentOptionsScreen.enterPinNumber();
-//            PaymentOptionsScreen.tapOnSubmitButton();
-//            PaymentOptionsScreen.checkPostTransactionScreenIsDisplayed();
-//            PaymentOptionsScreen.tapOnConfirmButton();
-//            PaymentOptionsScreen.checkTheKnetBookingProcessIsSuccess();
+            PaymentOptionsScreen.tapOnKnetPaymentGateWay();
+            PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
+            PaymentOptionsScreen.selectingBankName(TESTING_BANK_CARD);
+            PaymentOptionsScreen.enterCardNumber(); // Automation Defect: Card number text field is not intractable in iOS Platform
+            PaymentOptionsScreen.enterPinNumber();
+            PaymentOptionsScreen.tapOnSubmitButton();
+            PaymentOptionsScreen.checkPostTransactionScreenIsDisplayed();
+            PaymentOptionsScreen.tapOnConfirmButton();
+            PaymentOptionsScreen.checkTheKnetBookingProcessIsSuccess();
 
                 // CREDIT OR DEBIT CARD PAYMENT PROCESS
-                PaymentOptionsScreen.enterCreditOrDebitCardDetails();
-                PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
-                PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
-                PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
+//                PaymentOptionsScreen.enterCreditOrDebitCardDetails();
+//                PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
+//                PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
+//                PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
             }
         }
         Logger.endTest("- Ticket Booking with sign in from booking page and with applied coupon code ");

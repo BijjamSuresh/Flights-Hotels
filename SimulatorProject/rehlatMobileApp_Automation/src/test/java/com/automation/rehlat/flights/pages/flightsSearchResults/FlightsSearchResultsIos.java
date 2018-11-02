@@ -18,7 +18,7 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
     public static final String SRP_TWO_WAY_VIEW = "SRPRoundtrip";
     public static final String XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS = "(//XCUIElementTypeCell[@name=\"SRPLoaderCell\"])[1]";
     public static final String XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS = "(//XCUIElementTypeStaticText[@name=\"SRPRoundTripPriceLabel\"])[";
-    public static final String XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS = "(//XCUIElementTypeStaticText[@name=\"SRPOneWayPriceLabel\"])[";
+    public static final String XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS = "(//XCUIElementTypeStaticText[@name=\"SRPOnewayPriceLabel\"])[";
     public static final String XPATH_OF_FLIGHT_CELL_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS = "(//XCUIElementTypeCell[@name=\"SRPRoundTripCell\"])[";
     public static final String XPATH_OF_FLIGHT_CELL_IN_ONE_WAY_LOADED_SEARCH_RESULTS = "(//XCUIElementTypeCell[@name=\"SRPOnewayCell\"])[";
     public static final String PRICE_LABEL = "Price";
@@ -35,22 +35,24 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
     public void checkFlightsSearchResultsScreenIsDisplayed() {
         Logger.logAction("Checking the flights search results screen is displayed or not ?");
         try {
-            waitTillFlightsSearchResultsScreenIsDisplayed();
-            if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_ONE_WAY_VIEW))
-            {
-                TRIP_TYPE = SRP_ONE_WAY_VIEW;
-                XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
-                XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
-                Logger.logStep(" SRP One Way Flights search results screen is displayed and the results are loaded");
-            } else if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_TWO_WAY_VIEW)){
-                TRIP_TYPE = SRP_TWO_WAY_VIEW;
-                XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
-                XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
-                Logger.logStep("SRP Two Way Flights search results screen is displayed");
+            if (TRIP_TYPE.equalsIgnoreCase(Labels_Flights.STRING_NULL)) {
+                waitTillFlightsSearchResultsScreenIsDisplayed();
             }
-            else {
-                Logger.logError("Flights search screen is not displayed and the results are loaded");
-            }
+                if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_ONE_WAY_VIEW))
+                {
+                    TRIP_TYPE = SRP_ONE_WAY_VIEW;
+                    XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
+                    XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
+                    Logger.logStep(" SRP One Way Flights search results screen is displayed and the results are loaded");
+                } else if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_TWO_WAY_VIEW)){
+                    TRIP_TYPE = SRP_TWO_WAY_VIEW;
+                    XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
+                    XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
+                    Logger.logStep("SRP Two Way Flights search results screen is displayed");
+                }
+                else {
+                    Logger.logError("Flights search screen is not displayed and the results are loaded");
+                }
         }catch (Exception exception){
             Logger.logError("Encountered error: unable to check the current active screen name");
         }
@@ -65,11 +67,9 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
         Logger.logAction("Waiting till the active screen is loaded");
         try{
             if (isElementDisplayedByAccessibilityId(SRP_ONE_WAY_VIEW)){
-//                Thread.sleep(Labels_Flights.WAIT_TIME_DEFAULT);
                 try
                 {
                     if (isElementDisplayedByXPath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)){
-//                        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(SRP_ONE_WAY_VIEW)));
                         Logger.logStep("SRP screen is displayed with one way view and waiting for the flights information to be loaded.....,");
                         try {
                             driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
@@ -77,12 +77,9 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
                             driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS+1+"]")));
                         }
                     }else {
-//                        Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
                         Logger.logStep("Active screen is loaded and moving to check the screen name");
                     }
                 }catch (Exception exception){
-//                    driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(SRP_ONE_WAY_VIEW)));
-//                    Thread.sleep(Labels_Flights.WAIT_TIME_DEFAULT);
                     try {
                         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                     }catch (Exception exceptionTwo){
@@ -90,11 +87,9 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
                     }
                 }
             }else if (isElementDisplayedByAccessibilityId(SRP_TWO_WAY_VIEW)){
-//                Thread.sleep(Labels_Flights.WAIT_TIME_DEFAULT);
                 try
                 {
                 if (isElementDisplayedByXPath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)){
-//                    driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(SRP_TWO_WAY_VIEW)));
                     Logger.logStep("SRP screen is displayed with two way view and waiting for the flights information to be loaded.....,");
                     try {
                         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
@@ -102,12 +97,9 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
                         driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS+1+"]")));
                     }
                 }else {
-//                    Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
                     Logger.logStep("Active screen is loaded and moving to check the screen name");
                 }
                 }catch (Exception exception){
-//                    driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(SRP_TWO_WAY_VIEW)));
-//                    Thread.sleep(Labels_Flights.WAIT_TIME_DEFAULT);
                     try {
                         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                     }catch (Exception exceptionTwo){
@@ -171,10 +163,15 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
     public static String getTheBookingCostOfSelectingFlightInSearchResultsAndTapOnIt(String selectedFlightCellTypeNumber) {
         Logger.logAction("Getting the booking cost of "+selectedFlightCellTypeNumber+" flight in search results");
         String xPathOfBookingFlightCellType = XPATH_OF_PRICE_FLIGHT_CARD_VIEW+ selectedFlightCellTypeNumber + "]";
-        WebElement bookingFlightCell;
+        WebElement bookingFlightCell = null;
         try{
             Logger.logComment("Selecting flights cell is displayed in the current search results and moving forward to get the booking seat cost of selected flight");
-            bookingFlightCell = driver.findElementByXPath(xPathOfBookingFlightCellType);
+            if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
+                bookingFlightCell = driver.findElementByXPath(xPathOfBookingFlightCellType);
+                Logger.logComment("Flight cell number - "+selectedFlightCellTypeNumber+" is displayed");
+            }else {
+                Logger.logError("SRP results are not loaded with all the elements");
+            }
             String flightCellTypeText = bookingFlightCell.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
                 String bookingCostExcludingCurrencyName = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();

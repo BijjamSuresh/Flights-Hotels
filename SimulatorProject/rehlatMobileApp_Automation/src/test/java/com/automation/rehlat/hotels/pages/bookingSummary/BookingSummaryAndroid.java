@@ -30,6 +30,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public static final String KARAM_POINTS_TOGGLE_BUTTON = "com.app.rehlat:id/use_karm_checkbox";
     public static final String COUPON_CODE_TEXT_VIEW = "com.app.rehlat:id/enterCouponCodeTextViewEditText";
     public static final String APPLY_COUPON_CODE_BUTTON = "com.app.rehlat:id/coupon_apply";
+    public static final String APPLY_COUPON_CODE_LAYOUT = "com.app.rehlat:id/enterCouponCodeLayout";
     public static final String COUPON_CODE_VALIDATION_MESSAGE = "com.app.rehlat:id/couponcode_apply_layout_message_text_view";
     public static final String COUPON_INVALID_MESSAGE = "Invalid coupon";
     public static final String GUEST_TRAVELLERS_CARD_VIEW_ID = "com.app.rehlat:id/travellerDetailsCardView";
@@ -41,6 +42,12 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public static final String PRICE_ID_IN_BOOKING_SUMMARY_SCREEN_FOOTER_VIEW = "com.app.rehlat:id/booking_summaryfooter_total_fare_textview";
     public static final String XPATH_OF_LOGIN_TO_USE_KARAM_CASH_BUTTON = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.LinearLayout/android.widget.TextView";
     public static final String LOGIN_TO_USE_KARAM_CASH_LABEL = "Login to use Karam Cash";
+    public static final String CHOOSE_A_DIFFERENT_ROOM_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE = "com.app.rehlat:id/noHotelFareDifference";
+    public static final String PROCEED_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE = "com.app.rehlat:id/yesHotelFareDifference";
+    public static final String PROCEED_BUTTON_LABEL  = "Proceed";
+    public static final String LOADING_INDICATOR_ID_ON_SELECT_ROOM_BUTTON = "com.app.rehlat:id/select_room_text_progressbar";
+    public static final String KARAM_WALLET_MESSAGE_LABEL = "com.app.rehlat:id/login_alert_text";
+    public static final String KARAM_WALLET_MESSAGE = "Your Karam Wallet is empty.";
     public static boolean SIGN_IN_STATUS = false;
     public static Double displayedActualFare;
     public static Double couponAmount ;
@@ -54,6 +61,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void checkBookingPageScreenIsDisplayed() {
         Logger.logAction("Checking the Booking Summary screen is displayed or not ?");
         try{
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR,1);
             if (isElementDisplayedById(BOOKING_SUMMARY_TIMER_VIEW_ID) || isElementDisplayedById(ADD_GUEST_ID)){
                 Logger.logStep("Booking Summary screen is displayed");
             }else{
@@ -131,9 +139,10 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
                 }else if (emailField.equals(Labels_Hotels.EMAIL_ID_SIGN_IN)){
                     Logger.logComment(Labels_Hotels.EMAIL_ID_SIGN_IN+" :- Email id is already entered in the text field");
                 }else if (emailField.equals(Labels_Hotels.STRING_NULL)){
-                    Logger.logComment("Entering the phone number as :- "+ Labels_Hotels.phoneNumber);
+                    Logger.logComment("Entering the phone number as :- "+ Labels_Hotels.PHONE_NUMBER);
                     sendTextById(EMAIL_FIELD, Labels_Hotels.EMAIL_ID_SIGN_IN);
                     closeTheKeyboard_Android();
+                    Thread.sleep(3000);
                 }else {
                     Logger.logComment("Replacing current email id "+emailField+" with "+ Labels_Hotels.EMAIL_ID_SIGN_IN);
                     WebElement textField = driver.findElement(By.id(EMAIL_FIELD));
@@ -155,28 +164,28 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
      */
     @Override
     public void enterTextInPhoneNumberTextField() {
-        Logger.logAction("Entering the number "+ Labels_Hotels.phoneNumber+" in number text field");
+        Logger.logAction("Entering the number "+ Labels_Hotels.PHONE_NUMBER+" in number text field");
         try{
             if (isElementDisplayedById(PHONE_NUMBER_FIELD)){
                 String phoneNumberField = driver.findElementById(PHONE_NUMBER_FIELD).getText();
                 if (phoneNumberField.equals(PLACEHOLDER_TEXT_OF_PHONE_NUMBER_TEXT_FIELD)){
-                    Logger.logComment("Entering the phone number:- "+ Labels_Hotels.phoneNumber);
+                    Logger.logComment("Entering the phone number:- "+ Labels_Hotels.PHONE_NUMBER);
                     WebElement textField = driver.findElementById(PHONE_NUMBER_FIELD);
                     tapOnElementBasedOnLocation(textField,"bottomRight");
-                    sendTextById(PHONE_NUMBER_FIELD, Labels_Hotels.phoneNumber);
+                    sendTextById(PHONE_NUMBER_FIELD, Labels_Hotels.PHONE_NUMBER);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
-                }else if (phoneNumberField.equals(Labels_Hotels.phoneNumber)){
+                }else if (phoneNumberField.equals(Labels_Hotels.PHONE_NUMBER)){
                     Logger.logComment(Labels_Hotels.EMAIL_ID_SIGN_IN+" :- Email id is already entered in the text field");
                 } else if (phoneNumberField.equals(Labels_Hotels.STRING_NULL)){
-                    Logger.logComment("Entering the phone number as :- "+ Labels_Hotels.phoneNumber);
-                    sendTextById(PHONE_NUMBER_FIELD, Labels_Hotels.phoneNumber);
+                    Logger.logComment("Entering the phone number as :- "+ Labels_Hotels.PHONE_NUMBER);
+                    sendTextById(PHONE_NUMBER_FIELD, Labels_Hotels.PHONE_NUMBER);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
                 } else {
-                    Logger.logComment("Replacing current phone number text "+phoneNumberField+" with "+ Labels_Hotels.phoneNumber);
+                    Logger.logComment("Replacing current phone number text "+phoneNumberField+" with "+ Labels_Hotels.PHONE_NUMBER);
                     WebElement textField = driver.findElementById(PHONE_NUMBER_FIELD);
                     tapOnElementBasedOnLocation(textField,"bottomRight");
                     clearKeysByUsingKeycode(PHONE_NUMBER_FIELD,PHONE_NUMBER_FIELD.length());
-                    sendTextById(PHONE_NUMBER_FIELD, Labels_Hotels.phoneNumber);
+                    sendTextById(PHONE_NUMBER_FIELD, Labels_Hotels.PHONE_NUMBER);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
                 }
             }else {
@@ -194,7 +203,6 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void tapOnContinueButton() {
         Logger.logAction("Tapping on continue button");
         try{
-            compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout(); // Todo:- After iOS is implemented by "Online Check In toggle button", this method needs to be removed from here and call it as a step of TC from workflows directly
             Thread.sleep(2000);
             if (isElementDisplayedById(CONTINUE_BUTTON)){
                 driver.findElementById(CONTINUE_BUTTON).click();
@@ -214,6 +222,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void tapOnAddGuestTravellersDetailsButton() {
         Logger.logAction("Tapping on adult add guest travellers details button");
         try{
+            compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout(); // Todo:- After iOS is implemented by "Online Check In toggle button", this method needs to be removed from here and call it as a step of TC from workflows directly
             Thread.sleep(2000);
             closeTheKeyboard_Android(); //Todo:- This line of code is to close the keyboard triggered while swiping
 //            scrollTheScreenUpwards();
@@ -322,6 +331,8 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
                     Logger.logError("Final fare calculation is in correct");
                 }
             }else {
+                Logger.logComment("Booking hotel cost in select room(s) screen is :- "+bookingHotelCostInSelectRoomScreen);
+                Logger.logComment("Booking hotel cost in select room(s) screen is :- "+displayedActualFare);
                 Logger.logError("Booking seat cost in review booking screen is not matching with the cost displaying in booking page..,i.e.., Booking seat cost in Booking page screen & Review Booking screen is:- "+displayedActualFare+" & "+ Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN);
             }
         }catch (Exception exception){
@@ -391,7 +402,10 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         try
         {
             if (SIGN_IN_STATUS == true) {
-                scrollToAnElementById_ANDROID(ADD_GUEST_TRAVELLERS_VIEW_TITLE,true);
+                scrollToAnElementById_ANDROID(FINAL_FARE,true);
+                String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
+                if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
+
                 if (isKaramPointsToggleSwitchEnabled()){
                     if (isElementDisplayedById(KARAM_POINTS)){
                         String amount = driver.findElementById(KARAM_POINTS).getText().replace("( - ) "+ Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
@@ -402,6 +416,11 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
                     }
                 }else {
                     Logger.logComment("Karam points toggle switch is disabled, so applied karam points are:- "+karamPoints);
+                    return karamPoints;
+                }
+                }
+                else {
+                    Logger.logStep("Karam wallet is empty, so tapping functionality over karam toggle  button is blocked");
                     return karamPoints;
                 }
             }else {
@@ -422,7 +441,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         Logger.logAction("Getting the displayed final fare");
         Double finalDisplayedFare = 0.00;
         try {
-//            scrollToAnElementById_ANDROID(KARAM_POINTS,true);
+            scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true);
             String finalFareWithCurrency = findElementByIdAndReturnText(FINAL_FARE);
             if (finalFareWithCurrency.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
                 String finalFareWithoutCurrency = finalFareWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
@@ -497,12 +516,19 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         Logger.logAction("Enabling the karam points toggle");
         try
         {
+            scrollToAnElementById_ANDROID(FINAL_FARE,true);
+            String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
+            if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
             if (isKaramPointsToggleSwitchEnabled()){
                 Logger.logComment("karam points toggle button is already enabled");
             }else {
                 WebElement karamPointsToggleSwitch = driver.findElementById(KARAM_POINTS_TOGGLE_BUTTON);
                 karamPointsToggleSwitch.click();
                 Logger.logComment("Karam points toggle button is enabled");
+            }
+            }
+            else {
+                Logger.logStep("Karam wallet is empty, so tapping functionality over karam toggle  button is blocked");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enable the karam points toggle button");
@@ -538,7 +564,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void applyTheCouponCode() {
         Logger.logAction("Applying the coupon code");
         try {
-            scrollToAnElementById_ANDROID(COUPON_CODE_TEXT_VIEW,true);
+            scrollToAnElementById_ANDROID(FINAL_FARE,true);
             sendKeysToCouponCodeTextField();
             tapOnApplyCouponCodeButton();
             if (isCouponCodeAppliedSuccessfully()){
@@ -560,7 +586,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
             if (isElementDisplayedById(COUPON_CODE_TEXT_VIEW)){
                 driver.findElementById(COUPON_CODE_TEXT_VIEW).sendKeys(Labels_Hotels.COUPON_CODE);
                 Logger.logComment(Labels_Hotels.COUPON_CODE+":- coupon code is parsed");
-                closeTheKeyboard_Android();
+//                closeTheKeyboard_Android();
             }else {
                 Logger.logError(COUPON_CODE_TEXT_VIEW+" - element name is not displayed in the current active screen");
             }
@@ -577,11 +603,10 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         try {
             if (isElementDisplayedById(APPLY_COUPON_CODE_BUTTON)){
                 List<WebElement> element = driver.findElementsById(APPLY_COUPON_CODE_BUTTON);
-//                Thread.sleep(2000);
                 element.get(0).click();
-                if (isElementDisplayedById(APPLY_COUPON_CODE_BUTTON)) { // Todo:- The below if condition are implemented because of tapping is not working on first time
-                    WebElement couponID = driver.findElementById(APPLY_COUPON_CODE_BUTTON);
-                    tapOnElementBasedOnLocation(couponID,"centerRight");
+                if (isElementDisplayedById(APPLY_COUPON_CODE_LAYOUT)) { // Todo:- The below if condition are implemented because of tapping is not working on first time
+                    WebElement couponID = driver.findElementById(APPLY_COUPON_CODE_LAYOUT);
+                    tapOnElementBasedOnLocation(couponID,"topRight");
                 }
                 Logger.logComment("Tapped on apply coupon button");
                 driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR))); // Before running check this activity indicator label is correct or not?
@@ -808,4 +833,62 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
             Logger.logError("Encountered error: unable to select the country name :- "+parsingCountryName);
         }
     }
+
+    /**
+     * Check the Fare jump error is displayed
+     */
+    @Override
+    public boolean isFareJumpAlertIsDisplayed(){
+        Logger.logAction("Checking the Fare jump alert is displayed or not ?");
+        try {
+//            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(LOADING_INDICATOR_ID_ON_SELECT_ROOM_BUTTON,2);
+            if (isElementEnabledById(PROCEED_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE)){
+                String alertMessageName = findElementByIdAndReturnText(PROCEED_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE);
+                if (alertMessageName.equalsIgnoreCase(PROCEED_BUTTON_LABEL)){
+                    Logger.logStep("Fare jump alert is displayed");
+                    return true;
+                }else {
+                    Logger.logComment("Fare jump alert is not displayed");
+                }
+            }else {
+                Logger.logComment("Fare jump alert is not displayed");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to check the fare jump alert is displayed or not ?");
+        }
+        return false;
+    }
+
+    /**
+     * Tapped on proceed button in the Fare jump alert
+     */
+    @Override
+    public void tapOnProceedButtonInFareJumpAlert(){
+        Logger.logAction("Tapping on change your dates button in the Fare jump alert");
+        try{
+            if (isElementEnabledById(PROCEED_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE)){
+                driver.findElementById(PROCEED_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE).click();
+                Logger.logComment("Tapped on change your dates button in the Fare jump alert");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on OK button in Fare jump alert");
+        }
+    }
+
+    /**
+     * Tapped on choose different room button in the Fare jump alert
+     */
+    @Override
+    public void tapOnChooseDifferentRoomButtonInFareJumpAlert(){
+        Logger.logAction("Tapping on change your dates button in the Fare jump alert");
+        try{
+            if (isElementEnabledById(CHOOSE_A_DIFFERENT_ROOM_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE)){
+                driver.findElementById(CHOOSE_A_DIFFERENT_ROOM_BUTTON_IN_FARE_JUMP_ALERT_MESSAGE).click();
+                Logger.logComment("Tapped on change your dates button in the Fare jump alert");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on OK button in Fare jump alert");
+        }
+    }
+
 }

@@ -202,6 +202,7 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
         Logger.logAction("Comparing the selected booking flight cost displayed in the search results screen and in the review booking screen");
         String bookingSeatCostDisplayedInReviewBookingScreen;
         try {
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
             bookingSeatCostDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValue();
             double selectedSeatBookingCostInFlightSearchResultsScreen = Double.parseDouble((Labels_Flights.SELECTED_SEAT_BOOKING_COST));
             double selectedSeatCostDisplayedInReviewBookingScreen = Double.parseDouble(bookingSeatCostDisplayedInReviewBookingScreen);
@@ -213,12 +214,13 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
                 Logger.logComment("Selected flight booking cost in flight search results is lesser than the booking flight cost displayed in review booking screen.., So rechecking the flight cost by disabling the security check in toggle button");
                 disableSecurityCheckInToggle();
                 bookingSeatCostDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValue();
-                if (bookingSeatCostDisplayedInReviewBookingScreen.contains(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){
+                if (bookingSeatCostDisplayedInReviewBookingScreen.contains(Labels_Flights.SELECTED_SEAT_BOOKING_COST) || (bookingSeatCostDisplayedInReviewBookingScreen.equals(Labels_Flights.SELECTED_SEAT_BOOKING_COST))){
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
                     Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen");
                 }else{
                     Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
-                    Logger.logError("Selected seat booking cost is not matches in review booking screen and in search results screen");
+                    Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen, it got increased.. So continuing with the latest price");
+                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = bookingSeatCostDisplayedInReviewBookingScreen;
                 }
             } else{
                 Logger.logError("Selected seat booking cost is not matches in review booking screen and in search results screen");

@@ -1,6 +1,7 @@
 package com.automation.rehlat.flights.pages.signUp;
 
 import com.automation.rehlat.flights.Labels_Flights;
+import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
 import com.automation.rehlat.flights.pages.flights.FlightsIos;
 import org.openqa.selenium.By;
@@ -10,7 +11,7 @@ public class SignUpIos extends SignUpBase {
 
     public static final String TOUCH_ID__AS_SIGN_UP_BUTTON = "USE TOUCHID FOR SIGN UP";
     public static final String FACE_ID__AS_SIGN_UP_BUTTON = "USE FACEID FOR SIGN UP";
-    public static final String SIGN_UP_BUTTON = "signupButton";
+    public static final String SIGN_UP_BUTTON = "Sign Up";
     public static final String ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD = "signupFirstName";
     public static final String ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD = "signupLastName";
     public static final String ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD = "signupEmail";
@@ -67,7 +68,8 @@ public class SignUpIos extends SignUpBase {
         try {
             if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD)){
                 WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD);
-                element.sendKeys(Labels_Flights.FIRST_NAME);
+                String firstName = General.getTheTestDataOfField("First_Name");
+                element.sendKeys(firstName);
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -86,7 +88,8 @@ public class SignUpIos extends SignUpBase {
         try {
             if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD)){
                 WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD);
-                element.sendKeys(Labels_Flights.LAST_NAME);
+                String lastName = General.getTheTestDataOfField("Last_Name");
+                element.sendKeys(lastName);
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -203,7 +206,7 @@ public class SignUpIos extends SignUpBase {
         try {
             Thread.sleep(2000);
             if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD)){
-                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_SELECT_DOMAIN_TEXT_FIELD);
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD);
                 element.sendKeys(Labels_Flights.REFERRAL_CODE);
                 closeTheKeyboard_iOS();
             }else {
@@ -221,7 +224,7 @@ public class SignUpIos extends SignUpBase {
     public void tapOnSignUpButton() {
         Logger.logAction("Taping on create account button");
         try {
-            scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
+//            scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
             if (isElementDisplayedByAccessibilityId(SIGN_UP_BUTTON)){
                 driver.findElementByAccessibilityId(SIGN_UP_BUTTON).click();
                 waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);

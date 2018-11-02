@@ -78,4 +78,20 @@ public interface BookingSummary {
      * @param parsingCountryName
      */
     void selectTheCountryCodeByCountryName(String parsingCountryName);
+
+    /**
+     * Tapped on change your dates button in the sold out alert
+     */
+    void tapOnChooseDifferentRoomButtonInFareJumpAlert();
+
+    /**
+     * Check the sold out error is displayed
+     */
+    boolean isFareJumpAlertIsDisplayed();
+
+    /**
+     * Tapped on change your dates button in the sold out alert
+     */
+    void tapOnProceedButtonInFareJumpAlert();
+
 }

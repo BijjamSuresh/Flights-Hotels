@@ -11,6 +11,7 @@ import com.automation.rehlat.hotels.pages.hotelsSearchResults.HotelsSearchResult
 import com.automation.rehlat.hotels.pages.menu.MenuBase;
 import com.automation.rehlat.hotels.pages.paymentsOptions.PaymentOptionsBase;
 import com.automation.rehlat.hotels.pages.selectRooms.SelectRoomsBase;
+import com.automation.rehlat.hotels.pages.settings.SettingsBase;
 import com.automation.rehlat.hotels.pages.signIn.SignInBase;
 import com.automation.rehlat.hotels.pages.signUp.SignUpBase;
 import io.appium.java_client.TouchAction;
@@ -32,6 +33,7 @@ public class BasePage extends Base {
     public static GuestTravellersDetailsBase GuestTravellersDetailsScreen;
     public static SignInBase SignInScreen;
     public static SignUpBase SignUpScreen;
+    public static SettingsBase SettingsScreen;
 
 
 
@@ -44,7 +46,7 @@ public class BasePage extends Base {
     public static final String TOGGLE_SWITCH = "XCUIElementTypeSwitch";
     public static String TRIP_TYPE ;
     public static String SELECTED_AIRLINE_NAME_IN_SRP;
-    public static boolean isUserSignedIn;
+    public static boolean isUserSignedIn = false;
     public static final String SRP_ONE_WAY_VIEW = "Rehlat.SRPOneWayView";
     public static final String SRP_TWO_WAY_VIEW = "Rehlat.SRPRoundTripView";
     public static final String NO_BUTTON = "No";
@@ -172,7 +174,7 @@ public class BasePage extends Base {
     public static void declineTheSyncPreviousTravellersDataModalView_Android() {
         Logger.logAction("Declining the sync previous travellers data modal view ");
         try{
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR,1);
+//            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR,1);
             if (isElementEnabledById(MODAL_VIEW)){
 //                driver.runAppInBackground(2);
                 String modalViewName = driver.findElementById(MODAL_VIEW).getText();

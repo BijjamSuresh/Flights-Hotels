@@ -1,6 +1,7 @@
 package com.automation.rehlat.flights.pages.signUp;
 
 import com.automation.rehlat.flights.Labels_Flights;
+import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -66,8 +67,9 @@ public class SignUpAndroid extends SignUpBase {
         Logger.logAction("Entering user first name");
         try {
             if (isElementDisplayedById(FIRST_NAME_TEXT_FIELD)){
-                driver.findElement(By.id(FIRST_NAME_TEXT_FIELD)).sendKeys(Labels_Flights.FIRST_NAME);
-                Logger.logComment(Labels_Flights.FIRST_NAME+" - element name is parsed");
+                String firstName = General.getTheTestDataOfField("First_Name");
+                driver.findElement(By.id(FIRST_NAME_TEXT_FIELD)).sendKeys(firstName);
+                Logger.logComment(firstName+" - element name is parsed");
                 closeTheKeyboard_Android();
             }else {
                 Logger.logError(FIRST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -85,8 +87,9 @@ public class SignUpAndroid extends SignUpBase {
         Logger.logAction("Entering user last name");
         try {
             if (isElementDisplayedById(LAST_NAME_TEXT_FIELD)){
-                driver.findElement(By.id(LAST_NAME_TEXT_FIELD)).sendKeys(Labels_Flights.LAST_NAME);
-                Logger.logComment(Labels_Flights.LAST_NAME+" - element name is parsed");
+                String lastName = General.getTheTestDataOfField("Last_Name");
+                driver.findElement(By.id(LAST_NAME_TEXT_FIELD)).sendKeys(lastName);
+                Logger.logComment(lastName+" - element name is parsed");
                 closeTheKeyboard_Android();
             }else {
                 Logger.logError(LAST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -184,7 +187,7 @@ public class SignUpAndroid extends SignUpBase {
                 for (int index=0 ; index <= listOfTextViews.size()-1; index++){
                     String eachTextViewName = listOfTextViews.get(index).getText();
                     if (eachTextViewName.matches(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL)){
-                        Thread.sleep(2000);
+                        Thread.sleep(4000);
                         index =index+1;
                         driver.findElement(By.xpath(XPATH_OF_SELECT_COUNTRY_VIEW_WITHOUT_INDEX+index+"]")).click();
                         break;

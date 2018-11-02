@@ -8,6 +8,7 @@ public class ReviewBookingIos extends ReviewBookingBase {
     public static final String REVIEW_BOOKING_SCREEN_TITTLE = "Review Booking";
     public static final String IN_PROGRESS_INDICATOR = "In progress";
     public static final String CONTINUE_BUTTON = "CONTINUE";
+    public static final String FOOTER_VIEW_PRICE_ID = "price";
 
 
 
@@ -110,8 +111,8 @@ public class ReviewBookingIos extends ReviewBookingBase {
         Double bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen;
         try {
 //            waitTillInProgressIndicatorIsInvisible();
-            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
-             bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValueInFooterView("ReviewBookingScreen",2);
+            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,2);
+             bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen = getTheBookingPriceDisplayedInFooterView();
              Logger.logComment("Selecting flight cost is :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
             if (bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen == Double.parseDouble(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){
                 String bookingCostIncludingCurrencyName = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
@@ -123,7 +124,7 @@ public class ReviewBookingIos extends ReviewBookingBase {
                 Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen.., So checking the booking flight cost again by disabling the toggle button");
                 disableSecurityCheckInToggle();
 //                Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);
-                bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValueInFooterView("ReviewBookingScreen",2);
+                bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen = getTheBookingPriceDisplayedInFooterView();
                 if (bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen == Double.parseDouble(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){
                     String bookingCostIncludingCurrencyName = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
 //                    String bookingCostExcludingCurrencyName = bookingCostIncludingCurrencyName.replace("KWD ", "");
@@ -139,6 +140,27 @@ public class ReviewBookingIos extends ReviewBookingBase {
             exception.printStackTrace();
             Logger.logError("Encountered error: Unable to verify the cost of selected booking seat in search results screen displayed in review booking screen");
         }
+    }
+
+    /**
+     * Get the booking price displayed in the footer view layout
+     * @return
+     */
+    public static Double getTheBookingPriceDisplayedInFooterView(){
+        Logger.logAction("Getting the booking price displayed in footer view");
+        try{
+            String hotelPriceInFooterViewWithCurrency = driver.findElementByAccessibilityId(FOOTER_VIEW_PRICE_ID).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            String hotelPriceWithoutCurrency = hotelPriceInFooterViewWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
+            if (hotelPriceWithoutCurrency .contains(Labels_Flights.STRING_COMMA)) {
+                String hotelPriceWithoutComma = hotelPriceWithoutCurrency.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL).trim();
+                return Double.parseDouble(hotelPriceWithoutComma);
+            }else {
+                return Double.parseDouble(hotelPriceWithoutCurrency);
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to get the booking price displayed in footer view");
+        }
+        return null;
     }
 
 

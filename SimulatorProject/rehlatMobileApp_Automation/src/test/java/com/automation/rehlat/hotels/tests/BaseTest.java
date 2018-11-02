@@ -1,5 +1,6 @@
 package com.automation.rehlat.hotels.tests;
 
+import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.hotels.Base;
 import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
@@ -12,6 +13,7 @@ import com.automation.rehlat.hotels.pages.hotelsSearchResults.HotelsSearchResult
 import com.automation.rehlat.hotels.pages.menu.MenuBase;
 import com.automation.rehlat.hotels.pages.paymentsOptions.PaymentOptionsBase;
 import com.automation.rehlat.hotels.pages.selectRooms.SelectRoomsBase;
+import com.automation.rehlat.hotels.pages.settings.SettingsBase;
 import com.automation.rehlat.hotels.pages.signIn.SignInBase;
 import com.automation.rehlat.hotels.pages.signUp.SignUpBase;
 import org.apache.commons.io.FileUtils;
@@ -48,8 +50,8 @@ public class BaseTest extends Base {
     public static final String DOMESTIC_TRAVELLERS_COUNTRY_NAME = "India";
 
     public static final String KUWAIT_AIRPORT_NAME_XPATH_IN_SEARCH_RESULTS = "//XCUIElementTypeStaticText[@name=\"Kuwait - Kuwait Intl - Kuwait\"]";
-    public static final String CHECK_IN_DAY = "2";
-    public static final String CHECK_OUT_DAY = "3";
+    public static String CHECK_IN_DAY = "4";
+    public static String CHECK_OUT_DAY = "5";
     public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS = "2"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
     public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS_WHEN_SOLDOUT_POPUP_INTERRUPTRED = "1"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
     public static final String TESTING_BANK_CARD = "Knet Test Card [KNET1]";
@@ -67,6 +69,7 @@ public class BaseTest extends Base {
     public static GuestTravellersDetailsBase GuestTravellersDetailsScreen;
     public static SignInBase SignInScreen;
     public static SignUpBase SignUpScreen;
+    public static SettingsBase SettingsScreen;
 
 
 
@@ -87,9 +90,9 @@ public class BaseTest extends Base {
         initializePageObject("paymentOptionsScreen", Labels_Hotels.platform);
         initializePageObject("myProfileScreen", Labels_Hotels.platform);
         initializePageObject("guestTravellersDetailsScreen", Labels_Hotels.platform);
+        initializePageObject("settings", Labels_Hotels.platform);
 //        initializePageObject("referYourFriendsScreen", Labels_Hotels.platform);
 //        initializePageObject("myTrips", Labels_Hotels.platform);
-//        initializePageObject("settings", Labels_Hotels.platform);
 //        initializePageObject("appSupport", Labels_Hotels.platform);
 //        initializePageObject("rateUs", Labels_Hotels.platform);
 //        initializePageObject("privacyPolicy", Labels_Hotels.platform);
@@ -102,27 +105,32 @@ public class BaseTest extends Base {
 
         checkAndWaitTillTheSplashScreenIsInvisible();
         setCountryLanguageAndAirportFromAndToLabels();
-//        runTheLiveApp();
+        runTheAppInTheConfigurationOf("SA", "Live");
 //        acceptAutoAlertsIfDisplayed();
     }
 
-//    /**
-//     *Run the live app by pushing the testing build to background
-//     */
-//    public static void runTheLiveApp() throws Exception{
-//        try {
-////            driver.runAppInBackground(800);
-//            if (Labels_Hotels.platform.equals(Labels_Hotels.ANDROID)){
-//
-//            }else if (Labels_Hotels.platform.equals(Labels_Hotels.IOS)){
-//            {
-//
-//                }
-//            }
-//        }catch (Exception exception){
-//            Logger.logError("Unable to run the live app");
-//        }
-//    }
+    /**
+     * Set the coupon code as per the app configuration
+     */
+    public static void runTheAppInTheConfigurationOf(String domainName, String parsingConfigurationType) {
+        try {
+            Labels_Hotels.setTheLabelsForDomain(domainName);
+            if (parsingConfigurationType.equalsIgnoreCase("Live")){
+                Labels_Hotels.CONFIGURATION_TYPE = Labels_Flights.LIVE_CONFIGURATION_TYPE;
+                Labels_Hotels.COUPON_CODE = "save15";
+
+            }else if (parsingConfigurationType.equalsIgnoreCase("Stage")){
+            {
+                Labels_Hotels.CONFIGURATION_TYPE = Labels_Flights.STAGE_CONFIGURATION_TYPE;
+                Labels_Hotels.COUPON_CODE = "save15";
+                }
+            }else {
+                Logger.logError("App configuration is neither live nor stage");
+            }
+        }catch (Exception exception){
+            Logger.logError("Unable to run the live app");
+        }
+    }
     /**
      * Auto accepting the alerts
      */

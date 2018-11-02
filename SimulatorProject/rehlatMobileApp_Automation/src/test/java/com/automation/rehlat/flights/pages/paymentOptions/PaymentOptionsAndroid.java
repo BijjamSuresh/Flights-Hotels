@@ -636,10 +636,9 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     /**
      * Check 3D payment screen is displayed
      * @return
-     * @throws Exception
      */
     @Override
-    public boolean check3DPaymentScreenIsDisplayed() throws Exception{
+    public boolean check3DPaymentScreenIsDisplayed() {
         Logger.logAction("Checking the 3D payment screen is displayed");
         try {
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);

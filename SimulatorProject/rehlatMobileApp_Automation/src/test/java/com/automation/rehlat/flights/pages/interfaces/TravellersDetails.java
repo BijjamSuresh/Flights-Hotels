@@ -17,7 +17,7 @@ public interface TravellersDetails {
     /**
      * Accept the auto fill populate modal if displayed
      */
-    boolean acceptAutoFillPopulateModalIfDisplayed();
+    boolean acceptAutoFillPopulateModalIfDisplayed(Integer parsingPassengersCount);
 
     /**
      * Enter adult travellers details
@@ -36,4 +36,9 @@ public interface TravellersDetails {
      * @param parsingPassengerCount
      */
     void EnterTravellersDetailsForPassengers(Integer parsingPassengerCount);
+
+    /**
+     * Tap on Next button
+     */
+    void tapOnNextButton();
 }

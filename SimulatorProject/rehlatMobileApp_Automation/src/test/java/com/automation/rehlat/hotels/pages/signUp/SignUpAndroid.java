@@ -1,6 +1,7 @@
 package com.automation.rehlat.hotels.pages.signUp;
 
 import com.automation.rehlat.hotels.Labels_Hotels;
+import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -67,7 +68,8 @@ public class SignUpAndroid extends SignUpBase {
         try {
             if (isElementDisplayedById(FIRST_NAME_TEXT_FIELD)){
                 driver.findElement(By.id(FIRST_NAME_TEXT_FIELD)).sendKeys(Labels_Hotels.FIRST_NAME);
-                Logger.logComment(Labels_Hotels.FIRST_NAME+" - element name is parsed");
+                String firstName = General.getTheTestDataOfField("First_Name");
+                Logger.logComment(firstName+" - element name is parsed");
                 closeTheKeyboard_Android();
             }else {
                 Logger.logError(FIRST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -86,7 +88,8 @@ public class SignUpAndroid extends SignUpBase {
         try {
             if (isElementDisplayedById(LAST_NAME_TEXT_FIELD)){
                 driver.findElement(By.id(LAST_NAME_TEXT_FIELD)).sendKeys(Labels_Hotels.LAST_NAME);
-                Logger.logComment(Labels_Hotels.LAST_NAME+" - element name is parsed");
+                String lastName = General.getTheTestDataOfField("Last_Name");
+                Logger.logComment(lastName+" - element name is parsed");
                 closeTheKeyboard_Android();
             }else {
                 Logger.logError(LAST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -183,7 +186,7 @@ public class SignUpAndroid extends SignUpBase {
                 List<WebElement> listOfTextViews = driver.findElements(By.className(SELECT_COUNTRY_TEXT_VIEW));
                 for (int index=0 ; index <= listOfTextViews.size()-1; index++){
                     String eachTextViewName = listOfTextViews.get(index).getText();
-                    if (eachTextViewName.matches(Labels_Hotels.KUWAIT_LANGUAGE_COUNTRY_LABEL)){
+                    if (eachTextViewName.matches(Labels_Hotels.LANGUAGE_COUNTRY_LABEL)){
 //                        Thread.sleep(2000);
                         index =index+1;
                         driver.findElementByXPath(XPATH_OF_SELECT_COUNTRY_VIEW_WITHOUT_INDEX+index+"]/android.widget.TextView").click();
@@ -191,7 +194,7 @@ public class SignUpAndroid extends SignUpBase {
                     }
                 }
             }else {
-                Logger.logError(Labels_Hotels.KUWAIT_LANGUAGE_COUNTRY_LABEL+" - element name is not displayed in the current active screen");
+                Logger.logError(Labels_Hotels.LANGUAGE_COUNTRY_LABEL+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             exception.printStackTrace();

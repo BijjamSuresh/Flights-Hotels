@@ -127,14 +127,15 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
      * @param parsingFlightCellTypeNumber
      * @return
      */
-    public static String getTheBookingCostOfSelectingOnlyDepartureFlightInSearchResults(String parsingFlightCellTypeNumber) {
+    public static String getTheBookingCostOfSelectingOnlyDepartureFlightInSearchResults(String  parsingFlightCellTypeNumber) {
         Logger.logAction("Getting the booking cost of second flight in search results");
         try{
-            scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true);
+//            scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true); //Todo:- This line of code is enabled when the selection of flight is random
             try{
+                Integer flightCellNumber = Integer.valueOf(parsingFlightCellTypeNumber);
                 List<WebElement> priceLists = driver.findElementsById(ACTUAL_PRICE_RESOURCE_ID);
-               String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(Integer.parseInt(parsingFlightCellTypeNumber)));
-                String bookingFlightPrice = bookingCostOfParsingRoomNumber.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+               String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(flightCellNumber));
+                String bookingFlightPrice = bookingCostOfParsingRoomNumber.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
                 if (bookingFlightPrice.contains(Labels_Flights.STRING_COMMA)){
                     String bookingFlightPriceWithoutComma = bookingFlightPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
                     Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPriceWithoutComma);
@@ -160,14 +161,16 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
      * @param parsingFlightCellTypeNumber
      * @return
      */
-    public static String getTheBookingCostOfSelectingDepartureAndReturnFlightInSearchResults(String parsingFlightCellTypeNumber) {
+    public static String getTheBookingCostOfSelectingDepartureAndReturnFlightInSearchResults(String  parsingFlightCellTypeNumber) {
         Logger.logAction("Getting the booking cost of first flight in search results");
         try{
-            scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true);
+            Integer flightCellNumber = Integer.valueOf(parsingFlightCellTypeNumber);
+//            scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true); Todo:- This line of code is enabled when the selection of flight is random
             try{
+//                flightCellNumber = Integer.valueOf(parsingFlightCellTypeNumber);
                 List<WebElement> priceLists = driver.findElementsById(ACTUAL_PRICE_RESOURCE_ID);
-                String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(Integer.parseInt(parsingFlightCellTypeNumber)-1).getText());
-                String bookingFlightPrice = bookingCostOfParsingRoomNumber.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+                String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(flightCellNumber).getText());
+                String bookingFlightPrice = bookingCostOfParsingRoomNumber.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
                 if (bookingFlightPrice.contains(Labels_Flights.STRING_COMMA)){
                     String bookingFlightWithoutComma = bookingFlightPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
                     Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightWithoutComma);
@@ -180,7 +183,8 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
                 }
             }catch (Exception exception){
                 scrollTheFlightSearchResultsScreenDownByACardGap_Android();
-                getTheBookingCostOfSelectingDepartureAndReturnFlightInSearchResults(parsingFlightCellTypeNumber);
+                flightCellNumber = flightCellNumber-1;
+                getTheBookingCostOfSelectingDepartureAndReturnFlightInSearchResults(String.valueOf(flightCellNumber));
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to get the booking cost of first flight in search results");

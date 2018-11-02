@@ -60,8 +60,8 @@ public class BaseTest extends Base {
     public static final String DOMESTIC_TRAVELLERS_COUNTRY_NAME = "India";
 
     public static final String KUWAIT_AIRPORT_NAME_XPATH_IN_SEARCH_RESULTS = "//XCUIElementTypeStaticText[@name=\"Kuwait - Kuwait Intl - Kuwait\"]";
-    public static final String DEPARTURE_DAY = "2";
-    public static final String RETURN_DAY = "5";
+    public static String DEPARTURE_DAY = "2";
+    public static String RETURN_DAY = "5";
     public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS = "1"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
     public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS_WHEN_SOLDOUT_POPUP_INTERRUPTRED = "2"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
     public static final String TESTING_BANK_CARD = "Knet Test Card [KNET1]";
@@ -123,28 +123,32 @@ public class BaseTest extends Base {
 
 
         checkAndWaitTillTheSplashScreenIsInvisible();
-        setCountryLanguageAndAirportFromAndToLabels();
-//        runTheLiveApp();
+        runTheAppInTheConfigurationOf("KUWAIT","Stage");
 //        acceptAutoAlertsIfDisplayed();
     }
 
-//    /**
-//     *Run the live app by pushing the testing build to background
-//     */
-//    public static void runTheLiveApp() throws Exception{
-//        try {
-////            driver.runAppInBackground(800);
-//            if (Labels_Hotels.platform.equals(Labels_Hotels.ANDROID)){
-//
-//            }else if (Labels_Hotels.platform.equals(Labels_Hotels.IOS)){
-//            {
-//
-//                }
-//            }
-//        }catch (Exception exception){
-//            Logger.logError("Unable to run the live app");
-//        }
-//    }
+    /**
+     * Set the coupon code as per the app configuration
+     */
+    public static void runTheAppInTheConfigurationOf(String domainName, String parsingConfiguration) {
+        try {
+            setCountryLanguageAndAirportFromAndToLabels(domainName);
+            if (parsingConfiguration.equalsIgnoreCase("Live")){
+                Labels_Flights.CONFIGURATION_TYPE = Labels_Flights.LIVE_CONFIGURATION_TYPE;
+                Labels_Flights.COUPON_CODE = "app8";
+
+            }else if (parsingConfiguration.equalsIgnoreCase("Stage")){
+            {
+                Labels_Flights.CONFIGURATION_TYPE =  Labels_Flights.STAGE_CONFIGURATION_TYPE;
+                Labels_Flights.COUPON_CODE = "automate";
+                }
+            }else {
+                Logger.logError("App configuration is neither live nor stage");
+            }
+        }catch (Exception exception){
+            Logger.logError("Unable to run the live app");
+        }
+    }
     /**
      * Auto accepting the alerts
      */
@@ -394,7 +398,7 @@ public class BaseTest extends Base {
         try {
             Logger.logComment(" Failure in the script, so taking the screenshot");
             String nameOfTestCase = getTestCaseName();
-            String pathOfScreenshot = "Screenshots/SoldOut"+ nameOfTestCase + "_" + getPlatform();
+            String pathOfScreenshot = "Screenshots/SoldOuts"+ nameOfTestCase + "_" + getPlatform();
             String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
             System.out.println(new File(pathOfScreenshot + "_" + time + ".jpg"));
             File screenshot = driver.getScreenshotAs(OutputType.FILE);
@@ -415,49 +419,9 @@ public class BaseTest extends Base {
             if (Labels_Flights.DEFAULT_PLATFORM.equals(Labels_Flights.IOS)){
                 if (parsingUDID.contains("-")){
                     Logger.logComment("Current running script is on simulator");
-                    if (parsingUDID.equalsIgnoreCase("9A0D9008-C6C7-4A1B-A6BD-91B8A34E6032")){
-                        Logger.logComment("Current script running device name is :- iPhone 5s");
-                        String appPath = "/Users/rehlat/Documents/Suresh/Automation/Flights/Builds/SimulatorBuilds/iPhone5S/Rehlat.app";
-                        Labels_Flights.DEVICENAME = "iPhone 5s";
-                        Labels_Flights.CALENDAR_SWIPE_DURATION = 700; // by default set to 400
-                        return appPath;
-                    }else if (parsingUDID.equalsIgnoreCase("91981FA4-3BB9-4A16-9AA3-D6919C4C2FC2")){
-                        Logger.logComment("Current script running device name is :- iPhone 6");
-                        String appPath = "/Users/rehlat/Documents/Suresh/Automation/Flights/Builds/SimulatorBuilds/iPhone6/Rehlat.app";
-                        Labels_Flights.DEVICENAME = "iPhone 6";
-                        Labels_Flights.CALENDAR_SWIPE_DURATION = 400;
-                        return appPath;
-                    }else if (parsingUDID.equalsIgnoreCase("73487701-EE25-48C9-9229-8074840D3940")){
-                        Logger.logComment("Current script running device name is :- iPhone 7");
-                        String appPath = "/Users/rehlat/Documents/Suresh/Automation/Flights/Builds/SimulatorBuilds/iPhone7/Rehlat.app";
-                        Labels_Flights.DEVICENAME = "iPhone 7";
-                        Labels_Flights.CALENDAR_SWIPE_DURATION = 400;
-                        return appPath;
-                    }else if (parsingUDID.equalsIgnoreCase("45692414-3101-468A-9971-B2CEAAC6BF85")){
-                        Logger.logComment("Current script running device name is :- iPhone X");
-                        String appPath = "/Users/rehlat/Documents/Suresh/Automation/Flights/Builds/SimulatorBuilds/iPhoneX/Rehlat.app";
-                        Labels_Flights.DEVICENAME = "iPhone X";
-                        Labels_Flights.CALENDAR_SWIPE_DURATION = 400;
-                        return appPath;
-                    }else if (parsingUDID.equalsIgnoreCase("55835BA3-BC59-41C6-9A83-3F813E48E25E")){
-                        Logger.logComment("Current script running device name is :- iPhone XR");
-                        String appPath = "/Users/rehlat/Documents/Suresh/Automation/Flights/Builds/SimulatorBuilds/iPhoneX/Rehlat.app";
-                        Labels_Flights.DEVICENAME = "iPhone XR";
-                        Labels_Flights.CALENDAR_SWIPE_DURATION = 400;
-                        return appPath;
-                    }else if (parsingUDID.equalsIgnoreCase("191E84F0-2120-4A08-B33C-0AF03B4D0348")){
-                        Logger.logComment("Current script running device name is :- iPhone XS");
-                        String appPath = "/Users/rehlat/Documents/Suresh/Automation/Flights/Builds/SimulatorBuilds/iPhoneX/Rehlat.app";
-                        Labels_Flights.DEVICENAME = "iPhone XS";
-                        Labels_Flights.CALENDAR_SWIPE_DURATION = 400;
-                        return appPath;
-                    }else if (parsingUDID.equalsIgnoreCase("DB94E19B-A74A-4484-B7A2-3FEC43C0CC2D")){
-                        Logger.logComment("Current script running device name is :- iPhone XS Max");
-                        String appPath = "/Users/rehlat/Documents/Suresh/Automation/Flights/Builds/SimulatorBuilds/iPhoneX/Rehlat.app";
-                        Labels_Flights.DEVICENAME = "iPhone XS Max";
-                        Labels_Flights.CALENDAR_SWIPE_DURATION = 400;
-                        return appPath;
-                    }
+
+                     String appPath = "/Users/rehlat/Documents/SimulatorProject/Rehlat.app"; //Todo:- This code is used as the simulator build is configured as common one
+                     return appPath;
                 }else {
                     Logger.logComment("Current running script is on real device, will go with the relative app path");
                     String appPath = "../Rehlat.app";

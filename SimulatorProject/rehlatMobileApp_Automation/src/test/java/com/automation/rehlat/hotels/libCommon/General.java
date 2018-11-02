@@ -2,8 +2,12 @@ package com.automation.rehlat.hotels.libCommon;
 
 import com.automation.rehlat.hotels.Base;
 import com.automation.rehlat.hotels.Labels_Hotels;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 
 import static com.automation.rehlat.flights.Labels_Flights.*;
@@ -284,6 +288,31 @@ public class General extends Base {
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to accept the user location access alert");
         }
+    }
+
+    /**
+     * Get the test data of parsing passenger number
+     */
+    public static String getTheTestDataOfField(String parsingKey){
+        Logger.logAction("Getting the test data of passing key :- "+parsingKey);
+        Integer randomNumber = null;
+        try {
+            JSONParser jsonParser = new JSONParser();
+            FileReader fileReader = new FileReader("/Users/rehlat/Documents/Passengers_test_data.json");
+            JSONArray object = (JSONArray) jsonParser.parse(fileReader);
+            Integer totalListCount = (object).size();
+            randomNumber = getTheRandomValue(totalListCount);
+            if (randomNumber == 0){
+                randomNumber =1;
+            }
+            JSONObject travellerNumber = (JSONObject) object.get(randomNumber);
+            String parsingKeyValue = (String) travellerNumber.get(parsingKey);
+            return parsingKeyValue;
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Unable to get the test data of passenger number :- "+randomNumber);
+        }
+        return null;
     }
 
 }

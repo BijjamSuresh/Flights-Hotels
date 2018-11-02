@@ -117,7 +117,7 @@ public class SignInAndroid extends SignInBase{
             runAppInBackground(1);
             if (isElementDisplayedById(EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN)){
                 driver.findElementById(EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN).sendKeys(Labels_Flights.EMAIL_ID_SIGN_IN);
-                Logger.logComment(Labels_Flights.EMAIL_ID_SIGN_IN +":- email id is parsed");
+                Logger.logComment(Labels_Flights.EMAIL_ID_SIGN_IN+":- email id is parsed");
                 closeTheKeyboard_Android();
             }else {
                 Logger.logError("unable to find the element name :- "+EMAIL_TEXT_FIELD_OF_SIGN_IN_SCREEN);

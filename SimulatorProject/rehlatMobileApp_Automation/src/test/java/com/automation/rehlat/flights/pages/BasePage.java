@@ -60,9 +60,9 @@ public class BasePage extends Base {
     public static final String IOS_DONE_BUTTON = "Done";
     public static final String IOS_DATE_PICKER = "XCUIElementTypeDatePicker";
     public static final String TOGGLE_SWITCH = "XCUIElementTypeSwitch";
-    public static String TRIP_TYPE ;
+    public static String TRIP_TYPE = Labels_Flights.STRING_NULL;
     public static String SELECTED_AIRLINE_NAME_IN_SRP;
-    public static boolean isUserSignedIn;
+    public static boolean isUserSignedIn = false;
     public static final String SRP_ONE_WAY_VIEW = "SRPOneWayCell";
     public static final String SRP_TWO_WAY_VIEW = "SRPRoundTripCell";
     public static final String NO_BUTTON = "No";
@@ -113,7 +113,6 @@ public class BasePage extends Base {
     public static void scrollTheCalenderPageUpByDaysGap_Android() {
         Logger.logAction("Scrolling up action with less length is started");
         try {
-            Thread.sleep(2000);
             TouchAction action = new TouchAction(driver);
             action.longPress(500, 967).moveTo(500, 532).release().perform();
         } catch (Exception exception) {
@@ -189,7 +188,6 @@ public class BasePage extends Base {
         Logger.logAction("Declining the sync previous travellers data modal view ");
         try{
             if (isElementEnabledById(MODAL_VIEW)){
-//                driver.runAppInBackground(2);
                 String modalViewName = driver.findElementById(MODAL_VIEW).getText();
                 if (modalViewName.equals(SYNC_PREVIOUS_MODAL_VIEW_DATA)){
                     if (isElementDisplayedById(DONT_SYNC_PREVIOUS_TRAVELLERS_DATA)){
@@ -221,13 +219,12 @@ public class BasePage extends Base {
                 Thread.sleep(3000);
                 if (isElementDisplayedById(parsingID)){
                     Logger.logStep("Waiting till the activity indicator is invisible in the current active screen");
-//                    Thread.sleep(2000);
                     driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(parsingID)));
                 }else {
                     Logger.logStep("Activity indicator is not displayed in the current active screen");
                 }
             }catch (Exception exception){
-                Logger.logComment(count+" :- time trying to find the element name");
+                Logger.logComment(count+" :- time trying to find the progress indicator element name");
             }
             Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
             count++;
@@ -368,31 +365,15 @@ public class BasePage extends Base {
                 Logger.logStep(counter +" - time trying the keyboard is displayed in the current active screen");
                 counter++;
             }
-//            break;
+            if (counter == 1){
+                Logger.logStep(counter +" - time trying the keyboard is displayed in the current active screen");
+                return false;
+            }
         }
         Logger.logError("Encountered error: Unable to close the keyboard");
         return true;
     }
 
-//    /**
-//     * Check the test running device is an samsung device and if it is pushing it to background for a second
-//     * @throws Exception
-//     */
-//    public static void runAppInBackGroundIfTheCurrentRunningDeviceIsSamsungDevice() throws Exception{
-//        Logger.logAction(" Checking the test running device is a samsung device");
-//        try{
-////        String deviceName = getAndroidDeviceId();
-//        if (Labels_Hotels.platform.equals(Labels_Hotels.ANDROID)){
-//            Logger.logComment("Pushing the app to background");
-//            driver.runAppInBackground(1);
-//            Logger.logComment("Getting the app to foreground");
-//        }else {
-//            Logger.logStep("Current device is not an Android device with ID :- "+Labels_Hotels.SAMSUNG_DEVICE_ID);
-//        }
-//    }catch (Exception exception){
-//            Logger.logError("Unable to run the app in background for a second");
-//        }
-//    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -534,6 +515,7 @@ public class BasePage extends Base {
                         Logger.logComment("Exception happened on Updating element...,");
                     }
                 }
+                if (!(flightCellTypeText.contains("Use Coupon:"))){
                 if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE) && flightCellTypeText.contains(Labels_Flights.DOT_STRING)){
                     actualAmountPrice = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
                     if (actualAmountPrice.contains(Labels_Flights.STRING_COMMA)){
@@ -551,30 +533,36 @@ public class BasePage extends Base {
                     Logger.logComment("Final Fare cost of booking flight in footer view is :- "+actualAmountPrice);
                     return Double.valueOf(actualAmountPrice);
                 }
-//            else if(flightCellTypeText.contains("updating...") || flightCellTypeText.contains("updating.") || flightCellTypeText.contains("updating..")){
-//                Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);
-//                Logger.logStep("Booking flight cost is not displayed, price label is still loading");
-//                bookingFlightCell = driver.findElementByXPath("//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]");
-//                flightCellDetails = bookingFlightCell.findElements(By.className("XCUIElementTypeStaticText"));
-//                for (cellIndex=0;cellIndex<flightCellDetails.size();cellIndex++) {
-//                    flightCellType = flightCellDetails.get(cellIndex);
-//                    flightCellTypeText = flightCellType.getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
-//                    if (flightCellTypeText.contains(".")){
-//                        Logger.logComment("Displayed booking cost is: " +flightCellTypeText);
-//                        return flightCellTypeText;
-//                    } else if(flightCellTypeText.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
-//                        String actualAmountPrice = flightCellTypeText.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE+Labels_Hotels.ONE_CHARACTER_SPACE, "").trim();
-//                        Logger.logComment("Final Fare cost of booking flight in footer view is :- "+actualAmountPrice);
-//                        return actualAmountPrice;
-//                    }else{
-//                        Logger.logError("Booking flight cost is not displayed in the current active screen");
-//                    }
-//                }
-//            }
-                else
-                {
-                    Logger.logComment(cellIndex+" time finding the booking flight cost");
                 }
+            else {
+                footerViewCellNumber = footerViewCellNumber +1;
+                Logger.logStep("Booking flight cost is not displayed, price label is still loading");
+                bookingFlightCell = driver.findElementByXPath("//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther["+footerViewCellNumber+"]");
+                flightCellDetails = bookingFlightCell.findElements(By.className("XCUIElementTypeStaticText"));
+                for (cellIndex=0;cellIndex<flightCellDetails.size();cellIndex++) {
+                    flightCellType = flightCellDetails.get(cellIndex);
+                    flightCellTypeText = flightCellType.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                    if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE) && flightCellTypeText.contains(Labels_Flights.DOT_STRING)){
+                        actualAmountPrice = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+                        if (actualAmountPrice.contains(Labels_Flights.STRING_COMMA)){
+                            String actualAmountWithoutComma = actualAmountPrice.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
+                            actualAmountPrice = actualAmountWithoutComma;
+                        }
+                        Logger.logComment("Final Fare cost of booking flight in footer view is :- "+actualAmountPrice);
+                        return Double.valueOf(actualAmountPrice);
+                    } else if(flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
+                        actualAmountPrice = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
+                        if (actualAmountPrice.contains(Labels_Flights.STRING_COMMA)){
+                            String actualAmountWithoutComma = actualAmountPrice.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
+                            actualAmountPrice = actualAmountWithoutComma;
+                        }
+                        Logger.logComment("Final Fare cost of booking flight in footer view is :- "+actualAmountPrice);
+                        return Double.valueOf(actualAmountPrice);
+                    }else{
+                            Logger.logComment(cellIndex+" time finding the booking flight cost");
+                    }
+                }
+            }
             }
         }catch (Exception exception){
             exception.printStackTrace();

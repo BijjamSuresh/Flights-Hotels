@@ -1,12 +1,13 @@
 package com.automation.rehlat.hotels.tests.workFlows;
 
+import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import com.automation.rehlat.hotels.tests.BaseTest;
 import org.junit.Test;
 
 import static com.automation.rehlat.hotels.Labels_Hotels.*;
 
-public class TicketBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenuScreen extends BaseTest {
+public class HotelBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenuScreen extends BaseTest {
     @Test
     public void testTicketBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenuScreen() throws Exception{
         Logger.beginTest("Ticket booking without coupon code and with karam cash by sign in from menu screen");
@@ -26,6 +27,7 @@ public class TicketBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenu
         SignInScreen.enterLoginCredentials();
         SignInScreen.tapOnLoginButton();
         HotelsScreen.tapOnHotelsTab();
+        HotelsScreen.setTheDomainAs(Labels_Hotels.LANGUAGE_COUNTRY_LABEL); //Todo:- This line of method is to re-set the currency to parsing domain where as after signed in the currency type will change to domain as per email
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnSearchButton();
         HotelsScreen.sendKeysToSearchResultsScreen("London");
@@ -48,13 +50,20 @@ public class TicketBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenu
         HotelsSearchResultsScreen.checkTheHotelsSRPScreenIsDisplayed();
         HotelsSearchResultsScreen.getThePriceOfHotelAndTapOnItsCardView(1);
         if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
-            HotelsProfileScreen.tapOnChangeYourDatesButtonInSoldOutAlert();
-            HotelsScreen.tapOnCheckInOptionInCalendarView();
-            HotelsScreen.selectCheckInDate(SECOND_CHECK_IN_MONTH,"12");
-            HotelsScreen.selectCheckOutDate(SECOND_CHECK_OUT_MONTH,"13");
-            HotelsScreen.tapOnDoneButtonInCalendarView();
+            Logger.logStep("Sold out alert is displayed, so re selecting the hotel from SRP");
+            HotelsProfileScreen.tapOnSeeAvailablePropertiesButtonInSoldOutAlert();
+            HotelsSearchResultsScreen.checkTheHotelsSRPScreenIsDisplayed();
+            HotelsSearchResultsScreen.getThePriceOfHotelAndTapOnItsCardView(2);
             if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
-                Logger.logError("Tried two times but still the sold out alert is displaying");
+                Logger.logStep("Sold out alert is displayed even after selecting the new hotel from SRP, so re changing the hotel dates from hotel profile screen");
+                HotelsProfileScreen.tapOnChangeYourDatesButtonInSoldOutAlert();
+                HotelsScreen.tapOnCheckInOptionInCalendarView();
+                HotelsScreen.selectCheckInDate(SECOND_CHECK_IN_MONTH,"1");
+                HotelsScreen.selectCheckOutDate(SECOND_CHECK_OUT_MONTH,"2");
+                HotelsScreen.tapOnDoneButtonInCalendarView();
+                if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+                    Logger.logError("Tried selecting new hotel and changing the dates still shows the sold out alert");
+                }
             }
         }
         HotelsProfileScreen.checkTheHotelProfileScreenIsDisplayed();
@@ -64,15 +73,35 @@ public class TicketBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenu
         SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(2,1); // Todo:- Yet to discuss with the dev as multiple individual rooms selection is not possible [Eg: One user, multiple types of room selections are not possible]
         SelectRoomsScreen.compareSelectedRoomPriceInSelectRoomScreenAndHotelProfileScreen(1);
         SelectRoomsScreen.tapOnContinueButton();
-        if (SelectRoomsScreen.isHotelsSoldOutAlertIsDisplayed()){
-            Logger.logStep("Sold out alert is displayed in select rooms screen where as not displayed in the SRP or hotel profile screen");
-            SelectRoomsScreen.tapOnChangeYourRoomTypeButtonInSoldOutAlert();
-            SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(2,2);
+        if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+            Logger.logStep("Sold out alert is displayed, so re selecting the hotel from SRP");
+            SelectRoomsScreen.tapOnSeeAvailablePropertiesButtonInSoldOutAlert();
+            HotelsSearchResultsScreen.checkTheHotelsSRPScreenIsDisplayed();
+            HotelsSearchResultsScreen.getThePriceOfHotelAndTapOnItsCardView(2);
+            if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+                Logger.logStep("Sold out alert is displayed even after selecting the new hotel from SRP when sold out alert is displayed in hotel profile screen");
+                HotelsProfileScreen.tapOnChangeYourDatesButtonInSoldOutAlert();
+                HotelsScreen.tapOnCheckInOptionInCalendarView();
+                HotelsScreen.selectCheckInDate(SECOND_CHECK_IN_MONTH,"2");
+                HotelsScreen.selectCheckOutDate(SECOND_CHECK_OUT_MONTH,"3");
+                HotelsScreen.tapOnDoneButtonInCalendarView();
+                if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+                    Logger.logError("Tried selecting new hotel and changing the dates still shows the sold out alert");
+                }
+            }
+            HotelsProfileScreen.checkTheHotelProfileScreenIsDisplayed();
+            HotelsProfileScreen.compareSelectedHotelPriceInSRPAndInHotelProfileScreens();
+            HotelsProfileScreen.tapOnSelectRoomButton();
+            SelectRoomsScreen.checkSelectRoomScreenIsDisplayed();
+            SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(5,1); // Todo:- Yet to discuss with the dev as multiple individual rooms selection is not possible [Eg: One user, multiple types of room selections are not possible]
             SelectRoomsScreen.compareSelectedRoomPriceInSelectRoomScreenAndHotelProfileScreen(1);
             SelectRoomsScreen.tapOnContinueButton();
             if (SelectRoomsScreen.isHotelsSoldOutAlertIsDisplayed()) {
-                Logger.logError("Tried two times but still the sold out alert is displaying");
+                Logger.logError("Tried two times still shows the sold out alert even after selecting the new hotel from SRP when sold out alert is displayed in hotel profile screen");
             }
+        }
+        if (BookingSummaryScreen.isFareJumpAlertIsDisplayed()){
+            BookingSummaryScreen.tapOnProceedButtonInFareJumpAlert();
         }
         BookingSummaryScreen.checkBookingPageScreenIsDisplayed();
         if (!(BookingSummaryScreen.isUserIsSignedIn())){
@@ -89,6 +118,23 @@ public class TicketBooking_WithoutCouponCode_And_WithKaramCash_BySignIn_FromMenu
         GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(2,1,1);
         GuestTravellersDetailsScreen.tapOnSaveButton();
         BookingSummaryScreen.tapOnContinueButton();
+//        if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+//            Logger.logStep("Sold out alert is displayed, so re selecting the hotel from SRP");
+//            HotelsProfileScreen.tapOnSeeAvailablePropertiesButtonInSoldOutAlert();
+//            HotelsSearchResultsScreen.checkTheHotelsSRPScreenIsDisplayed();
+//            HotelsSearchResultsScreen.getThePriceOfHotelAndTapOnItsCardView(2);
+//            if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+//                Logger.logStep("Sold out alert is displayed even after selecting the new hotel from SRP, so re changing the hotel dates from hotel profile screen");
+//                HotelsProfileScreen.tapOnChangeYourDatesButtonInSoldOutAlert();
+//                HotelsScreen.tapOnCheckInOptionInCalendarView();
+//                HotelsScreen.selectCheckInDate(SECOND_CHECK_IN_MONTH,"1");
+//                HotelsScreen.selectCheckOutDate(SECOND_CHECK_OUT_MONTH,"2");
+//                HotelsScreen.tapOnDoneButtonInCalendarView();
+//                if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+//                    Logger.logError("Tried selecting new hotel and changing the dates still shows the sold out alert");
+//                }
+//            }
+//        }
         PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
         PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
         // KNET PAYMENT PROCESS

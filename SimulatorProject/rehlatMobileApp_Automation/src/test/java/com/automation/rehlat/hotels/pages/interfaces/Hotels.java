@@ -97,4 +97,16 @@ public interface Hotels {
      * @param roomsCount
      */
     void resetTheRoomsCountToDefaultCount(Integer roomsCount);
+
+//    /**
+//     * Change the domain
+//     * @param parsingCurrencyName
+//     */
+//    void selectTheCurrencyName(String parsingCurrencyName);
+
+    /**
+     * Set the domain as per the parsing domain
+     * @param parsingDomain
+     */
+    void setTheDomainAs(String parsingDomain);
 }

@@ -33,4 +33,9 @@ public interface SelectRooms {
      * Tapped on ok button in the sold out alert
      */
     void tapOnChangeYourRoomTypeButtonInSoldOutAlert();
+
+    /**
+     * Tapped on change your dates button in the sold out alert
+     */
+    void tapOnSeeAvailablePropertiesButtonInSoldOutAlert();
 }

@@ -10,7 +10,7 @@ public class MenuIos extends MenuBase {
     public static final String SETTINGS_OPTION = "Settings";
     public static final String TRIPS_OPTION = "My Trips";
     public static final String TWENTY_FOUR_BAR_SEVEN_SUPPORT_OPTION = "Rehlat 24X 7 Support";
-    public static final String SIGN_IN_OR_SIGN_UP_BUTTON = "Sign In/Sign Up";
+    public static final String SIGN_IN_OR_SIGN_UP_BUTTON = "signupButton";
     public static final String USER_NAME_FIELD_IN_SIDE_MENU = "userName";
     public static final String SIDE_MENU_IMAGE = "sideMenuImage";
     public static final String NEW_SIGNUP_ICON = "new_signup_icon";
@@ -38,6 +38,8 @@ public class MenuIos extends MenuBase {
     public static final String NO_MAIL_ACCOUNTS_ID_IN_EMAIL = "No Mail Accounts";
     public static final String CANCEL_BUTTON_ID_IN_EMAIL = "Cancel";
     public static final String DELETE_DRAFT_ID_IN_EMAIL = "Delete Draft";
+    public static final String NEW_SIGNUP_LABEL = "Sign In/Sign Up";
+
 
 
     /**
@@ -124,7 +126,7 @@ public class MenuIos extends MenuBase {
         try {
             WebElement element = driver.findElementByAccessibilityId(USER_NAME_FIELD_IN_SIDE_MENU);
             String elementName = element.getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
-            if (elementName.equalsIgnoreCase(SIGN_IN_OR_SIGN_UP_BUTTON)){
+            if (elementName.equalsIgnoreCase(NEW_SIGNUP_LABEL)){
                 com.automation.rehlat.flights.libCommon.Logger.logStep("User is not signed in");
                 return false;
             }else {

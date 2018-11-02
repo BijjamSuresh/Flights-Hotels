@@ -3,6 +3,7 @@ package com.automation.rehlat.flights.pages.paymentOptions;
 import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.flights.libCommon.Logger;
 import com.automation.rehlat.flights.tests.BaseTest;
+import com.automation.rehlat.hotels.Labels_Hotels;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,7 +14,7 @@ import java.util.List;
 public class PaymentOptionsIos extends PaymentOptionsBase {
 
     public static final String PAYMENT_OPTIONS_TITLE = "Payment Options";
-    public static final String KNET_PAYMENT_GATEWAY_OPTION = "KNET";
+    public static final String KNET_PAYMENT_GATEWAY_OPTION = "kNet";
     public static final String KNET_PAYMENT_GATEWAY_TITLE = "Knet Payment Gateway";
     public static final String PIN_TEXTFIELD = "XCUIElementTypeSecureTextField";
     public static final String SELECT_YOUR_BANK = "Select Your Bank";
@@ -29,18 +30,20 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static final String POST_TRANSACTIONS_SCREEN = "Posted Transaction Filter";
     public static final String XPATH_OF_CARD_NUMBER_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[4]/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeOther[2]";
     public static final String XPATH_OF_CARDNUMBER = "//XCUIElementTypeApplication[@name=\\\"Rehlat\\\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[4]/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeTextField[2]";
-    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[2]/XCUIElementTypeTextField";
-    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[3]/XCUIElementTypeTextField";
-    public static final String XPATH_OF_CREDITOR_DEBIT_CARD_CVV_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\\\"Rehlat\\\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[4]/XCUIElementTypeTextField";
-    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_HOLDER_NAME_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[5]/XCUIElementTypeTextField";
+    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"cardNumber\"]";
+    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"date\"]";
+    public static final String XPATH_OF_CREDITOR_DEBIT_CARD_CVV_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"cvv\"]";
+    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_HOLDER_NAME_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"cardName\"]";
     public static final String PAY_SECURELY_BUTTON = "PAY SECURELY";
     public static final String XPATH_OF_PASSWORD_FIELD_IN_3D_SECURE_DEBIT_OR_CREDIT_PAYMENT_SCREEN = "//XCUIElementTypeOther[@name=\"Checkout 3D Simulator\"]/XCUIElementTypeOther[5]/XCUIElementTypeSecureTextField";
     public static final String CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN = "Continue";
-    public static final String XPATH_OF_FINAL_PAYMENT_CELL_IN_PAYMENT_OPTIONS_SCREEN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]";
+    public static final String XPATH_OF_FINAL_PAYMENT_PRICE_IN_PAYMENT_OPTIONS_SCREEN = "//XCUIElementTypeStaticText[@name=\"totalAmount\"]";
     public static final String TICKET_SOLD_OUT_POPUP = "Ticket had been Sold out";
     public static final String OK_BUTTON = "OK";
     public static final String SETUP_APPLE_PAY_MODAL_SHEET = "Set up Apple Pay";
+    public static final String BUY_WITH_APPLE_PAY_MODAL_SHEET = "Buy with Apple Pay";
     public static final String CHANGE_PAYMENT_OPTION = "Change Payment Method";
+    public static boolean FARE_JUMP_STATUS = false;
 
 
     /**
@@ -50,7 +53,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public void checkPaymentOptionsScreenIsDisplayed() {
         Logger.logAction("Checking payment option screen is displayed or not ?");
         try{
-            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,5);
+            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,3);
 //            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR); // Todo:- Below two lines of code is needed while the sold out's are happening with long timeout
 //            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR);
             acceptTheFareDifferAlert();
@@ -75,12 +78,13 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static boolean isSetUpApplePayModalSheetIsDisplayed() {
         Logger.logAction("Checking the setup apple pay modal sheet is displayed");
         try {
-            if (isElementDisplayedByName(SETUP_APPLE_PAY_MODAL_SHEET)){
+//            if (isElementDisplayedByName(SETUP_APPLE_PAY_MODAL_SHEET) || isElementDisplayedByName(BUY_WITH_APPLE_PAY_MODAL_SHEET)){ //Todo:- RECHECK -- This line of code is disabled due to element status says false while executing but in inspector enabled and visibility attributes are showing as true
+            if (isElementDisplayedByName(CHANGE_PAYMENT_OPTION)){
                 Logger.logStep("setup apple pay modal sheet is displayed");
                 return true;
             }
             else {
-                Logger.logStep(SETUP_APPLE_PAY_MODAL_SHEET+" :- element is not displayed in the current active screen");
+                Logger.logStep(CHANGE_PAYMENT_OPTION+" :- element is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to verify the set p Apple Pay modal sheet is displayed or not");
@@ -94,7 +98,12 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static void tapOnChangePaymentMethodOption() {
         Logger.logAction("Tapping on change payment method option");
         try {
-            findElementByNameAndClick(CHANGE_PAYMENT_OPTION);
+            boolean status = findElementByAccessibilityIdAndClick(CHANGE_PAYMENT_OPTION);
+            if (status == true){
+                Logger.logComment("Tapped on change payment option");
+            }else {
+                Logger.logError("Didn't tapped on change payment option");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on change payment method option");
         }
@@ -107,6 +116,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
         Logger.logAction("Accepting the fare differ alert if displayed");
         try {
             if (isElementDisplayedByXPath(FARE_DIFFER_ALERT_XPATH)){
+                FARE_JUMP_STATUS = true;
                 Logger.logStep("Fare differ alert is displayed and going to accept it by tapping on yes button");
                 driver.findElementByName(YES_BUTTON_IN_FARE_DIFFER_ALERT).click();
                 Logger.logComment("Tapped on yes button in the fare differ alert");
@@ -128,27 +138,35 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public void compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen() {
         Logger.logAction("Comparing the final payment displayed in payment checkout screen with the amount displayed in review booking screen");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_FINAL_PAYMENT_CELL_IN_PAYMENT_OPTIONS_SCREEN)){
+            String finalPayment;
+            if (isElementDisplayedByXPath(XPATH_OF_FINAL_PAYMENT_PRICE_IN_PAYMENT_OPTIONS_SCREEN)){
                 Logger.logAction("Total amount payable price linear layout is displayed");
-                String xPathOfFinalPaymentPrice = XPATH_OF_FINAL_PAYMENT_CELL_IN_PAYMENT_OPTIONS_SCREEN+"/XCUIElementTypeStaticText[3]";
-                if (isElementDisplayedByXPath(xPathOfFinalPaymentPrice)){
-                    Double finalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(driver.findElementByXPath(xPathOfFinalPaymentPrice).getText().replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL));
-                    Double ticketAmountDisplayedInBookingPageScreen = Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
-                    Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalAmountPayablePriceInPaymentCheckOutScreen);
-                    Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
-                    if (finalAmountPayablePriceInPaymentCheckOutScreen.equals(ticketAmountDisplayedInBookingPageScreen)) {
-                        Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
-                    }else if (finalAmountPayablePriceInPaymentCheckOutScreen == ticketAmountDisplayedInBookingPageScreen) {
-                        Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
-                    }
+                String finalPaymentWithCurrencyType = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_FINAL_PAYMENT_PRICE_IN_PAYMENT_OPTIONS_SCREEN);
+                String finalPaymentWithoutCurrencyType = finalPaymentWithCurrencyType.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL);
+                if (finalPaymentWithoutCurrencyType.contains(Labels_Flights.STRING_COMMA)){
+                    String finalPaymentWithoutComma = finalPaymentWithoutCurrencyType.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
+                    finalPayment = finalPaymentWithoutComma;
+                }else {
+                    finalPayment = finalPaymentWithoutCurrencyType;
+                }
+                Double finalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(finalPayment);
+                Double ticketAmountDisplayedInBookingPageScreen = Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
+                Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalAmountPayablePriceInPaymentCheckOutScreen);
+                Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
+                if (FARE_JUMP_STATUS == false){
+                if (finalAmountPayablePriceInPaymentCheckOutScreen.equals(ticketAmountDisplayedInBookingPageScreen)) {
+                    Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
+                }else if (finalAmountPayablePriceInPaymentCheckOutScreen == ticketAmountDisplayedInBookingPageScreen) {
+                    Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
+                }
 //                    else if (Labels_Hotels.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN.contains(finalAmountPayablePriceInPaymentCheckOutScreen)) {
 //                        Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
 //                    }
-                    else {
-                        Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
-                    }
+                else {
+                    Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                }
                 }else {
-                    Logger.logError("Total amount payable price is not displaying in payment checkout screen");
+                    Logger.logComment("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalAmountPayablePriceInPaymentCheckOutScreen);
                 }
             }else {
                 Logger.logError("Total amount payable cell is not displaying in payment checkout screen");
@@ -212,9 +230,13 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public void tapOnKnetPaymentGateWay() {
         Logger.logAction("Tapping on KNET payment gateway");
         try{
-            if (isElementEnabledByName(KNET_PAYMENT_GATEWAY_OPTION)){
-                driver.findElementByName(KNET_PAYMENT_GATEWAY_OPTION).click();
-                Logger.logComment("Tapped on kent payment option");
+            if (isElementDisplayedByAccessibilityId(KNET_PAYMENT_GATEWAY_OPTION)){
+                boolean status = findElementByAccessibilityIdAndClick(KNET_PAYMENT_GATEWAY_OPTION);
+                if (status ==true){
+                    Logger.logComment("Tapped on kent payment option");
+                }else {
+                    Logger.logError("Didn't tapped on knet payment option");
+                }
 //                if (isElementDisplayedByClassName(Labels_Hotels.IOS_ACTIVITY_INDICATOR)){
 //                    driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(Labels_Hotels.IOS_ACTIVITY_INDICATOR)));
 //                }else {
@@ -641,9 +663,13 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static void tapOnCreditOrDebitCardCheckOutPaymentButton() {
         Logger.logAction("Tapping on pay securely check out button");
         try {
-            if (isElementDisplayedById(PAY_SECURELY_BUTTON)){
-                driver.findElement(By.id(PAY_SECURELY_BUTTON)).click();
-                Logger.logComment("Tapped on pay securely button");
+            if (isElementDisplayedByAccessibilityId(PAY_SECURELY_BUTTON)){
+               boolean status = findElementByAccessibilityIdAndClick(PAY_SECURELY_BUTTON);
+               if (status==true){
+                   Logger.logComment("Tapped on pay securely button");
+               }else {
+                   Logger.logError("Didn't tapped on pay securely button");
+               }
             }else {
                 Logger.logError("Element name is not displayed in the current active screen:- "+PAY_SECURELY_BUTTON);
             }
@@ -655,10 +681,9 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     /**
      * Check 3D payment screen is displayed
      * @return
-     * @throws Exception
      */
     @Override
-    public boolean check3DPaymentScreenIsDisplayed() throws Exception {
+    public boolean check3DPaymentScreenIsDisplayed() {
         Logger.logAction("Checking the 3D payment screen is displayed");
         try {
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
@@ -712,7 +737,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 driver.findElement(By.id(CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN)).click();
                 Logger.logComment("Tapped on continue button in  3D pay securely payment button");
             }else {
-                Logger.logError("Element name is not displayed in the current active screen:- "+CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN);
+                Logger.logWarning("Element name is not displayed in the current active screen:- "+CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN);
             }
         } catch (Exception exception) {
             Logger.logError("Encountered error: Unable to enter the credit or debit card details");

@@ -12,6 +12,7 @@ public class HotelsProfileAndroid extends HotelsProfileBase {
     public static final String SELECT_ROOM_BUTTON_ID = "com.app.rehlat:id/select_room_text";
     public static final String LOADING_INDICATOR_ID_ON_SELECT_ROOM_BUTTON = "com.app.rehlat:id/select_room_text_progressbar";
     public static final String CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE  = "com.app.rehlat:id/noHotelFareDifference";
+    public static final String SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE  = "com.app.rehlat:id/yesHotelFareDifference";
     public static final String CHANGE_YOUR_DATES_BUTTON_LABEL  = "Change your Dates";
     public static final String OK_BUTTON_IN_ROOM_SOLD_OUT_ALERT_ID  = "com.app.rehlat:id/noHotelFareDifference";
     public static final String PRICE_ID_IN_HOTELS_PROFILE_SCREEN_FOOTER_VIEW = "com.app.rehlat:id/hotelDetailsfooter_total_fare_textview";
@@ -120,6 +121,22 @@ public class HotelsProfileAndroid extends HotelsProfileBase {
         try{
             if (isElementEnabledById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
                 driver.findElementById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
+                Logger.logComment("Tapped on change your dates button in the sold out alert");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
+        }
+    }
+
+    /**
+     * Tapped on change your dates button in the sold out alert
+     */
+    @Override
+    public void tapOnSeeAvailablePropertiesButtonInSoldOutAlert(){
+        Logger.logAction("Tapping on change your dates button in the sold out alert");
+        try{
+            if (isElementEnabledById(SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
+                driver.findElementById(SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
                 Logger.logComment("Tapped on change your dates button in the sold out alert");
             }
         }catch (Exception exception){

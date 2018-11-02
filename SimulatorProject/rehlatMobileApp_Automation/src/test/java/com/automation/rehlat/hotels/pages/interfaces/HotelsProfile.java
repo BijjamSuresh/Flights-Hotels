@@ -26,4 +26,9 @@ public interface HotelsProfile {
      * Tapped on ok button in the sold out alert
      */
     void tapOnChangeYourDatesButtonInSoldOutAlert();
+
+    /**
+     * Tapped on change your dates button in the sold out alert
+     */
+    void tapOnSeeAvailablePropertiesButtonInSoldOutAlert();
 }

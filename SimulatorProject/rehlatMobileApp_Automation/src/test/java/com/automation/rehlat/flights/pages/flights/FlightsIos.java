@@ -2,6 +2,7 @@ package com.automation.rehlat.flights.pages.flights;
 
 import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.flights.libCommon.Logger;
+import io.appium.java_client.MobileElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
@@ -17,11 +18,9 @@ public class FlightsIos extends FlightsBase {
     public static final String FROM_TEXTFIELD_ID = "fromButton";
     public static final String TO_TEXTFIELD_ID = "toButton";
     public static final String DOWN_ARROW_BUTTON_ID_OF_PASSENGER_LAYOUT = "Downward Arrow";
-    public static final String XPATH_OF_ONE_WAY_BUTTON = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]";
+    public static final String XPATH_OF_ONE_WAY_BUTTON = "//XCUIElementTypeButton[@name=\"onewayButton\"]";
     public static final String XPATH_OF_TWO_WAY_BUTTON = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]";
     public static final String SEARCH_VIEW = "Rehlat.SearchView";
-    public static final String IN_PROGRESS_LOADING_INDIACATOR = "In progress";
-    public static final String SEARCH_TEXTFIELD = "Kuwait - Kuwait Intl - Kuwait";
     public static final String SEARCH_TEXTFIELD_XPATH = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField";
     public static final String CONTINUE_BUTTON = "CONTINUE";
     public static final String MENU_BUTTON = "Item";
@@ -32,10 +31,10 @@ public class FlightsIos extends FlightsBase {
     public static final String ONE_WAY_IN_ARABIC_LANGUAGE = "الذهاب فقط";
     public static final String ONE_WAY_IN_ENGLISH_LANGUAGE = "ONE-WAY";
     public static final String XPATH_OF_SELECT_COUNTRY_SHEET = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeTable";
-    public static final String XPATH_OF_DEPARTURE_DAY_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[2]";
-    public static final String XPATH_OF_DEPARTURE_MONTH_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeStaticText[1]";
-    public static final String XPATH_OF_RETURN_DAY_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[2]";
-    public static final String XPATH_OF_RETURN_MONTH_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeStaticText[1]";
+    public static final String DEPARTURE_DAY_ID_IN_CALENDAR_VIEW = "fromDate";
+    public static final String DEPARTURE_MONTH_ID_IN_CALENDAR_VIEW = "fromMonth";
+    public static final String RETURN_DAY_ID_IN_CALENDAR_VIEW = "toDate";
+    public static final String RETURN_MONTH_ID_IN_CALENDAR_VIEW = "toMonth";
     public static final String CALENDER_MODAL_VIEW_XPATH = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeCollectionView";
     protected static String CURRENT_MONTH = "Oct";
     public static final String[] listOfElementsInFlightsTab = {"ONE-WAY","ROUND-TRIP","FROM","TO","Departure","Return","ADULTS","CHILDREN","INFANTS","ECONOMY","BUSINESS","FIRST","Search"};
@@ -104,6 +103,8 @@ public class FlightsIos extends FlightsBase {
     public void tapOnOneWayTrip(){
         Logger.logAction("Tap on one way trip");
         try {
+//            MobileElement element = (MobileElement) driver.findElementByXPath(Labels_Flights.XCUI);
+//            element.click();
             boolean  status = findElementByXPathAndClick(XPATH_OF_ONE_WAY_BUTTON);
             if (status == true){
              Logger.logStep("Tapped on one way trip");
@@ -111,6 +112,7 @@ public class FlightsIos extends FlightsBase {
                 Logger.logError("Didn't tapped on one way trip");
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error:- Unable to tap on one way trip button");
         }
     }
@@ -253,11 +255,6 @@ public class FlightsIos extends FlightsBase {
         Logger.logAction("Checking keyboard is triggered or not ?");
         try {
             // Commented code is used to handle the loading indicator displayed on first time navigating to search flight screen after fresh installation
-//            if (isElementDisplayedByClassName(Labels_Hotels.IOS_ACTIVITY_INDICATOR)){
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(Labels_Hotels.IOS_ACTIVITY_INDICATOR)));
-//            }else {
-//                Logger.logAction("Activity indicator is not displayed in the current active screen");
-//            }
             Thread.sleep(2000);
             if (isKeyboardDisplayed()){
                 Logger.logComment("Keyboard is triggered");
@@ -277,19 +274,11 @@ public class FlightsIos extends FlightsBase {
         Logger.logAction("Checking search view screen is displayed or not?");
         try{
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
-            // Below if condition is added because on first launch loading indicator is displaying after tapping on FROM text field
-//            if (isElementDisplayedByClassName(Labels_Hotels.IOS_ACTIVITY_INDICATOR)){
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(Labels_Hotels.IOS_ACTIVITY_INDICATOR)));
-//                Logger.logStep("Waiting till the loading indicator is invisible");
-//                isElementDisplayedByName(SEARCH_VIEW);
-//            }
-//            else {
                 if(isElementDisplayedByName(SEARCH_VIEW)){
                     Logger.logStep("Search view screen is displayed");
                 }else {
                     Logger.logError("Search view screen is not displayed");
                 }
-//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the screen name");
         }
@@ -337,10 +326,7 @@ public class FlightsIos extends FlightsBase {
         Logger.logAction("Tapping on departure button");
         try{
             findElementByXPathAndClick(XPATH_OF_DEPARTURE);
-//            if (isElementEnabledByName(XPATH_OF_DEPARTURE)){
-//                driver.findElement(By.name(DEPARTURE_BUTTON)).click();
                 Logger.logStep("Tapped on departure button");
-//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on Departure button");
         }
@@ -354,10 +340,7 @@ public class FlightsIos extends FlightsBase {
         Logger.logAction("Tapping on return button");
         try{
             findElementByXPathAndClick(XPATH_OF_RETURN);
-//            if (isElementEnabledByName(XPATH_OF_RETURN)){
-//                driver.findElementByName(XPATH_OF_RETURN).click();
                 Logger.logStep("Tapped on return button");
-//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on Departure button");
         }
@@ -380,11 +363,12 @@ public class FlightsIos extends FlightsBase {
                 scrollToAnElementByName(calendarView,departureMonthAndYear,true);
                 if (isElementDisplayedByName(departureMonthAndYear)){
                     if (isElementEnabledByName(departureDay)) {
-                        WebElement  calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
-                        List<WebElement> departureDays = calenderView.findElements(By.name(departureDay));
-                        int departureDaysSize = departureDays.size();
-                        if (departureDaysSize >= 2){
-                            Logger.logComment("More than one similar departure days are displayed in the calender view with same departure day: "+departureDay+"");
+                        while (iterations <=10){
+                            WebElement  calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+                            List<WebElement> departureDays = calenderView.findElements(By.name(departureDay));
+                            int departureDaysSize = departureDays.size();
+                            if (departureDaysSize >= 2){
+                                Logger.logComment("More than one similar departure days are displayed in the calender view with same departure day: "+departureDay+"");
                             if (departureDaysSize >= 2){
                                 Logger.logWarning("More than one similar dates are displayed in the departure calender, so tapping on nearest possible date");
                                 for (int count =0;count<=departureDays.size()-1;count++){
@@ -392,31 +376,33 @@ public class FlightsIos extends FlightsBase {
                                     if (visibleDepartureDay.getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Flights.STATUS_TRUE)){
                                         visibleDepartureDay.click();
                                         Logger.logComment("Tapped on day:- "+departureDay);
+                                        String departureMonthName = getTheDepartureMonthDisplayedInCalenderView();
+                                        String departureDayValue = getTheDepartureDayDisplayedInCalenderView();
+                                        if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
+                                            if (departureDayValue.equalsIgnoreCase(departureDay)){
+                                                Logger.logComment("Tapped on correct departure day:- "+departureDay);
+                                                iterations = 10;
+                                                break;
+                                            }else {
+                                                Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                            }
+                                        }else {
+                                            Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                            if (iterations <= 10){
+                                                iterations++;
+                                                arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
+                                                arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
+                                                driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
+                                            }else {
+                                                Logger.logError("Tried "+iterations+" times didn't find the exact date");
+                                            }
+                                        }
                                     }else
                                     {
                                         continue;
                                     }
                                 }
-                                String departureMonthName = getTheDepartureMonthDisplayedInCalenderView();
-                                String departureDayValue = getTheDepartureDayDisplayedInCalenderView();
-                                if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                    if (departureDayValue.equalsIgnoreCase(departureDay)){
-                                        Logger.logComment("Tapped on correct departure day:- "+departureDay);
-                                    }else {
-                                        Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
-                                    }
-                                }else {
-                                    Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
-                                    if (iterations <= 3){
-                                        iterations++;
-                                        arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                        arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                        driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
-                                        selectDepartureDate(departureMonthAndYear, departureDay);
-                                    }else {
-                                        Logger.logError("Tried "+iterations+" times didn't find the exact date");
-                                    }
-                                }
+
                             }else {
                                 driver.findElementByName(departureDay).click();
                                 Logger.logComment("Tapped on day:- "+departureDay);
@@ -426,6 +412,10 @@ public class FlightsIos extends FlightsBase {
                             driver.findElementByName(departureDay).click();
                             Logger.logComment("Tapped on day:- "+departureDay);
                         }
+                        if (iterations == 10){
+                            break;
+                        }
+                        }
                     }else {
                         Logger.logError("Accurate Date is not displayed in the departure");
                     }
@@ -433,6 +423,7 @@ public class FlightsIos extends FlightsBase {
                     scrollToAnElementByName(calendarView,departureMonthAndYear,false);
                     if (isElementDisplayedByName(departureMonthAndYear)){
                         if (isElementEnabledByName(departureDay)) {
+                            while (iterations <=10){
                             WebElement  calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
                             List<WebElement> departureDays = calenderView.findElements(By.name(departureDay));
                             int departureDaysSize = departureDays.size();
@@ -445,30 +436,32 @@ public class FlightsIos extends FlightsBase {
                                         if (visibleDepartureDay.getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Flights.STATUS_TRUE)){
                                             visibleDepartureDay.click();
                                             Logger.logComment("Tapped on day:- "+departureDay);
+                                            String departureMonthName = getTheDepartureMonthDisplayedInCalenderView();
+                                            String departureDayValue = getTheDepartureDayDisplayedInCalenderView();
+                                            if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
+                                                if (departureDayValue.equalsIgnoreCase(departureDay)){
+                                                    Logger.logComment("Tapped on correct departure day:- "+departureDay);
+                                                    iterations = 10;
+                                                    break;
+                                                }else {
+                                                    Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                                }
+                                            }else {
+                                                if (iterations <= 10){
+                                                    iterations++;
+                                                    arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
+                                                    arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
+                                                    driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
+                                                }else {
+                                                    Logger.logError("Tried "+iterations+" times didn't find the exact date");
+                                                }
+                                            }
                                         }else
                                         {
                                             continue;
                                         }
                                     }
-                                    String departureMonthName = getTheDepartureMonthDisplayedInCalenderView();
-                                    String departureDayValue = getTheDepartureDayDisplayedInCalenderView();
-                                    if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                        if (departureDayValue.equalsIgnoreCase(departureDay)){
-                                            Logger.logComment("Tapped on correct departure day:- "+departureDay);
-                                        }else {
-                                            Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
-                                        }
-                                    }else {
-                                        if (iterations <= 3){
-                                            iterations++;
-                                            arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                            arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
-                                            selectDepartureDate(departureMonthAndYear, departureDay);
-                                        }else {
-                                            Logger.logError("Tried "+iterations+" times didn't find the exact date");
-                                        }
-                                    }
+
                                 }else {
                                     driver.findElementByName(departureDay).click();
                                     Logger.logComment("Tapped on day:- "+departureDay);
@@ -477,6 +470,10 @@ public class FlightsIos extends FlightsBase {
                                 Logger.logComment("One departure day is displayed in the calender: "+departureDay+"");
                                 driver.findElementByName(departureDay).click();
                                 Logger.logComment("Tapped on day:- "+departureDay);
+                            }
+                            if (iterations == 10){
+                                break;
+                            }
                             }
                         }else {
                             Logger.logError("Accurate Date is not displayed in the departure");
@@ -521,49 +518,54 @@ public class FlightsIos extends FlightsBase {
                 scrollToAnElementByName(calendarView,returnMonthAndYear,true);
                 if (isElementDisplayedByName(returnMonthAndYear)){
                     if (isElementEnabledByName(returnDay)) {
-                        WebElement  calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
-                        List<WebElement> returnDays = calenderView.findElements(By.name(returnDay));
-                        int returnDaysSize = returnDays.size();
-                        if (returnDaysSize >= 2){
-                            Logger.logComment("Two departure days are displayed in the calender view with same return day: "+returnDay+"");
-                            if (returnDaysSize >= 2){
-                                Logger.logWarning("Two accurate dates are displayed in the return calender, so tapping on nearest possible date");
-                                for (int count =0;count<=returnDays.size()-1;count++){
-                                    WebElement visibleReturnDay = returnDays.get(count);
-                                    if (visibleReturnDay.getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Flights.STATUS_TRUE)){
-                                        visibleReturnDay.click();
-                                        Logger.logComment("Tapped on day:- "+visibleReturnDay);
-                                    }else
-                                    {
-                                        continue;
+                        while (iterations <=10) {
+                            WebElement calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+                            List<WebElement> returnDays = calenderView.findElements(By.name(returnDay));
+                            int returnDaysSize = returnDays.size();
+                            if (returnDaysSize >= 2) {
+                                Logger.logComment("Two departure days are displayed in the calender view with same return day: " + returnDay + "");
+                                if (returnDaysSize >= 2) {
+                                    Logger.logWarning("Two accurate dates are displayed in the return calender, so tapping on nearest possible date");
+                                    for (int count = 0; count <= returnDays.size() - 1; count++) {
+                                        WebElement visibleReturnDay = returnDays.get(count);
+                                        if (visibleReturnDay.getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Flights.STATUS_TRUE)) {
+                                            visibleReturnDay.click();
+                                            Logger.logComment("Tapped on day:- " + visibleReturnDay);
+                                            String departureMonthName = getTheReturnMonthDisplayedInCalenderView();
+                                            String departureDayValue = getTheReturnDayDisplayedInCalenderView();
+                                            if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)) {
+                                                if (departureDayValue.equalsIgnoreCase(returnDay)) {
+                                                    Logger.logComment("Tapped on correct departure day:- " + returnDay);
+                                                    iterations = 10;
+                                                    break;
+                                                } else {
+                                                    Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                                }
+                                            } else {
+                                                if (iterations <= 10) {
+                                                    iterations++;
+                                                    arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
+                                                    arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "center");
+                                                    driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1], arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1], 1000);
+                                                } else {
+                                                    Logger.logError("Tried " + iterations + " times didn't find the exact date");
+                                                }
+                                            }
+                                        } else {
+                                            continue;
+                                        }
                                     }
+                                } else {
+                                    driver.findElementByName(returnDay).click();
+                                    Logger.logComment("Tapped on day:- " + returnDay);
                                 }
-                                String departureMonthName = getTheReturnMonthDisplayedInCalenderView();
-                                String departureDayValue = getTheReturnDayDisplayedInCalenderView();
-                                if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                    if (departureDayValue.equalsIgnoreCase(returnDay)){
-                                        Logger.logComment("Tapped on correct departure day:- "+returnDay);
-                                    }else {
-                                        Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
-                                    }
-                                }else {
-                                    if (iterations <= 3){
-                                        iterations++;
-                                        arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                        arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                        driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
-                                        selectDepartureDate(returnMonthAndYear, returnDay);
-                                    }else {
-                                        Logger.logError("Tried "+iterations+" times didn't find the exact date");
-                                    }
-                                }
-                            }else {
+                            } else {
+                                Logger.logComment("One return day is displayed in the return calender: " + returnDay + "");
                                 driver.findElementByName(returnDay).click();
-                                Logger.logComment("Tapped on day:- "+returnDay);
                             }
-                        }else {
-                            Logger.logComment("One return day is displayed in the return calender: "+returnDay+"");
-                            driver.findElementByName(returnDay).click();
+                            if (iterations == 10){
+                                break;
+                            }
                         }
                     }else {
                         Logger.logError("Accurate Date is not displayed in the departure");
@@ -572,7 +574,8 @@ public class FlightsIos extends FlightsBase {
                     scrollToAnElementByName(calendarView,returnMonthAndYear,false);
                     if (isElementDisplayedByName(returnMonthAndYear)){
                         if (isElementEnabledByName(returnDay)) {
-                            WebElement  calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+                            while (iterations <=10) {
+                                WebElement  calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
                             List<WebElement> returnDays = calenderView.findElements(By.name(returnDay));
                             int returnDaysSize = returnDays.size();
                             if (returnDaysSize >= 2){
@@ -584,28 +587,29 @@ public class FlightsIos extends FlightsBase {
                                         if (visibleReturnDay.getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Flights.STATUS_TRUE)){
                                             visibleReturnDay.click();
                                             Logger.logComment("Tapped on day:- "+visibleReturnDay);
+                                            String departureMonthName = getTheReturnMonthDisplayedInCalenderView();
+                                            String departureDayValue = getTheReturnDayDisplayedInCalenderView();
+                                            if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
+                                                if (departureDayValue.equalsIgnoreCase(returnDay)){
+                                                    Logger.logComment("Tapped on correct departure day:- "+returnDay);
+                                                    iterations = 10;
+                                                    break;
+                                                }else {
+                                                    Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                                }
+                                            }else {
+                                                if (iterations <= 10){
+                                                    iterations++;
+                                                    arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
+                                                    arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
+                                                    driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
+                                                }else {
+                                                    Logger.logError("Tried "+iterations+" times didn't find the exact date");
+                                                }
+                                            }
                                         }else
                                         {
                                             continue;
-                                        }
-                                    }
-                                    String departureMonthName = getTheReturnMonthDisplayedInCalenderView();
-                                    String departureDayValue = getTheReturnDayDisplayedInCalenderView();
-                                    if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                        if (departureDayValue.equalsIgnoreCase(returnDay)){
-                                            Logger.logComment("Tapped on correct departure day:- "+returnDay);
-                                        }else {
-                                            Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
-                                        }
-                                    }else {
-                                        if (iterations <= 3){
-                                            iterations++;
-                                            arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                            arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
-                                            selectDepartureDate(returnMonthAndYear, returnDay);
-                                        }else {
-                                            Logger.logError("Tried "+iterations+" times didn't find the exact date");
                                         }
                                     }
                                 }else {
@@ -615,6 +619,10 @@ public class FlightsIos extends FlightsBase {
                             }else {
                                 Logger.logComment("One return day is displayed in the return calender: "+returnDay+"");
                                 driver.findElementByName(returnDay).click();
+                            }
+                            if (iterations == 10){
+                                break;
+                            }
                             }
                         }else {
                             Logger.logError("Accurate Date is not displayed in the departure");
@@ -852,7 +860,7 @@ public class FlightsIos extends FlightsBase {
      */
     public static String getTheDepartureMonthDisplayedInCalenderView() throws Exception{
         Logger.logAction("Getting the month displayed in the calendar view");
-        String departureMonth = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_DEPARTURE_MONTH_IN_CALENDAR_VIEW);
+        String departureMonth = findElementByAccessibilityIdAndReturnText(DEPARTURE_MONTH_ID_IN_CALENDAR_VIEW,Labels_Flights.VALUE_ATTRIBUTE);
         Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
         return departureMonth;
     }
@@ -864,7 +872,7 @@ public class FlightsIos extends FlightsBase {
      */
     public static String getTheDepartureDayDisplayedInCalenderView() throws Exception{
         Logger.logAction("Getting the day displayed in the calendar view");
-        String departureDay = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_DEPARTURE_DAY_IN_CALENDAR_VIEW);
+        String departureDay = findElementByAccessibilityIdAndReturnText(DEPARTURE_DAY_ID_IN_CALENDAR_VIEW,Labels_Flights.VALUE_ATTRIBUTE);
         Logger.logComment("Selected day value in calendar view is :- "+departureDay);
         return departureDay;
     }
@@ -876,7 +884,7 @@ public class FlightsIos extends FlightsBase {
      */
     public static String getTheReturnMonthDisplayedInCalenderView() throws Exception{
         Logger.logAction("Getting the month displayed in the calendar view");
-        String departureMonth = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_RETURN_MONTH_IN_CALENDAR_VIEW);
+        String departureMonth = findElementByAccessibilityIdAndReturnText(RETURN_MONTH_ID_IN_CALENDAR_VIEW,Labels_Flights.VALUE_ATTRIBUTE);
         Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
         return departureMonth;
     }
@@ -888,7 +896,7 @@ public class FlightsIos extends FlightsBase {
      */
     public static String getTheReturnDayDisplayedInCalenderView() throws Exception {
         Logger.logAction("Getting the day displayed in the calendar view");
-        String departureDay = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_RETURN_DAY_IN_CALENDAR_VIEW);
+        String departureDay = findElementByAccessibilityIdAndReturnText(RETURN_DAY_ID_IN_CALENDAR_VIEW,Labels_Flights.VALUE_ATTRIBUTE);
         Logger.logComment("Selected day value in calendar view is :- " + departureDay);
         return departureDay;
     }
@@ -1002,11 +1010,7 @@ public class FlightsIos extends FlightsBase {
             WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_ADULTS_COUNT);
             String adultsCount = element.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             Logger.logComment("Current adult passenger count is :- "+adultsCount);
-//            if (adultsCount.equalsIgnoreCase("0")){
-//                return 0;
-//            }else {
                 return Integer.parseInt(adultsCount);
-//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to set the passenger count");
         }
@@ -1062,11 +1066,7 @@ public class FlightsIos extends FlightsBase {
             WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_CHILDREN_COUNT);
             String childrenCount = element.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             Logger.logComment("Current children passenger count is :- "+childrenCount);
-//            if (childrenCount.equalsIgnoreCase("0")){
-//                return 0;
-//            }else {
                 return Integer.parseInt(childrenCount);
-//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to set the passenger count");
         }
@@ -1122,11 +1122,7 @@ public class FlightsIos extends FlightsBase {
             WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_INFANTS_COUNT);
             String infantsCount = element.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             Logger.logComment("Current infants passenger count is :- "+infantsCount);
-//            if (infantsCount.equalsIgnoreCase("infant")){
-//                return 0;
-//            }else {
-                return Integer.parseInt(infantsCount);
-//            }
+            return Integer.parseInt(infantsCount);
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to set the passenger count");
         }
@@ -1245,7 +1241,5 @@ public class FlightsIos extends FlightsBase {
         }
     }
 
-
-        /////////////
 
 }

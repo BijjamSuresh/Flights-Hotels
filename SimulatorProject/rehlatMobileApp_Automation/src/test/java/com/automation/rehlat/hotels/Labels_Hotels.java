@@ -1,5 +1,8 @@
 package com.automation.rehlat.hotels;
 
+import com.automation.rehlat.flights.libCommon.Logger;
+import com.automation.rehlat.hotels.tests.BaseTest;
+
 public class Labels_Hotels extends Base {
     //////// APPIUM Capabilities /////////////////////
     public static final String APPIUM_PORT_NUMBER_DEFAULT = "4723";
@@ -44,17 +47,17 @@ public class Labels_Hotels extends Base {
 //        public static final String WDA_LOCAL_PORT_DEFAULT= "8010"; // This helps to run the parallel runs
 
     ///Device Two ///
-    public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5554"; // Nexus Emulator id
+//    public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5554"; // Nexus Emulator id
 //    public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5556"; // Pixel Emulator id
 //
-//    public static final String APPIUM_DEVICE_ID_DEFAULT = "BH901M4F4C"; // Sony device id
+    public static final String APPIUM_DEVICE_ID_DEFAULT = "BH901M4F4C"; // Sony device id
 //        public static final String WDA_LOCAL_PORT_DEFAULT= "8015"; // This helps to run the parallel runs
 //            public static final String WDA_LOCAL_PORT_DEFAULT= "192.168.3.111:5555"; // This helps to run the scripts over wifi [WDA Port number == Android device IP address : tcpip address (Used in the terminal to connect the device and PC in same network)]
 
     ////////Common ///////////
     // Port 1 and Port 2 email id's are used while running multiple scripts where as on single run we use port one as default
-    public static String EMAIL_ID_SIGN_UP_PORT_1 = "rehlatAutomationSimu1TestingEmail210@gmail.com"; // This is for port one connected device [Either iOS or Android]
-    public static String EMAIL_ID_SIGN_UP_PORT_2 = "rehlatAutomationSimu2TestingEmail180@gmail.com"; // This is for port two connected device [Either iOS or Android]
+    public static String EMAIL_ID_SIGN_UP_PORT_1 = "rehlatAutomationSimu1TestingEmail235@gmail.com"; // This is for port one connected device [Either iOS or Android]
+    public static String EMAIL_ID_SIGN_UP_PORT_2 = "rehlatAutomationSimu2TestingEmail185@gmail.com"; // This is for port two connected device [Either iOS or Android]
 
 
     ////////////////////  Types of devices ////////////////////
@@ -80,9 +83,9 @@ public class Labels_Hotels extends Base {
     public static final String ANDROID_PLATFORM = "Android";
 
 
-    //    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Sony";
+        public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Sony";
 //    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "SamsungGalaxy8";
-        public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Pixel_2_API_24"; //Pixel emulator
+//        public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Pixel_2_API_24"; //Pixel emulator
 //    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Nexus_6_API_25"; // Nexus emulator
 //        public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "7.0"; // Pixel emulator version
 //    public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "6.0.1"; // Sony version
@@ -147,6 +150,7 @@ public class Labels_Hotels extends Base {
     public static final String UIA_DATEPICKER ="XCUIElementTypeDatePicker";
     public static final String IOS_ACTIVITY_INDICATOR = "XCUIElementTypeActivityIndicator";
     public static final String IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW = "XCUIElementTypeCollectionView";
+    public static final String IOS_XCUI_ELEMENT_TYPE_SCROLL_VIEW = "XCUIElementTypeScrollView";
     public static final String IOS_XCUI_ELEMENT_TYPE_SHEET = "XCUIElementTypeSheet";
     public static final String IOS_XCUI_ELEMENT_TYPE_STATIC_TEXT = "XCUIElementTypeStaticText";
     public static final String IOS_XCUI_ELEMENT_TYPE_TEXT_FIELD = "XCUIElementTypeTextField";
@@ -219,16 +223,16 @@ public class Labels_Hotels extends Base {
     public static final String YEAR_IN_TRAVELLERS_PASSPORT_EXPIRY_DATE_IOS ="2020";
     public static final String PASSPORT_EXPIRY_CALENDAR ="passportExpiryDate";
     public static final String DATEOFBIRTH_CALENDAR ="dateOfBirth";
-    public static final String CHECK_IN_FOR_IOS = "Jan 2019";
-    public static final String CHECK_IN_FOR_ANDROID = "JAN 2019";
+    public static final String CHECK_IN_FOR_IOS = "Mar 2019";
+    public static final String CHECK_IN_FOR_ANDROID = "MAR 2019";
     public static final String SECOND_CHECK_IN_FOR_IOS = "Mar 2019";
     public static final String SECOND_CHECK_IN_FOR_ANDROID = "MAR 2019";
-    public static final String DEPARTURE_MONTH_IN_CALENDAR_VIEW = "Jan";
+    public static final String DEPARTURE_MONTH_IN_CALENDAR_VIEW = "Mar";
     public static final String JOURNEY_YEAR = "2019";
     public static final String CURRENT_RUNNING_MONTH_FOR_ANDROID ="OCT 2018";
     public static final String CURRENT_RUNNING_MONTH_FOR_IOS ="Oct 2018";
-    public static final String CHECK_OUT_FOR_IOS = "Jan 2019";
-    public static final String CHECK_OUT_FOR_ANDROID = "JAN 2019";
+    public static final String CHECK_OUT_FOR_IOS = "Mar 2019";
+    public static final String CHECK_OUT_FOR_ANDROID = "MAR 2019";
     public static final String SECOND_CHECK_OUT_FOR_IOS = "Mar 2019";
     public static final String SECOND_CHECK_OUT_FOR_ANDROID = "MAR 2019";
     public static final String TRAVELLERS_PASSPORT_NUMBER="ASDFGHJKLZXCV";
@@ -239,12 +243,17 @@ public class Labels_Hotels extends Base {
     public static final String CONTACT_INFO_COUNTRY_CODE = "+91";
     public static final int SCREEN_X_AXIS_SIZE_OF_RANGE_OF_20_PERCENT =481;
     public static final int SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_20_PERCENT=1443;
+    public static final int SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT=1800;
     public static String SELECTED_HOTEL_BOOKING_COST_IN_SRP;
     public static String BOOKING_HOTEL_COST_DISPLAYING_IN_SELECT_ROOM_SCREEN;
     public static String BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN;
     public static String BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN;
     public static String DEVICENAME;
     public static Integer CALENDAR_SWIPE_DURATION = 400;
+    public static String CONFIGURATION_TYPE;
+    public static final String LIVE_CONFIGURATION_TYPE = "Live";
+    public static final String STAGE_CONFIGURATION_TYPE = "Stage";
+    public static final String MINUS_WITH_IN_BRACKETS = "(-) ";
 
 
     ///////////////// Parsing strings in the classes of tests folder//////////////
@@ -257,7 +266,7 @@ public class Labels_Hotels extends Base {
     public static String FROM_DOMESTIC_AIRPORT_NAME;
     public static String FROM_DOMESTIC_AIRPORT_CODE;
     public static String INDIA_LANGUAGE_COUNTRY_LABEL ;
-    public static String KUWAIT_LANGUAGE_COUNTRY_LABEL ;
+    public static String LANGUAGE_COUNTRY_LABEL ;
     public static String CHECK_IN_MONTH ;
     public static String CHECK_OUT_MONTH ;
     public static String SECOND_CHECK_IN_MONTH ;
@@ -266,28 +275,30 @@ public class Labels_Hotels extends Base {
     public static String FLIGHT_BOOKING_TYPE;
 
     ///////////////// Kuwait Country Labels_Hotels /////////////////
-//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
-//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
-    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "SAUDI ARABIA";
-    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Saudi Arabia";
-//    public static final String CURRENT_USER_CURRENCY_TYPE = "KWD";
-//    public static final String CURRENT_USER_COUNTRY_NAME = "KUWAIT";
-    public static final String CURRENT_USER_COUNTRY_NAME = "SAR";
-    public static final String CURRENT_USER_CURRENCY_TYPE = "SAR";
-//    public static final String CURRENT_USER_COUNTRY_NAME = "UAE";
-//    public static final String CURRENT_USER_CURRENCY_TYPE = "AED";
-//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
-//    public static final String KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
-    public static final String KUWAIT_AIRPORT_NAME_FOR_IOS = "Kuwait";
-    public static final String KUWAIT_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
-    public static final String CAIRO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
-    public static final String CAIRO_AIRPORT_NAME_FOR_IOS = "Cairo";
-    public static final String CAIRO_AIRPORT_CODE = "CAI";
-    public static final String KUWAIT_AIRPORT_CODE = "KWI";
+//    public static  String LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
+//    public static  String LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
+    public static  String LANGUAGE_COUNTRY_LABEL_FOR_IOS;
+    public static  String LANGUAGE_COUNTRY_LABEL_FOR_ANDROID;
+//    public static  String LANGUAGE_COUNTRY_LABEL_FOR_IOS = "UAE";
+//    public static  String LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "UAE";
+//    public static  String CURRENT_USER_CURRENCY_TYPE = "KWD";
+//    public static  String CURRENT_USER_COUNTRY_NAME = "KUWAIT";
+//    public static  String CURRENT_USER_COUNTRY_NAME = "SAR";
+    public static  String CURRENT_USER_CURRENCY_TYPE;
+//    public static  String CURRENT_USER_COUNTRY_NAME = "UAE";
+//    public static  String CURRENT_USER_CURRENCY_TYPE = "AED";
+//    public static  String LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
+//    public static  String LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
+    public static String INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS;
+    public static String INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID;
+    public static String INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID;
+    public static String INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS;
+    public static String INTERNATIONAL_TO_AIRPORT_CODE;
+    public static String INTERNATIONAL_FROM_AIRPORT_CODE;
     public static final String INTERNATIONAL_FLIGHT_BOOKING = "International";
     public static final String UAE_CURRENCY_TYPE = "AED";
     public static final String SAUDI_ARABIA_CURRENCY_TYPE = "SAR";
-    public static final String EGYPT_CURRENCY_TYPE = "AED";
+    public static final String EGYPT_CURRENCY_TYPE = "EGP";
 
     ///////////////// Country Labels_Hotels /////////////////
 
@@ -297,14 +308,14 @@ public class Labels_Hotels extends Base {
 //    public static final String HYDERABAD_AIRPORT_NAME_FOR_ANDROID = "Hyderabad";
 //    public static final String BANGALORE_AIRPORT_NAME_FOR_ANDROID = "Bangalore";
 //    public static final String BANGALORE_AIRPORT_NAME_FOR_IOS = "Bangalore";
-    public static final String JEDDAH_AIRPORT_NAME_FOR_IOS = "Jeddah";
-    public static final String JEDDAH_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
-    public static final String RIYADH_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
-    public static final String RIYADH_AIRPORT_NAME_FOR_IOS = "Riyadh";
+    public static String DOMESTIC_FROM_AIRPORT_NAME_FOR_IOS;
+    public static String DOMESTIC_FROM_AIRPORT_NAME_FOR_ANDROID;
+    public static String DOMESTIC_TO_AIRPORT_NAME_FOR_ANDROID;
+    public static String DOMESTIC_TO_AIRPORT_NAME_FOR_IOS;
 //    public static final String HYDERABAD_AIRPORT_CODE = "HYD";
 //    public static final String BANGALORE_AIRPORT_CODE = "BLR";
-    public static final String JEDDAH_AIRPORT_CODE = "JED";
-    public static final String RIYADH_AIRPORT_CODE = "RUH";
+    public static String DOMESTIC_FROM_AIRPORT_CODE;
+    public static String DOMESTIC_TO_AIRPORT_CODE;
     public static final String DOMESTIC_FLIGHT_BOOKING = "Domestic";
     public static final String OTHERS_COUNTRY_LABEL = "OTHERS";
     public static final String ENGLISH_LANGUAGE = "English";
@@ -319,14 +330,14 @@ public class Labels_Hotels extends Base {
     public static final String FIRST_NAME = "Suresh";
     public static final String LAST_NAME = "Reddy";
     public static String EMAIL_ID_SIGN_UP = "rehlatAutomationPort0TestingEmail103@gmail.com";
-    public static final String EMAIL_ID_SIGN_IN = "rehlatAutomationTestEmail1@gmail.com";  // Always add the two digit email number so that on every test script a new email id is generated for to test sign up
-    public static final String PASSWORD = "testPasswordFromLabels";
+    public static String EMAIL_ID_SIGN_IN = "rehlatAutomationTestEmail1@gmail.com";  // Always add the two digit email number so that on every test script a new email id is generated for to test sign up
+    public static String PASSWORD = "testPasswordFromLabels";
     public static final String REPEAT_PASSWORD="testPasswordFromLabels";
     public static final String REFERRAL_CODE = "chaitu";
     public static final String NEW_REFERRAL_CODE = "rehHYD";
-    public static String phoneNumber = "8050510545";
+    public static String PHONE_NUMBER = "8050510545";
 //    public static final String COUPON_CODE = "bijjam"; // Both for international and national flights searching should be the same
-    public static final String COUPON_CODE = "save15"; // Both for international and national flights searching should be the same
+    public static String COUPON_CODE = "save15"; // Both for international and national flights searching should be the same
 
     public static final String IOS_APPLIED_KARAM_POINTS = "1";
     public static final String[] ONLINE_CHECKIN_AIRLINES_LIST = {"AIR CHINA", "ALL NIPPON AIRWAYS", "TAP PORTUGAL","CHINA SOUTHERN AIRLINES", "PRECISION AIR", "AIR BALTIC", "LAM MOZAMBIQUE", "BRUSSELS AIRLINES", "AZUL LINHAS AEREAS", "BRASILEIRAS", "CROATIA AIRLINES", "VIRGIN AUSTRALIA INTL", "VIETNAM AIRLINES", "VIRGIN ATLANTIC", "RWANDAIR EXPRESS", "AIR SEYCHELLES", "QANTAS AIRWAYS", "NESMA AIRLINES", "SAUDI GULF AIRLINES", "ROYAL JORDANIAN", "QATAR AIRWAYS", "EMIRATES", "JAZEERA AIRWAYS", "GULF AIR", "TURKISH AIRLINES", "SAUDI ARABIAN AIRLINES", "EGYPTAIR", "JET AIRWAYS", "FLYNAS", "OMAN AIR", "KUWAIT AIRWAYS", "FLY DUBAI", "AIR INDIA", "ETIHAD AIRWAYS", "SRILANKAN AIRLINES"};
@@ -359,25 +370,26 @@ public class Labels_Hotels extends Base {
      * Setting the country language and airport from and to names
      */
     public static void setCountryLanguageAndAirportFromAndToLabels() {
+        Logger.logAction("Setting the country language and airport from and to names w.r.t. the domain");
         // This check will finalize the airport name and airport code based on its platform. This is implemented because Android and iOS flight search results are differently coded
         if (Labels_Hotels.platform.equals(IOS)){
             ////////////////// INTERNATIONAL AIRPORTS NAMES ////////////////////
-            Labels_Hotels.FROM_INTERNATIONAL_AIRPORT_NAME = KUWAIT_AIRPORT_NAME_FOR_IOS;
-            Labels_Hotels.FROM_INTERNATIONAL_AIRPORT_CODE = KUWAIT_AIRPORT_CODE;
-            TO_INTERNATIONAL_AIRPORT_NAME = CAIRO_AIRPORT_NAME_FOR_IOS;
-            TO_INTERNATIONAL_AIRPORT_CODE = CAIRO_AIRPORT_CODE;
-            KUWAIT_LANGUAGE_COUNTRY_LABEL = KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_IOS;
+            Labels_Hotels.FROM_INTERNATIONAL_AIRPORT_NAME = INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS;
+            Labels_Hotels.FROM_INTERNATIONAL_AIRPORT_CODE = INTERNATIONAL_FROM_AIRPORT_CODE;
+            TO_INTERNATIONAL_AIRPORT_NAME = INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS;
+            TO_INTERNATIONAL_AIRPORT_CODE = INTERNATIONAL_TO_AIRPORT_CODE;
+            LANGUAGE_COUNTRY_LABEL = LANGUAGE_COUNTRY_LABEL_FOR_IOS;
 
             ///////////////// DOMESTIC AIRPORTS NAMES /////////////////////////
 //            FROM_DOMESTIC_AIRPORT_NAME = HYDERABAD_AIRPORT_NAME_FOR_IOS;
 //            FROM_DOMESTIC_AIRPORT_CODE = HYDERABAD_AIRPORT_CODE;
 //            TO_DOMESTIC_AIRPORT_NAME = BANGALORE_AIRPORT_NAME_FOR_IOS;
 //            TO_DOMESTIC_AIRPORT_CODE = BANGALORE_AIRPORT_CODE;
-            FROM_DOMESTIC_AIRPORT_NAME = JEDDAH_AIRPORT_NAME_FOR_IOS;
-            FROM_DOMESTIC_AIRPORT_CODE = JEDDAH_AIRPORT_CODE;
-            TO_DOMESTIC_AIRPORT_NAME = RIYADH_AIRPORT_NAME_FOR_IOS;
-            TO_DOMESTIC_AIRPORT_CODE =  RIYADH_AIRPORT_CODE;
-            INDIA_LANGUAGE_COUNTRY_LABEL = INDIA_LANGUAGE_COUNTRY_LABEL_FOR_IOS;
+            FROM_DOMESTIC_AIRPORT_NAME = DOMESTIC_FROM_AIRPORT_NAME_FOR_IOS;
+            FROM_DOMESTIC_AIRPORT_CODE = DOMESTIC_FROM_AIRPORT_CODE;
+            TO_DOMESTIC_AIRPORT_NAME = DOMESTIC_TO_AIRPORT_NAME_FOR_IOS;
+            TO_DOMESTIC_AIRPORT_CODE = DOMESTIC_TO_AIRPORT_CODE;
+            INDIA_LANGUAGE_COUNTRY_LABEL = LANGUAGE_COUNTRY_LABEL_FOR_IOS;
 
             ////////////////////////// DEPARTURE & RETURN MONTHS FOR BOTH INTERNATIONAL AND DOMESTIC AIRPORTS ///////////////////////
             CHECK_IN_MONTH = CHECK_IN_FOR_IOS;
@@ -385,26 +397,31 @@ public class Labels_Hotels extends Base {
             SECOND_CHECK_IN_MONTH = SECOND_CHECK_IN_FOR_IOS;
             SECOND_CHECK_OUT_MONTH = SECOND_CHECK_OUT_FOR_IOS;
             CURRENT_RUNNING_MONTH = CURRENT_RUNNING_MONTH_FOR_IOS;
-
+            Integer randomDate = Base.getTheRandomValue(26);
+            if (randomDate==0){
+                randomDate = 1;
+            }
+            BaseTest.CHECK_IN_DAY = String.valueOf(randomDate);
+            BaseTest.CHECK_OUT_DAY = String.valueOf(randomDate+1);
 
         }else if (platform.equals(ANDROID)){
             ////////////////// INTERNATIONAL AIRPORTS NAMES ////////////////////
-            FROM_INTERNATIONAL_AIRPORT_NAME = KUWAIT_AIRPORT_NAME_FOR_ANDROID;
-            FROM_INTERNATIONAL_AIRPORT_CODE = KUWAIT_AIRPORT_CODE;
-            TO_INTERNATIONAL_AIRPORT_NAME = CAIRO_AIRPORT_NAME_FOR_ANDROID;
-            TO_INTERNATIONAL_AIRPORT_CODE = CAIRO_AIRPORT_CODE;
-            KUWAIT_LANGUAGE_COUNTRY_LABEL = KUWAIT_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID;
+            FROM_INTERNATIONAL_AIRPORT_NAME = INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID;
+            FROM_INTERNATIONAL_AIRPORT_CODE = INTERNATIONAL_FROM_AIRPORT_CODE;
+            TO_INTERNATIONAL_AIRPORT_NAME = INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID;
+            TO_INTERNATIONAL_AIRPORT_CODE = INTERNATIONAL_TO_AIRPORT_CODE;
+            LANGUAGE_COUNTRY_LABEL = LANGUAGE_COUNTRY_LABEL_FOR_ANDROID;
 
             ///////////////// DOMESTIC AIRPORTS NAMES /////////////////////////
 //            FROM_DOMESTIC_AIRPORT_NAME = HYDERABAD_AIRPORT_NAME_FOR_ANDROID;
 //            FROM_DOMESTIC_AIRPORT_CODE = HYDERABAD_AIRPORT_CODE;
 //            TO_DOMESTIC_AIRPORT_NAME = BANGALORE_AIRPORT_NAME_FOR_ANDROID;
 //            TO_DOMESTIC_AIRPORT_CODE = BANGALORE_AIRPORT_CODE;
-            FROM_DOMESTIC_AIRPORT_NAME = JEDDAH_AIRPORT_NAME_FOR_ANDROID;
-            FROM_DOMESTIC_AIRPORT_CODE = JEDDAH_AIRPORT_CODE;
-            TO_DOMESTIC_AIRPORT_NAME =  RIYADH_AIRPORT_NAME_FOR_ANDROID;
-            TO_DOMESTIC_AIRPORT_CODE =  RIYADH_AIRPORT_CODE;
-            INDIA_LANGUAGE_COUNTRY_LABEL = INDIA_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID;
+            FROM_DOMESTIC_AIRPORT_NAME = DOMESTIC_FROM_AIRPORT_NAME_FOR_ANDROID;
+            FROM_DOMESTIC_AIRPORT_CODE = DOMESTIC_FROM_AIRPORT_CODE;
+            TO_DOMESTIC_AIRPORT_NAME = DOMESTIC_TO_AIRPORT_NAME_FOR_ANDROID;
+            TO_DOMESTIC_AIRPORT_CODE = DOMESTIC_TO_AIRPORT_CODE;
+            INDIA_LANGUAGE_COUNTRY_LABEL = LANGUAGE_COUNTRY_LABEL_FOR_IOS;
 
             ////////////////////////// DEPARTURE & RETURN MONTH FOR BOTH INTERNATIONAL AND DOMESTIC AIRPORTS ///////////////////////
             CHECK_IN_MONTH = CHECK_IN_FOR_ANDROID;
@@ -412,13 +429,157 @@ public class Labels_Hotels extends Base {
             SECOND_CHECK_IN_MONTH = SECOND_CHECK_OUT_FOR_ANDROID;
             SECOND_CHECK_OUT_MONTH = SECOND_CHECK_OUT_FOR_ANDROID;
             CURRENT_RUNNING_MONTH = CURRENT_RUNNING_MONTH_FOR_ANDROID;
-
+            Integer randomDate = Base.getTheRandomValue(26);
+            if (randomDate==0){
+                randomDate = 1;
+            }
+            BaseTest.CHECK_IN_DAY = String.valueOf(randomDate);
+            BaseTest.CHECK_OUT_DAY = String.valueOf(randomDate+1);
 
         }
         ////////////////////////// FLIGHT BOOKING TYPE ///////////////////////
         // This Label should changed based on the flight booking type the test scripts needs to be run
 //            Labels_Hotels.FLIGHT_BOOKING_TYPE = INTERNATIONAL_FLIGHT_BOOKING;
         FLIGHT_BOOKING_TYPE = DOMESTIC_FLIGHT_BOOKING; // This one is act as default flight booking type..In every @Test will declare the flight booking type, else it will consider this default flight type
+    }
+
+    /**
+     * Set the labels for the parsing domain
+     * @param parsingDomain
+     */
+    public static void setTheLabelsForDomain(String parsingDomain){
+        Logger.logAction("Setting the labels for domain :- "+parsingDomain);
+        try {
+            switch (parsingDomain){
+                case "KUWAIT":
+                {
+                    LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
+                    LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
+                    CURRENT_USER_CURRENCY_TYPE = "KWD";
+//                    CURRENT_USER_COUNTRY_NAME = "KUWAIT";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_IOS = "Jeddah";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_IOS = "Riyadh";
+                    EMAIL_ID_SIGN_IN = "ComEmail@gmail.com";
+                    PASSWORD = "rehlat@123";
+                    break;
+                }
+                case "SA":
+                {
+                    LANGUAGE_COUNTRY_LABEL_FOR_IOS = "SAUDI ARABIA";
+                    LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Saudi Arabia";
+//                    CURRENT_USER_COUNTRY_NAME = "SAR";
+                    CURRENT_USER_CURRENCY_TYPE = "SAR";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_IOS = "Jeddah";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_IOS = "Riyadh";
+                    EMAIL_ID_SIGN_IN = "SaEmail@gmail.com";
+                    PASSWORD = "rehlat@123";
+                    break;
+                }
+                case "UAE":
+                {
+                    LANGUAGE_COUNTRY_LABEL_FOR_IOS = "UAE";
+                    LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "UAE";
+//                    CURRENT_USER_COUNTRY_NAME = "UAE";
+                    CURRENT_USER_CURRENCY_TYPE = "AED";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_IOS = "Jeddah";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_IOS = "Riyadh";
+                    EMAIL_ID_SIGN_IN = "UaeEmail@gmail.com";
+                    PASSWORD = "rehlat@123";
+                    break;
+                }
+                case "EG":
+                {
+                    LANGUAGE_COUNTRY_LABEL_FOR_IOS = "EGYPT";
+                    LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Egypt";
+//                    CURRENT_USER_COUNTRY_NAME = "EGP";
+                    CURRENT_USER_CURRENCY_TYPE = "EGP";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_IOS = "Jeddah";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_IOS = "Riyadh";
+                    EMAIL_ID_SIGN_IN = "EgEmail@gmail.com";
+                    PASSWORD = "rehlat@123";
+                    break;
+                }
+                default:
+                {
+                    LANGUAGE_COUNTRY_LABEL_FOR_IOS = "SAUDI ARABIA";
+                    LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Saudi Arabia";
+//                    CURRENT_USER_COUNTRY_NAME = "EGP";
+                    CURRENT_USER_CURRENCY_TYPE = "EGP";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
+                    INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_NAME_FOR_IOS = "Cairo";
+                    INTERNATIONAL_TO_AIRPORT_CODE = "CAI";
+                    INTERNATIONAL_FROM_AIRPORT_CODE = "KWI";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_IOS = "Jeddah";
+                    DOMESTIC_FROM_AIRPORT_NAME_FOR_ANDROID = "Jeddah";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_ANDROID = "Riyadh";
+                    DOMESTIC_TO_AIRPORT_NAME_FOR_IOS = "Riyadh";
+                    EMAIL_ID_SIGN_IN = "ComEmail@gmail.com";
+                    PASSWORD = "rehlat@123";
+                    break;
+                }
+            }
+
+        }catch (Exception exception){
+            Logger.logError("Encountered exception :- Unable to set the labels fpr domain :- "+parsingDomain);
+        }
     }
 
 }

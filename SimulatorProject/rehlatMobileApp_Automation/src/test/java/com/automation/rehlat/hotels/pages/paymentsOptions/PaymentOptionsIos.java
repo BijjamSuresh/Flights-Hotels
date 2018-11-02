@@ -12,7 +12,7 @@ import java.util.List;
 public class PaymentOptionsIos extends PaymentOptionsBase {
 
     public static final String PAYMENT_OPTIONS_TITLE = "Payment Options";
-    public static final String KNET_PAYMENT_GATEWAY_OPTION = "KNET";
+    public static final String KNET_PAYMENT_GATEWAY_OPTION = "kNet";
     public static final String KNET_PAYMENT_GATEWAY_TITLE = "Knet Payment Gateway";
     public static final String PIN_TEXTFIELD = "XCUIElementTypeSecureTextField";
     public static final String SELECT_YOUR_BANK = "Select Your Bank";
@@ -28,10 +28,10 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static final String POST_TRANSACTIONS_SCREEN = "Posted Transaction Filter";
     public static final String XPATH_OF_CARD_NUMBER_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[4]/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeOther[2]";
     public static final String XPATH_OF_CARDNUMBER = "//XCUIElementTypeApplication[@name=\\\"Rehlat\\\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[4]/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeTextField[2]";
-    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[2]/XCUIElementTypeTextField";
-    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[3]/XCUIElementTypeTextField";
-    public static final String XPATH_OF_CREDITOR_DEBIT_CARD_CVV_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\\\"Rehlat\\\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[4]/XCUIElementTypeTextField";
-    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_HOLDER_NAME_TEXT_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[3]/XCUIElementTypeOther[5]/XCUIElementTypeTextField";
+    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"cardNumber\"]";
+    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"date\"]";
+    public static final String XPATH_OF_CREDITOR_DEBIT_CARD_CVV_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"cvv\"]";
+    public static final String XPATH_OF_CREDIT_OR_DEBIT_CARD_HOLDER_NAME_TEXT_FIELD = "//XCUIElementTypeTextField[@name=\"cardName\"]";
     public static final String PAY_SECURELY_BUTTON = "PAY SECURELY";
     public static final String XPATH_OF_PASSWORD_FIELD_IN_3D_SECURE_DEBIT_OR_CREDIT_PAYMENT_SCREEN = "//XCUIElementTypeOther[@name=\"Checkout 3D Simulator\"]/XCUIElementTypeOther[5]/XCUIElementTypeSecureTextField";
     public static final String CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN = "Continue";
@@ -40,6 +40,9 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static final String OK_BUTTON = "OK";
     public static final String SETUP_APPLE_PAY_MODAL_SHEET = "Set up Apple Pay";
     public static final String CHANGE_PAYMENT_OPTION = "Change Payment Method";
+    public static final String XPATH_OF_FINAL_PAYMENT_PRICE_IN_PAYMENT_OPTIONS_SCREEN = "//XCUIElementTypeStaticText[@name=\"totalAmount\"]";
+    public static boolean FARE_JUMP_STATUS = false;
+
 
 
     /**
@@ -104,6 +107,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
         Logger.logAction("Accepting the fare differ alert if displayed");
         try {
             if (isElementDisplayedByXPath(FARE_DIFFER_ALERT_XPATH)){
+                FARE_JUMP_STATUS = true;
                 Logger.logStep("Fare differ alert is displayed and going to accept it by tapping on yes button");
                 driver.findElementByName(YES_BUTTON_IN_FARE_DIFFER_ALERT).click();
                 Logger.logComment("Tapped on yes button in the fare differ alert");
@@ -124,14 +128,22 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public void compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen() {
         Logger.logAction("Comparing the final payment displayed in payment checkout screen with the amount displayed in review booking screen");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_FINAL_PAYMENT_CELL_IN_PAYMENT_OPTIONS_SCREEN)){
+            String finalPayment;
+            if (isElementDisplayedByXPath(XPATH_OF_FINAL_PAYMENT_PRICE_IN_PAYMENT_OPTIONS_SCREEN)){
                 Logger.logAction("Total amount payable price linear layout is displayed");
-                String xPathOfFinalPaymentPrice = XPATH_OF_FINAL_PAYMENT_CELL_IN_PAYMENT_OPTIONS_SCREEN+"/XCUIElementTypeStaticText[3]";
-                if (isElementDisplayedByXPath(xPathOfFinalPaymentPrice)){
-                    Double finalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(driver.findElementByXPath(xPathOfFinalPaymentPrice).getText());
+                String finalPaymentWithCurrencyType = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_FINAL_PAYMENT_PRICE_IN_PAYMENT_OPTIONS_SCREEN);
+                String finalPaymentWithoutCurrencyType = finalPaymentWithCurrencyType.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL);
+                if (finalPaymentWithoutCurrencyType.contains(Labels_Hotels.STRING_COMMA)){
+                    String finalPaymentWithoutComma = finalPaymentWithoutCurrencyType.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL);
+                    finalPayment = finalPaymentWithoutComma;
+                }else {
+                    finalPayment = finalPaymentWithoutCurrencyType;
+                }
+                Double finalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(finalPayment);
                     Double ticketAmountDisplayedInBookingPageScreen = Double.parseDouble(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN);
                     Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalAmountPayablePriceInPaymentCheckOutScreen);
                     Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN);
+                if (FARE_JUMP_STATUS == false){
                     if (finalAmountPayablePriceInPaymentCheckOutScreen.equals(ticketAmountDisplayedInBookingPageScreen)) {
                         Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
                     }else if (finalAmountPayablePriceInPaymentCheckOutScreen == ticketAmountDisplayedInBookingPageScreen) {
@@ -144,11 +156,11 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                         Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
                     }
                 }else {
+                    Logger.logComment("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalAmountPayablePriceInPaymentCheckOutScreen);
+                }
+                }else {
                     Logger.logError("Total amount payable price is not displaying in payment checkout screen");
                 }
-            }else {
-                Logger.logError("Total amount payable cell is not displaying in payment checkout screen");
-            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to compare the final payment price in payment list screen with the price dispalyed in review booking screen");
         }
@@ -197,7 +209,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //** KNET PAYMENT METHODS **\\
+                                                                                                        //** KNET PAYMENT METHODS **\\
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -208,9 +220,13 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public void tapOnKnetPaymentGateWay() {
         Logger.logAction("Tapping on KNET payment gateway");
         try{
-            if (isElementEnabledByName(KNET_PAYMENT_GATEWAY_OPTION)){
-                driver.findElementByName(KNET_PAYMENT_GATEWAY_OPTION).click();
-                Logger.logComment("Tapped on kent payment option");
+            if (isElementDisplayedByAccessibilityId(KNET_PAYMENT_GATEWAY_OPTION)){
+                boolean status = findElementByXPathAndClick(KNET_PAYMENT_GATEWAY_OPTION);
+                if (status == true){
+                    Logger.logComment("Tapped on kent payment option");
+                }else {
+                    Logger.logError("Didn't tapped on knet payment option");
+                }
 //                if (isElementDisplayedByClassName(Labels_Hotels.IOS_ACTIVITY_INDICATOR)){
 //                    driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(Labels_Hotels.IOS_ACTIVITY_INDICATOR)));
 //                }else {
@@ -422,11 +438,11 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 Logger.logComment("Booking process is started");
                 if (isElementDisplayedByName(TRANSACTION_IN_PROGRESS)){
                     Logger.logComment(TRANSACTION_IN_PROGRESS);
-                    waitForAnElementToDisappear_ByName(TRANSACTION_IN_PROGRESS);
+                    waitForAnElementToDisappear_ByName(TRANSACTION_IN_PROGRESS,1);
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                         if (isElementDisplayedByName(BOOKING_SUCCESS)){
                             System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
@@ -448,7 +464,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                         if (isElementDisplayedByName(BOOKING_SUCCESS)){
                             System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
@@ -468,11 +484,11 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 }
             }else if (isElementDisplayedByName(TRANSACTION_IN_PROGRESS)){
                 Logger.logComment(TRANSACTION_IN_PROGRESS);
-                waitForAnElementToDisappear_ByName(TRANSACTION_IN_PROGRESS);
+                waitForAnElementToDisappear_ByName(TRANSACTION_IN_PROGRESS,1);
                 if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                     Logger.logComment(PAYMENT_SUCCESS);
                     Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                    waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                    waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                     if (isElementDisplayedByName(BOOKING_SUCCESS)){
                         System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
                                 "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
@@ -492,7 +508,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
             }else if (isElementDisplayedByName(PAYMENT_SUCCESS)) {
                 Logger.logComment(PAYMENT_SUCCESS);
                 Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                 if (isElementDisplayedByName(BOOKING_SUCCESS)){
                     System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
                             "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
@@ -533,7 +549,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //** CREDIT OR DEBIT CARD METHODS **\\
+                                                                                                    //** CREDIT OR DEBIT CARD METHODS **\\
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -636,9 +652,13 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static void tapOnCreditOrDebitCardCheckOutPaymentButton() {
         Logger.logAction("Tapping on pay securely check out button");
         try {
-            if (isElementDisplayedById(PAY_SECURELY_BUTTON)){
-                driver.findElement(By.id(PAY_SECURELY_BUTTON)).click();
-                Logger.logComment("Tapped on pay securely button");
+            if (isElementDisplayedByAccessibilityId(PAY_SECURELY_BUTTON)){
+                boolean status = findElementByAccessibilityIdAndClick(PAY_SECURELY_BUTTON);
+                if (status == true){
+                    Logger.logComment("Tapped on pay securely button");
+                }else {
+                    Logger.logError("Didn't tapped on pay securely button");
+                }
             }else {
                 Logger.logError("Element name is not displayed in the current active screen:- "+PAY_SECURELY_BUTTON);
             }
@@ -650,10 +670,9 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     /**
      * Check 3D payment screen is displayed
      * @return
-     * @throws Exception
      */
     @Override
-    public boolean check3DPaymentScreenIsDisplayed() throws Exception {
+    public boolean check3DPaymentScreenIsDisplayed() {
         Logger.logAction("Checking the 3D payment screen is displayed");
         try {
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR,1);
@@ -723,11 +742,11 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR,3);
                 if (isElementDisplayedByName(TRANSACTION_IN_PROGRESS)) {
                     Logger.logComment(TRANSACTION_IN_PROGRESS + " is displayed");
-                    waitForAnElementToDisappear_ByName(TRANSACTION_IN_PROGRESS);
+                    waitForAnElementToDisappear_ByName(TRANSACTION_IN_PROGRESS,1);
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)) {
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                         if (isElementDisplayedByName(BOOKING_SUCCESS)) {
                             System.out.println("        ////////////////////////////////////////////////////////////////////////////////////\n" +
                                     "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
@@ -748,7 +767,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)) {
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                         if (isElementDisplayedByName(BOOKING_SUCCESS)) {
                             System.out.println("        ////////////////////////////////////////////////////////////////////////////////////\n" +
                                     "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
@@ -771,7 +790,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 if (isElementDisplayedByName(PAYMENT_SUCCESS)) {
                     Logger.logComment(PAYMENT_SUCCESS);
                     Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                    waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                    waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                     if (isElementDisplayedByName(BOOKING_SUCCESS)) {
                         System.out.println("        ////////////////////////////////////////////////////////////////////////////////////\n" +
                                 "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
@@ -791,7 +810,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
             } else if (isElementDisplayedByName(PAYMENT_SUCCESS)) {
                 Logger.logComment(PAYMENT_SUCCESS);
                 Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
-                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                 if (isElementDisplayedByName(BOOKING_SUCCESS)) {
                     System.out.println("        ////////////////////////////////////////////////////////////////////////////////////\n" +
                             "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +

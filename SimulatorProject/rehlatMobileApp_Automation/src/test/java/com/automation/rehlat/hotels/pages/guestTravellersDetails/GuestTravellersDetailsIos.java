@@ -1,6 +1,8 @@
 package com.automation.rehlat.hotels.pages.guestTravellersDetails;
 
+import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.hotels.Labels_Hotels;
+import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -11,15 +13,15 @@ public class GuestTravellersDetailsIos extends GuestTravellersDetailsBase{
 
     public static final String TRAVELLERS_FIRST_NAME="First Name";
     public static final String TRAVELLERS_LAST_NAME="Last Name";
-    public static final String SAVE_BUTTON="Save";
+    public static final String CONTINUE_BUTTON="Continue";
     public static final String NEXT_BUTTON="Next";
     public static final String TRAVELLERS_DETAILS_SCREEN_TITLE ="Traveller Details";
     public static final String TRAVELLERS_PRE_POPULATE_MODAL_VIEW = "Populate the fields with your previous inputs?";
-    public static final String XPATH_OF_ROOM_NUMBER_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.HorizontalScrollView/android.widget.LinearLayout/android.support.v7.app.ActionBar.Tab[";
-    public static final String XPATH_OF_ROOM_NUMBER_NAME_WITHOUT_ROOM_NUMBER_XPATH = "]/android.widget.TextView";
-    public static final String XPATH_OF_TRAVELLERS_CARD_VIEW_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.support.v4.view.ViewPager/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[2]/android.widget.LinearLayout[";
-    public static final String XPATH_OF_TRAVELLERS_FIRST_NAME_WITHOUT_XPATH_OF_CARD_NUMBER = "]/android.widget.LinearLayout[1]/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.EditText";
-    public static final String XPATH_OF_TRAVELLERS_Last_NAME_WITHOUT_XPATH_OF_CARD_NUMBER = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.support.v4.view.ViewPager/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[2]/android.widget.LinearLayout[";
+    public static final String XPATH_OF_TRAVELLERS_Last_NAME_WHEN_ONE_GUEST_WITHOUT_INDEX = "LastName_TF";
+    public static final String TRAVELLERS_FIRST_NAME_WHEN_ONE_GUEST_WITHOUT_INDEX = "FirstName_TF";
+    public static final String XPATH_OF_TRAVELLERS_CARD_ROOM_NUMBER_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.support.v4.view.ViewPager/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[2]/android.widget.LinearLayout[";
+    public static final String XPATH_OF_TRAVELLERS_FIRST_NAME_WHEN_MORE_THAN_ONE_GUEST_WITHOUT_INDEX = "(//XCUIElementTypeTextField[@name=\"FirstName_TF\"])[";
+    public static final String XPATH_OF_TRAVELLERS_Last_NAME_WHEN_MORE_THAN_ONE_GUEST_WITHOUT_INDEX  = "(//XCUIElementTypeTextField[@name=\"LastName_TF\"])[";
 
 
     /**
@@ -115,7 +117,7 @@ public class GuestTravellersDetailsIos extends GuestTravellersDetailsBase{
             Integer childCardViewNumber;
             GuestTravellersDetailsScreen.declineAutoFillPopulateModalIfDisplayed();
             GuestTravellersDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-            if(isTheSelectedTravellerTypeof(parsingRoomNumber)){
+//            if(isTheSelectedTravellerTypeof(parsingRoomNumber)){
                 while (enteringTravellersAdultCount < parsingGuestTravellersAdultCount){
                     enterAdultTravellersDetails("Adult",enteringTravellersAdultCount);
                     enteringTravellersAdultCount++;
@@ -125,32 +127,32 @@ public class GuestTravellersDetailsIos extends GuestTravellersDetailsBase{
                     enterChildTravellersDetails("Child",childCardViewNumber);
                     enteringTravellersChildCount++;
                 }
-            }else {
-                Logger.logError("Current selected paring room number is incorrect. i.e.., parsing room number:- "+parsingRoomNumber);
-            }
+//            }else {
+//                Logger.logError("Current selected paring room number is incorrect. i.e.., parsing room number:- "+parsingRoomNumber);
+//            }
         }catch (Exception exception){
             exception.printStackTrace();
             Logger.logError("Encountered error: Unable to enter the travellers details of passengers :- "+parsingRoomNumber);
         }
     }
 
-    /**
-     * Return the travellers type
-     * @return
-     */
-    public static boolean isTheSelectedTravellerTypeof(Integer roomNumber){
-        Logger.logAction("Getting the travellers type");
-        try {
-            String xpathOfRoomNumberName = XPATH_OF_ROOM_NUMBER_NAME_WITHOUT_ROOM_NUMBER_XPATH+roomNumber+XPATH_OF_ROOM_NUMBER_WITHOUT_INDEX;
-            String parsingRoomNumberStatus = findElementByXpathAndReturnItsAttributeSelected(xpathOfRoomNumberName);
-            if (parsingRoomNumberStatus.equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
-                return true;
-            }
-        }catch (Exception exception){
-            Logger.logError("Encountered error :- Unable to get the travellers type");
-        }
-        return false;
-    }
+//    /**
+//     * Return the travellers type
+//     * @return
+//     */
+//    public static boolean isTheSelectedTravellerTypeof(Integer roomNumber){
+//        Logger.logAction("Getting the travellers type");
+//        try {
+//            String xpathOfRoomNumberName = XPATH_OF_ROOM_NUMBER_NAME_WITHOUT_ROOM_NUMBER_XPATH+roomNumber+XPATH_OF_ROOM_NUMBER_WITHOUT_INDEX;
+//            String parsingRoomNumberStatus = findElementByXpathAndReturnItsAttributeSelected(xpathOfRoomNumberName);
+//            if (parsingRoomNumberStatus.equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
+//                return true;
+//            }
+//        }catch (Exception exception){
+//            Logger.logError("Encountered error :- Unable to get the travellers type");
+//        }
+//        return false;
+//    }
 
 //    /**
 //     * Enter adult travellers details
@@ -202,14 +204,21 @@ public class GuestTravellersDetailsIos extends GuestTravellersDetailsBase{
     public static void enterTravellersFirstName(String travellersType, Integer parsingTravellersNumber) {
         Logger.logStep("Entering travellers first name");
         try{
-            String xpathOfParsingTravellersFirstName = XPATH_OF_TRAVELLERS_CARD_VIEW_WITHOUT_INDEX+parsingTravellersNumber+XPATH_OF_TRAVELLERS_FIRST_NAME_WITHOUT_XPATH_OF_CARD_NUMBER;
+            String xpathOfParsingTravellersFirstName;
+            String firstName = General.getTheTestDataOfField("First_Name");
+            if (parsingTravellersNumber >1){
+                xpathOfParsingTravellersFirstName = XPATH_OF_TRAVELLERS_FIRST_NAME_WHEN_MORE_THAN_ONE_GUEST_WITHOUT_INDEX+parsingTravellersNumber+ "]";
+            }else {
+                xpathOfParsingTravellersFirstName = TRAVELLERS_FIRST_NAME_WHEN_ONE_GUEST_WITHOUT_INDEX+parsingTravellersNumber+"]";
+            }
             if (travellersType.equalsIgnoreCase("Adult")){
-                sendTextByXpath(xpathOfParsingTravellersFirstName, Labels_Hotels.ADULT_TRAVELLERS_FIRST_NAME);
+                sendTextByXpath(xpathOfParsingTravellersFirstName, firstName);
             }else if (travellersType.equalsIgnoreCase("Child")){
-                sendTextByXpath(xpathOfParsingTravellersFirstName, Labels_Hotels.CHILD_TRAVELLERS_FIRST_NAME);
+                sendTextByXpath(xpathOfParsingTravellersFirstName, firstName);
             }else {
                 Logger.logError("Incorrect travellers type is parsed");
             }
+
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter the travellers first name");
         }
@@ -221,11 +230,12 @@ public class GuestTravellersDetailsIos extends GuestTravellersDetailsBase{
     public static void enterTravellersLastName(String travellersType, Integer parsingTravellersNumber) {
         Logger.logStep("Entering travellers last name");
         try{
-            String xpathOfParsingTravellersFirstName = XPATH_OF_TRAVELLERS_CARD_VIEW_WITHOUT_INDEX+parsingTravellersNumber+XPATH_OF_TRAVELLERS_Last_NAME_WITHOUT_XPATH_OF_CARD_NUMBER;
+            String lastName = General.getTheTestDataOfField("Last_Name");
+            String xpathOfParsingTravellersFirstName = XPATH_OF_TRAVELLERS_Last_NAME_WHEN_ONE_GUEST_WITHOUT_INDEX+parsingTravellersNumber+"]";
             if (travellersType.equalsIgnoreCase("Adult")){
-                sendTextByXpath(xpathOfParsingTravellersFirstName, Labels_Hotels.ADULT_TRAVELLERS_LAST_NAME);
+                sendTextByXpath(xpathOfParsingTravellersFirstName,lastName);
             }else if (travellersType.equalsIgnoreCase("Child")){
-                sendTextByXpath(xpathOfParsingTravellersFirstName, Labels_Hotels.CHILD_TRAVELLERS_FIRST_NAME);
+                sendTextByXpath(xpathOfParsingTravellersFirstName, lastName);
             }else {
                 Logger.logError("Incorrect travellers type is parsed");
             }
@@ -241,12 +251,11 @@ public class GuestTravellersDetailsIos extends GuestTravellersDetailsBase{
     public void tapOnSaveButton() {
         Logger.logAction("Tapping on save travellers details button");
         try{
-            if (isElementDisplayedById(SAVE_BUTTON)){
-                driver.findElementById(SAVE_BUTTON).click();
-                Logger.logComment(SAVE_BUTTON+" :- element name is selected");
+            boolean status = findElementByAccessibilityIdAndClick(CONTINUE_BUTTON);
+            if (status == true){
+                Logger.logComment(CONTINUE_BUTTON+" :- element name is clicked");
             }else {
-//                if (isElementDisplayedByName("Next")) // Implement a method such that should verify multiple travellers info (Verify the save button name if it is NEXT, return false and call a method that enters the other travellers info), this process needs to be continued till save button is displayed.
-                Logger.logError("Save button is not displayed in the current active screen");
+                Logger.logError(CONTINUE_BUTTON+" :- element name is not clicked");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to find the save button in the current active screen");

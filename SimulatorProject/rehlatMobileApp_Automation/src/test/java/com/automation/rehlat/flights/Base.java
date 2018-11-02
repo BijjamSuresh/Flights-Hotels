@@ -2,6 +2,7 @@ package com.automation.rehlat.flights;
 
 import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
+import com.automation.rehlat.hotels.Labels_Hotels;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
@@ -114,7 +115,9 @@ public class Base {
     public TestWatcher watch = new TestWatcher() {
         @Override
         protected void failed(Throwable e, Description description) {
-            driver.runAppInBackground(1);
+            if (platform.equalsIgnoreCase(ANDROID)){
+                driver.runAppInBackground(1);
+            }
             takeScreenshot();
             super.failed(e, description);
         }
@@ -126,12 +129,18 @@ public class Base {
      */
     public static void takeScreenshot() {
         try {
+            String pathOfScreenshot;
             Logger.logComment(" Failure in the script, so taking the screenshot");
             String nameOfTestCase = getTestCaseName();
             Thread.sleep(1000);
 //            String pathOfScreenshot = "Screenshots/"+ nameOfTestCase + "_" + getPlatform();
-            String pathOfScreenshot = "Screenshots/NexusEmulator/"+ nameOfTestCase + "_" + getPlatform();
+//            String pathOfScreenshot = "Screenshots/NexusEmulator/"+ nameOfTestCase + "_" + getPlatform();
 //            String pathOfScreenshot = "Screenshots/PixelEmulator/"+ nameOfTestCase + "_" + getPlatform();
+            if (platform.equalsIgnoreCase(ANDROID)){
+               pathOfScreenshot = "Screenshots/Android/"+ nameOfTestCase + "_" + getPlatform();
+            }else {
+                pathOfScreenshot = "Screenshots/iOS/"+ nameOfTestCase + "_" + getPlatform();
+            }
             String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
             System.out.println(new File(pathOfScreenshot + "_" + time + ".jpg"));
             File screenshot = driver.getScreenshotAs(OutputType.FILE);
@@ -266,7 +275,7 @@ public class Base {
                     element = driver.findElementByName(elementName);
 //                    return true;
 //                }
-                if (element.isDisplayed()) {
+                if (element.isDisplayed() || element.isEnabled()) {
                     Logger.logComment(elementName + " - element name is displayed and moving forward to next step");
                     return true;
                 }
@@ -299,7 +308,7 @@ public class Base {
                     element = driver.findElementById(elementId);
 //                    return true;
 //                }
-                if (element.isDisplayed()) {
+                if (element.isDisplayed() || element.isEnabled()) {
                     Logger.logComment(elementId + " - element id is displayed and moving forward to next step");
                     return true;
                 }
@@ -620,7 +629,7 @@ public class Base {
             } catch (Exception e) {
                 Logger.logComment(counter + " time trying to find " + xpath);
             }
-            Thread.sleep(Labels_Flights.WAIT_TIME_DEFAULT);
+            Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
             counter++;
         }
         Logger.logComment( xpath+" is not enabled in the current active screen");
@@ -668,9 +677,8 @@ public class Base {
      * @param size
      * @return
      */
-    public int getTheRandomValue(int size) {
+    public static int getTheRandomValue(int size) {
         int randomValue= new Random().nextInt(size);
-
         return randomValue;
     }
 
@@ -977,7 +985,7 @@ public class Base {
                     swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
 //                    scrollDown();
                     counter++;
-                    if (counter > 6) {
+                    if (counter > 25) {
                         break;
                     }
                 }
@@ -987,7 +995,7 @@ public class Base {
                         swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
 //                        scrollUp();
                         counter++;
-                        if (counter > 10) {
+                        if (counter > 30) {
                             break;
                         }
                     }
@@ -998,7 +1006,7 @@ public class Base {
 //                    scrollUp();
                     swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
                     counter++;
-                    if (counter > 7) {
+                    if (counter > 5) {
                         break;
                     }
                 }
@@ -1008,7 +1016,7 @@ public class Base {
 //                        scrollDown();
                         swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
                         counter++;
-                        if (counter > 10) {
+                        if (counter > 30) {
                             break;
                         }
                     }
@@ -1323,6 +1331,7 @@ public class Base {
                     Logger.logComment("Tapped on the element by xpath :- "+XPath);
                     return true;
                 }
+                Thread.sleep(Labels_Flights.WAIT_TIME_DEFAULT);
             } catch (Exception e) {
                 Logger.logComment(counter + " time trying to find the xpath :- " + XPath);
             }
@@ -1771,8 +1780,10 @@ public class Base {
         while (counter < Labels_Flights.MIN_ATTEMPTS) {
             try {
                 element = driver.findElementById(elementId);
-                element.click();
-                return true;
+                if (element.isEnabled() || element.isEnabled()){
+                    element.click();
+                    return true;
+                }
             } catch (Exception e) {
                 Logger.logComment(counter + " time trying to find " + elementId);
             }
@@ -1805,6 +1816,31 @@ public class Base {
             Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
         }
         return false;
+    }
+
+    /**
+     * Return element text using element accessibility id as parameter.
+     * @param elementId element class name.
+     * @param attributeType is the tye of the attribute of parsing element
+     * @return status returns true if element is having parsing attribute else false.
+     * @throws Exception
+     */
+    public static String findElementByAccessibilityIdAndReturnText(String elementId, String attributeType) throws Exception {
+        int counter = 0;
+        WebElement element = null;
+        while (counter < Labels_Flights.MIN_ATTEMPTS) {
+            try {
+                element = driver.findElementByAccessibilityId(elementId);
+                if (!element.getText().isEmpty()){
+                    return element.getAttribute(attributeType);
+                }
+            } catch (Exception e) {
+                Logger.logComment(counter + " time trying to find " + elementId);
+            }
+            counter++;
+            Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
+        }
+        return null;
     }
 
     /**

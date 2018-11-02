@@ -1,6 +1,7 @@
 package com.automation.rehlat.hotels.pages.signUp;
 
 import com.automation.rehlat.hotels.Labels_Hotels;
+import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -9,7 +10,7 @@ public class SignUpIos extends SignUpBase {
 
     public static final String TOUCH_ID__AS_SIGN_UP_BUTTON = "USE TOUCHID FOR SIGN UP";
     public static final String FACE_ID__AS_SIGN_UP_BUTTON = "USE FACEID FOR SIGN UP";
-    public static final String SIGN_UP_BUTTON = "signupButtonp";
+    public static final String SIGN_UP_BUTTON = "Sign Up";
     public static final String ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD = "signupFirstName";
     public static final String ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD = "signupLastName";
     public static final String ACCESSIBILITY_ID_OF_EMAIL_TEXT_FIELD = "signupEmail";
@@ -67,7 +68,8 @@ public class SignUpIos extends SignUpBase {
         try {
             if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD)){
                 WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD);
-                element.sendKeys(Labels_Hotels.FIRST_NAME);
+                String firstName = General.getTheTestDataOfField("First_Name");
+                element.sendKeys(firstName);
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError(ACCESSIBILITY_ID_OF_FIRST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -86,7 +88,8 @@ public class SignUpIos extends SignUpBase {
         try {
             if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD)){
                 WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD);
-                element.sendKeys(Labels_Hotels.LAST_NAME);
+                String lastName = General.getTheTestDataOfField("Last_Name");
+                element.sendKeys(lastName);
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError(ACCESSIBILITY_ID_OF_LAST_NAME_TEXT_FIELD+" - element name is not displayed in the current active screen");
@@ -178,7 +181,7 @@ public class SignUpIos extends SignUpBase {
     public static void selectCountryNameAndTapOnContinueButton() {
         Logger.logAction("Selecting user country domain and tap on tap on continue button");
         try {
-            findElementByNameAndClick(Labels_Hotels.KUWAIT_LANGUAGE_COUNTRY_LABEL);
+            findElementByNameAndClick(Labels_Hotels.LANGUAGE_COUNTRY_LABEL);
             findElementByNameAndClick(CONTINUE_BUTTON);
 
 //            if (isElementDisplayedByName(Labels_Hotels.KUWAIT_LANGUAGE_COUNTRY_LABEL)){
@@ -199,8 +202,8 @@ public class SignUpIos extends SignUpBase {
     public void enterReferralCode() {
         Logger.logAction("Entering referral code");
         try {
-            if (isElementDisplayedByXPath(ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD)){
-                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_SELECT_DOMAIN_TEXT_FIELD);
+            if (isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD)){
+                WebElement element = driver.findElementByAccessibilityId(ACCESSIBILITY_ID_OF_REFERRAL_CODE_TEXT_FIELD);
                 element.sendKeys(Labels_Hotels.REFERRAL_CODE);
                 closeTheKeyboard_iOS();
             }else {

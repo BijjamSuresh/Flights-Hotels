@@ -1,10 +1,13 @@
 package com.automation.rehlat.flights.pages.travellerDetails;
 
 import com.automation.rehlat.flights.Labels_Flights;
+import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import java.util.List;
 
 import static com.automation.rehlat.flights.tests.BaseTest.INTERNATIONALS_TRAVELLERS_COUNTRY_NAME;
@@ -51,28 +54,35 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
      * Accept the auto fill populate modal if displayed
      */
     @Override
-    public boolean acceptAutoFillPopulateModalIfDisplayed() {
+    public boolean acceptAutoFillPopulateModalIfDisplayed(Integer parsingPassengersCount) {
         Logger.logAction("Accepting the auto fill popup if displayed");
+        Integer count = 0;
         try{
-            if (isElementDisplayedByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_SHEET)){
-                WebElement popUpModal = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_SHEET);
-                String popUpModalTitle = popUpModal.findElement(By.className(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_STATIC_TEXT)).getAttribute(Labels_Flights.NAME_ATTRIBUTE);
-                if (popUpModalTitle.equals(TRAVELLERS_PRE_POPULLATE_MODAL_VIEW)){
-                    Logger.logStep("Auto fill popup modal is displayed and going to accept it");
-                    if (isElementDisplayedByName(YES_BUTTON)){
-                        driver.findElementByName(YES_BUTTON).click();
-                        Logger.logComment("Tapped on yes button");
-                        return true;
-                    }else{
-                        Logger.logError("Button with - Yes - name is not displayed in the popup");
+            while (count <= parsingPassengersCount) {
+                if (isElementDisplayedByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_SHEET)) {
+                    WebElement popUpModal = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_SHEET);
+                    String popUpModalTitle = popUpModal.findElement(By.className(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_STATIC_TEXT)).getAttribute(Labels_Flights.NAME_ATTRIBUTE);
+                    if (popUpModalTitle.equals(TRAVELLERS_PRE_POPULLATE_MODAL_VIEW)) {
+                        Logger.logStep("Auto fill popup modal is displayed and going to accept it");
+                        if (isElementDisplayedByName(YES_BUTTON)) {
+                            driver.findElementByName(YES_BUTTON).click();
+                            Logger.logComment("Tapped on yes button");
+                            if (!(parsingPassengersCount == count+1)){
+                                tapOnNextButton();
+                                count++;
+                            }
+                        } else {
+                            Logger.logError("Button with - Yes - name is not displayed in the popup");
+                        }
+                    } else {
+                        Logger.logError("Auto fill PopUp is not displayed but a popup is displayed with different title");
                     }
-                }else{
-                    Logger.logError("Auto fill PopUp is not displayed but a popup is displayed with different title");
+                } else {
+                    Logger.logComment("PopUp modal is not displayed in the current active screen and moving to next test step");
+                    return false;
                 }
-            } else {
-                Logger.logComment("PopUp modal is not displayed in the current active screen and moving to next test step");
-                return false;
             }
+            return true;
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to decline the auto fill popup ");
         }
@@ -207,10 +217,11 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
         Logger.logAction("Entering travellers first name");
         try{
             if (isElementDisplayedByAccessibilityId(TRAVELLERS_FIRST_NAME)){
-                WebElement firstName = driver.findElementByAccessibilityId(TRAVELLERS_FIRST_NAME);
+                WebElement firstNameLabel = driver.findElementByAccessibilityId(TRAVELLERS_FIRST_NAME);
 //                tapOnElementBasedOnLocation(firstName,"bottomRight");
-                firstName.sendKeys(Labels_Flights.TRAVELLERS_FIRST_NAME);
-                Logger.logComment(Labels_Flights.TRAVELLERS_FIRST_NAME+" :- is parsed");
+                String firstName = General.getTheTestDataOfField("First_Name");
+                firstNameLabel.sendKeys(firstName);
+                Logger.logComment(firstName+" :- is parsed");
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError("Travellers first name field is not displayed in the current active screen");
@@ -228,10 +239,11 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
         Logger.logAction("Entering travellers middle name");
         try{
             if (isElementDisplayedByAccessibilityId(TRAVELLERS_MIDDLE_NAME)){
-                WebElement middleName = driver.findElementByAccessibilityId(TRAVELLERS_MIDDLE_NAME);
+                WebElement middleNameLabel = driver.findElementByAccessibilityId(TRAVELLERS_MIDDLE_NAME);
 //                tapOnElementBasedOnLocation(middleName,"bottomRight");
-                middleName.sendKeys(Labels_Flights.TRAVELLERS_MIDDLE_NAME);
-                Logger.logComment(Labels_Flights.TRAVELLERS_MIDDLE_NAME+" :- is parsed");
+                String middleName = General.getTheTestDataOfField("Middle_Name");
+                middleNameLabel.sendKeys(middleName);
+                Logger.logComment(middleName+" :- is parsed");
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError("Travellers middle name field is not displayed in the current active screen");
@@ -248,10 +260,11 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
         Logger.logAction("Entering travellers last name");
         try{
             if (isElementDisplayedByAccessibilityId(TRAVELLERS_LAST_NAME)){
-                WebElement lastName = driver.findElementByAccessibilityId(TRAVELLERS_LAST_NAME);
+                WebElement lastNameLabel = driver.findElementByAccessibilityId(TRAVELLERS_LAST_NAME);
 //                tapOnElementBasedOnLocation(lastName,"bottomRight");
-                lastName.sendKeys(Labels_Flights.TRAVELLERS_LAST_NAME);
-                Logger.logComment(Labels_Flights.TRAVELLERS_LAST_NAME+" :- is parsed");
+                String lastName = General.getTheTestDataOfField("Last_Name");
+                lastNameLabel.sendKeys(lastName);
+                Logger.logComment(lastName+" :- is parsed");
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError("Travellers last name field is not displayed in the current active screen");
@@ -298,10 +311,11 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
         Logger.logAction("Entering travellers passport number");
         try{
             if (isElementDisplayedByAccessibilityId(TRAVELLERS_PASSPORT_NUMBER)){
-                WebElement passportNumber = driver.findElementByAccessibilityId(TRAVELLERS_PASSPORT_NUMBER);
+                WebElement passportNumberLabel = driver.findElementByAccessibilityId(TRAVELLERS_PASSPORT_NUMBER);
 //                tapOnElementBasedOnLocation(passportNumber,"bottomRight");
-                passportNumber.sendKeys(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER);
-                Logger.logComment(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER+" :- is parsed");
+                String passportNumber = General.getTheTestDataOfField("Passport_No");
+                passportNumberLabel.sendKeys(passportNumber);
+                Logger.logComment(passportNumber+" :- is parsed");
                 closeTheKeyboard_iOS();
             }else {
                 Logger.logError("Travellers passport field is not displayed in the current active screen");
@@ -321,6 +335,7 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
                 passportExpiryNumber.click();
 //                tapOnElementBasedOnLocation(passportExpiryNumber,"bottomRight");
                 Logger.logComment("Tapped on Travellers passport expiry text field");
+                driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.className(PICKER_WHEEL)));
                 if (isDatePickerDisplayed()){
                     List<IOSElement> wheels = (List) driver.findElements(By.className(PICKER_WHEEL));
                     wheels.get(0).sendKeys(Labels_Flights.DAY_IN_TRAVELLERS_PASSPORT_EXPIRY_DATE_IOS);
@@ -431,6 +446,7 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
     /**
      * Tap on next button
      */
+    @Override
     public void tapOnNextButton() {
         Logger.logAction("Tapping on next button");
         try{

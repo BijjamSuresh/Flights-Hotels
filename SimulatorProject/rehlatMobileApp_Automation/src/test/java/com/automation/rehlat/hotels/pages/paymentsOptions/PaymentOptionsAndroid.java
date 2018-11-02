@@ -638,10 +638,9 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     /**
      * Check 3D payment screen is displayed
      * @return
-     * @throws Exception
      */
     @Override
-    public boolean check3DPaymentScreenIsDisplayed() throws Exception{
+    public boolean check3DPaymentScreenIsDisplayed() {
         Logger.logAction("Checking the 3D payment screen is displayed");
         try {
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR,1);
@@ -710,7 +709,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                     Logger.logComment(TRANSACTION_IN_PROGRESS);
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                         Logger.logComment(PAYMENT_SUCCESS);
-                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                         if (isElementDisplayedByName(BOOKING_SUCCESS)){
                             Logger.logComment(PAYMENT_SUCCESS);
                         }else {
@@ -726,7 +725,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                 }else {
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                         Logger.logComment(PAYMENT_SUCCESS);
-                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                         if (isElementDisplayedByName(BOOKING_SUCCESS)){
                             Logger.logComment(PAYMENT_SUCCESS);
                         }else {
@@ -744,7 +743,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                 Logger.logComment(TRANSACTION_IN_PROGRESS);
                 if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                     Logger.logComment(PAYMENT_SUCCESS);
-                    waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                    waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                     if (isElementDisplayedByName(BOOKING_SUCCESS)){
                         Logger.logComment(PAYMENT_SUCCESS);
                     }else {
@@ -759,7 +758,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                 }
             }else if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                 Logger.logComment(PAYMENT_SUCCESS);
-                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS,1);
                 if (isElementDisplayedByName(BOOKING_SUCCESS)){
                     Logger.logComment(PAYMENT_SUCCESS);
                 }else {

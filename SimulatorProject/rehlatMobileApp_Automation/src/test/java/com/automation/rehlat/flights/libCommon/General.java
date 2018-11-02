@@ -2,7 +2,13 @@ package com.automation.rehlat.flights.libCommon;
 
 import com.automation.rehlat.flights.Base;
 import com.automation.rehlat.flights.Labels_Flights;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 
 import static com.automation.rehlat.flights.Labels_Flights.ANDROID_CAPABILITIES_PACKAGE_NAME;
@@ -289,18 +295,37 @@ public class General extends Base {
 
     /**
      * Get the test data of parsing passenger number
-     * @param parsingRandomNumber
-     * @param parsingKeyOfRandomNumber
      */
-    public static void getTheTestDataOfPassengerNumber(Integer parsingRandomNumber, String  parsingKeyOfRandomNumber){
-        Logger.logAction("Getting the test data of passenger Number");
+    public static String getTheTestDataOfField(String parsingKey){
+        Logger.logAction("Getting the test data of passing key :- "+parsingKey);
+        Integer randomNumber = null;
+        String parsingKeyValue;
         try {
-
-
+            JSONParser jsonParser = new JSONParser();
+            FileReader fileReader = new FileReader(Labels_Flights.PATH_OF_TEST_DATA_JSON_FILE);
+            JSONArray object = (JSONArray) jsonParser.parse(fileReader);
+            Integer totalListCount = (object).size();
+            randomNumber = getTheRandomValue(totalListCount-1);
+            if (randomNumber == 0){
+                randomNumber = 1;
+            }
+            JSONObject travellerNumber = (JSONObject) object.get(randomNumber);
+            try {
+                parsingKeyValue = (String) travellerNumber.get(parsingKey);
+            }catch (Exception exception){
+                Logger.logWarning("Null - email address is triggered. So going to get the new email id");
+                randomNumber = getTheRandomValue(totalListCount-1);
+                if (randomNumber == 0){
+                    randomNumber =1;
+                }
+                parsingKeyValue = (String) travellerNumber.get(parsingKey);
+            }
+            return parsingKeyValue;
         }catch (Exception exception){
             exception.printStackTrace();
-            Logger.logError("Unable to get the test data of passenger number :- "+parsingRandomNumber);
+            Logger.logError("Unable to get the test data of parsing key :- "+randomNumber);
         }
+        return null;
     }
 
 }

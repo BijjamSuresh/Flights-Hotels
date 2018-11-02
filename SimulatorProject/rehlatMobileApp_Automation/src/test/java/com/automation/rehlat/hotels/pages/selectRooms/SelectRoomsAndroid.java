@@ -22,6 +22,7 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
     public static final String PRICE_ID_IN_HOTELS_PROFILE_SCREEN_FOOTER_VIEW_BEDS = "com.app.rehlat:id/hotel_bedsfooter_total_fare_textview";
     public static final String CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE  = "com.app.rehlat:id/noHotelFareDifference";
     public static final String OK_BUTTON_IN_ROOM_SOLD_OUT_ALERT_ID  = "com.app.rehlat:id/okBtn";
+    public static final String SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE  = "com.app.rehlat:id/yesHotelFareDifference";
     public static final String CHANGE_YOUR_DATES_BUTTON_LABEL  = "Change your Room type";
     private static String API_RESPONSE_TYPE_IN_SELECT_ROOMS;
   
@@ -60,7 +61,7 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
     public void tapOnSelectButtonInRoomCellNumber(Integer totalRooms, Integer roomNumberToSelect){
         Logger.logAction("Tapping on select button in room cell number :- "+totalRooms);
         Integer roomNumber = 2 ;
-        String roomNumberTab;
+        String xpathOfRoomNumberTab;
         try {
             if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_PROS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 Integer parsingRoomNumberToSelect = roomNumberToSelect;
@@ -68,8 +69,8 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
                 findElementByXPathAndClick(xpathOfSelectButtonOfParsingCellNumber);
                 Logger.logStep("Tapped on select button in the room cell number :- "+roomNumberToSelect);
             }else if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_BEDS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
-                 roomNumberTab = XPATH_OF_ROOM_NUMBER_TAB_WITHOUT_INDEX+1+"]";
-                findElementByXPathAndClick(roomNumberTab);
+                xpathOfRoomNumberTab = XPATH_OF_ROOM_NUMBER_TAB_WITHOUT_INDEX+1+"]";
+                findElementByXPathAndClick(xpathOfRoomNumberTab);
                 for (int count =0; count < totalRooms; count++){
                     Integer parsingRoomNumberToSelect =roomNumberToSelect;
                     Thread.sleep(1000);
@@ -81,8 +82,8 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
                     }else {
                         Integer roomNumberCountInScrollView = count+2;
                         roomNumber = roomNumberCountInScrollView-2;
-                        roomNumberTab = XPATH_OF_ROOM_NUMBER_TAB_WITHOUT_INDEX+roomNumberCountInScrollView+"]";
-                        findElementByXPathAndClick(roomNumberTab);
+                        xpathOfRoomNumberTab = XPATH_OF_ROOM_NUMBER_TAB_WITHOUT_INDEX+roomNumberCountInScrollView+"]";
+                        findElementByXPathAndClick(xpathOfRoomNumberTab);
                         Logger.logStep("Tapped on select button in the room cell number :- "+roomNumberCountInScrollView);
                     }
                 }
@@ -243,6 +244,22 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
                 driver.findElementById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
                 Logger.logComment("Tapped on on button in the sold out alert");
                 runAppInBackground(2);
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
+        }
+    }
+
+    /**
+     * Tapped on change your dates button in the sold out alert
+     */
+    @Override
+    public void tapOnSeeAvailablePropertiesButtonInSoldOutAlert(){
+        Logger.logAction("Tapping on change your dates button in the sold out alert");
+        try{
+            if (isElementEnabledById(SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
+                driver.findElementById(SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
+                Logger.logComment("Tapped on change your dates button in the sold out alert");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");

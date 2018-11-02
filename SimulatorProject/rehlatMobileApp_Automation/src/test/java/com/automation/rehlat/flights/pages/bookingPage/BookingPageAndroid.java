@@ -1,6 +1,7 @@
 package com.automation.rehlat.flights.pages.bookingPage;
 
 import com.automation.rehlat.flights.Labels_Flights;
+import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
@@ -19,18 +20,24 @@ public class BookingPageAndroid extends BookingPageBase {
     public static final String PAY_NOW_BUTTON = "com.app.rehlat:id/countinue_text";
     public static final String CONTACT_DETAILS_VIEW ="com.app.rehlat:id/paymentContainer";
     public static final String SIGN_IN_OR_SIGN_UP_FOR_FAST_BOOKINGS_BUTTON = "com.app.rehlat:id/login_btn";
+    public static final String KARAM_WALLET_MESSAGE_LABEL = "com.app.rehlat:id/login_alert_text";
+    public static final String KARAM_WALLET_MESSAGE = "Your Karam Wallet is empty.";
     public static final String ACTUAL_DISPLAYING_FARE = "com.app.rehlat:id/traveller_detail_onward_price_strikedoff";
     public static final String COUPON_AMOUNT = "com.app.rehlat:id/coupon_amount";
     public static final String KARAM_POINTS = "com.app.rehlat:id/walletPointsTextView";
     public static final String FINAL_FARE = "com.app.rehlat:id/final_fare_textview";
     public static final String KARAM_POINTS_TOGGLE_BUTTON = "com.app.rehlat:id/use_karm_checkbox";
     public static final String COUPON_CODE_TEXT_VIEW = "com.app.rehlat:id/enterCouponCodeTextViewEditText";
+    public static final String COUPON_CODE_APPLY_TEXT_VIEW = "com.app.rehlat:id/couponcode_apply_layout";
+    public static final String COUPON_CODE_CLOSE_BUTTON = "com.app.rehlat:id/couponCode_cancellyt";
+    public static final String COUPON_CODE_LOADING_INDICATOR= "com.app.rehlat:id/flight_search_progressbar";
     public static final String APPLY_COUPON_CODE_BUTTON = "com.app.rehlat:id/coupon_apply";
-    public static final String COUPON_CODE_VALIDATION_MESSAGE = "com.app.rehlat:id/coupon_validation_message";
+    public static final String COUPON_CODE_VALIDATION_MESSAGE = "com.app.rehlat:id/coupon_qualifies_msg";
     public static final String COUPON_INVALID_MESSAGE = "Coupon is invalid or expired";
     public static final String ONLINE_CHECKIN_TOGGLE_BUTTON = "com.app.rehlat:id/onlinecheckin_checkbox";
     public static final String REVIEW_BOOKING_PRICE_IN_FOOTER_VIEW_CELL = "com.app.rehlat:id/reviewbooking_price";
     public static final String SEARCH_TEXTFIELD_IN_SELECT_COUNTRY_MODAL="com.app.rehlat:id/searchFlightEditText";
+    public static final String TERMS_AND_CONDITIONS_URL_LABLE ="com.app.rehlat:id/agreeTermsConditions";
     public static final String XPATH_OF_FIRST_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[1]";
     public static final String XPATH_OF_SECOND_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.TextView[1]";
     public static final String CONTACT_INFO_COUNTRY_NAME = "com.app.rehlat:id/contact_info_country_name_textview";
@@ -103,27 +110,32 @@ public class BookingPageAndroid extends BookingPageBase {
     public void enterTextInEmailTextField() {
         Logger.logAction("Entering the email id "+ Labels_Flights.EMAIL_ID_SIGN_IN+" in email id text field");
         try{
+            String firstName = General.getTheTestDataOfField("First_Name");
+            String lastName = General.getTheTestDataOfField("Last_Name");
+            String gmailId = firstName+"."+lastName+"@gmial.cm";
             if (isElementDisplayedById(EMAIL_FIELD)){
                 String emailField = driver.findElementById(EMAIL_FIELD).getText();
                 if (emailField.equals(PLACEHOLDER_TEXT_OF_EMAILID_TEXTFIELD)){
-                    Logger.logComment("Entering the email id:- "+ Labels_Flights.EMAIL_ID_SIGN_IN);
+                    Logger.logComment("Entering the email id:- "+ gmailId);
                     WebElement textField = driver.findElement(By.id(EMAIL_FIELD));
                     tapOnElementBasedOnLocation(textField,"bottomRight");
 //                    clearKeysByUsingKeycode(EMAIL_FIELD,EMAIL_FIELD.length());
-                    sendTextById(EMAIL_FIELD, Labels_Flights.EMAIL_ID_SIGN_IN);
+                    sendTextById(EMAIL_FIELD, gmailId);
                     closeTheKeyboard_Android();
                 }else if (emailField.equals(Labels_Flights.EMAIL_ID_SIGN_IN)){
-                    Logger.logComment(Labels_Flights.EMAIL_ID_SIGN_IN+" :- Email id is already entered in the text field");
+                    Logger.logComment(Labels_Flights.EMAIL_ID_SIGN_IN+" :- Email id is already entered in the text field, going to re changing it to :- "+gmailId);
+                    sendTextById(EMAIL_FIELD,gmailId);
+                    closeTheKeyboard_Android();
                 }else if (emailField.equals(Labels_Flights.STRING_NULL)){
-                    Logger.logComment("Entering the phone number as :- "+ Labels_Flights.phoneNumber);
-                    sendTextById(EMAIL_FIELD, Labels_Flights.EMAIL_ID_SIGN_IN);
+                    Logger.logComment("Entering the email id as :- "+ gmailId);
+                    sendTextById(EMAIL_FIELD,gmailId);
                     closeTheKeyboard_Android();
                 }else {
-                    Logger.logComment("Replacing current email id "+emailField+" with "+ Labels_Flights.EMAIL_ID_SIGN_IN);
+                    Logger.logComment("Replacing current email id "+emailField+" with "+ gmailId);
                     WebElement textField = driver.findElement(By.id(EMAIL_FIELD));
                     tapOnElementBasedOnLocation(textField,"bottomRight");
                     clearKeysByUsingKeycode(EMAIL_FIELD,EMAIL_FIELD.length());
-                    sendTextById(EMAIL_FIELD, Labels_Flights.EMAIL_ID_SIGN_IN);
+                    sendTextById(EMAIL_FIELD, gmailId);
                     closeTheKeyboard_Android();
                 }
             }else {
@@ -139,28 +151,31 @@ public class BookingPageAndroid extends BookingPageBase {
      */
     @Override
     public void enterTextInPhoneNumberTextField() {
-        Logger.logAction("Entering the number "+ Labels_Flights.phoneNumber+" in number text field");
+        Logger.logAction("Entering the number "+ Labels_Flights.PHONE_NUMBER+" in number text field");
         try{
+//            String phoneNumber = General.getTheTestDataOfField("Phone_Number");
             if (isElementDisplayedById(PHONENUMBER_FIELD)){
                 String phoneNumberField = driver.findElementById(PHONENUMBER_FIELD).getText();
                 if (phoneNumberField.equals(PLACEHOLDER_TEXT_OF_PHONENUMBER_TEXTFIELD)){
-                    Logger.logComment("Entering the phone number:- "+ Labels_Flights.phoneNumber);
+                    Logger.logComment("Entering the phone number:- "+ Labels_Flights.PHONE_NUMBER);
                     WebElement textField = driver.findElementById(PHONENUMBER_FIELD);
                     tapOnElementBasedOnLocation(textField,"bottomRight");
-                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.phoneNumber);
+                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
-                }else if (phoneNumberField.equals(Labels_Flights.phoneNumber)){
-                    Logger.logComment(Labels_Flights.EMAIL_ID_SIGN_IN+" :- Email id is already entered in the text field");
+                }else if (phoneNumberField.equals(Labels_Flights.PHONE_NUMBER)){
+                    Logger.logComment(Labels_Flights.PHONE_NUMBER+" :- Phone number is already entered in the text field, going to re changing to :- "+Labels_Flights.PHONE_NUMBER);
+                    clearKeysByUsingKeycode(PHONENUMBER_FIELD,PHONENUMBER_FIELD.length());
+                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
                 } else if (phoneNumberField.equals(Labels_Flights.STRING_NULL)){
-                    Logger.logComment("Entering the phone number as :- "+ Labels_Flights.phoneNumber);
-                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.phoneNumber);
+                    Logger.logComment("Entering the phone number as :- "+ Labels_Flights.PHONE_NUMBER);
+                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
                 } else {
-                    Logger.logComment("Replacing current phone number text "+phoneNumberField+" with "+ Labels_Flights.phoneNumber);
+                    Logger.logComment("Replacing current phone number text "+phoneNumberField+" with "+ Labels_Flights.PHONE_NUMBER);
                     WebElement textField = driver.findElementById(PHONENUMBER_FIELD);
                     tapOnElementBasedOnLocation(textField,"bottomRight");
                     clearKeysByUsingKeycode(PHONENUMBER_FIELD,PHONENUMBER_FIELD.length());
-                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.phoneNumber);
+                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
                 }
             }else {
@@ -197,6 +212,7 @@ public class BookingPageAndroid extends BookingPageBase {
     public void tapOnAdultAddTravellersDetailsButton() {
         Logger.logAction("Tapping on adult add travellers details button");
         try{
+            scrollToAnElementById_ANDROID(TERMS_AND_CONDITIONS_URL_LABLE,true);
             if (isElementDisplayedById(ADULT_BUTTON)){
                 WebElement locationOfDay = driver.findElementById(ADULT_BUTTON);
                 Point table = locationOfDay.getLocation();
@@ -267,7 +283,6 @@ public class BookingPageAndroid extends BookingPageBase {
             disableOnlineCheckInToggleButton();
             scrollTheScreenDownwards();
             scrollTheScreenDownwards();
-//            driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
             Double bookingSeatCostInReviewBookingScreen = Double.valueOf(Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
             displayedActualFare = Double.valueOf(getDisplayedActualFare());
             couponAmount = Double.valueOf(getCouponAmount());
@@ -295,14 +310,6 @@ public class BookingPageAndroid extends BookingPageBase {
                 }else if (finalFareInternalMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This logic is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
                     Logger.logStep("Final fare calculation is correct");
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareInternalMathCalculation); // Code that returns the final price displaying in booking page screen
-//                } else if (finalFareMathCalculation.toString().contains(".0") && finalDisplayedFare.toString().contains(".00")){ //This logic is because of showing final fare value as with two decimal values even though they are zeros eg: 16.00 but internal math calculation will shows only one decimal point (if is zero) eg: 16.0
-//                    finalFareMathCalculation = Double.valueOf(finalFareMathCalculation.toString().replace(".0",".00"));
-//                    if (finalFareMathCalculation.equals(finalDisplayedFare)) {
-//                        Logger.logStep("Final fare calculation is correct");
-//                        Labels_Hotels.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
-//                    }else {
-//                        Logger.logError("Final calculation is incorrect in decimal values");
-//                    }
                 }
                 else {
                     Logger.logError("Final fare calculation is in correct");
@@ -375,6 +382,8 @@ public class BookingPageAndroid extends BookingPageBase {
         try
         {
             if (isUserIsSignedIn()) {
+                String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
+                if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
                 if (isKaramPointsToggleSwitchEnabled()){
                     if (isElementDisplayedById(KARAM_POINTS)){
                         String amount = driver.findElementById(KARAM_POINTS).getText();
@@ -385,6 +394,11 @@ public class BookingPageAndroid extends BookingPageBase {
                     }
                 }else {
                     Logger.logComment("Karam points toggle switch is disabled, so applied karam points are:- "+karamPoints);
+                    return karamPoints;
+                }
+                }
+                else {
+                    Logger.logStep("Karam wallet is empty, so tapping functionality over karam toggle  button is blocked");
                     return karamPoints;
                 }
             }else {
@@ -474,12 +488,19 @@ public class BookingPageAndroid extends BookingPageBase {
         Logger.logAction("Enabling the karam points toggle");
         try
         {
+            scrollToAnElementById_ANDROID(ACTUAL_DISPLAYING_FARE,true);
+            String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
+            if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
             if (isKaramPointsToggleSwitchEnabled()){
                 Logger.logComment("karam points toggle button is already enabled");
             }else {
                 WebElement karamPointsToggleSwitch = driver.findElementById(KARAM_POINTS_TOGGLE_BUTTON);
                 karamPointsToggleSwitch.click();
                 Logger.logComment("Karam points toggle button is enabled");
+            }
+            }
+            else {
+                Logger.logStep("Karam wallet is empty, so tapping functionality over karam toggle  button is blocked");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enable the karam points toggle button");
@@ -493,6 +514,7 @@ public class BookingPageAndroid extends BookingPageBase {
     public void applyTheCouponCode() {
         Logger.logAction("Applying the coupon code");
         try {
+            scrollToAnElementById_ANDROID(ACTUAL_DISPLAYING_FARE,true);
             sendKeysToCouponCodeTextField();
             tapOnApplyCouponCodeButton();
             if (isCouponCodeAppliedSuccessfully()){
@@ -547,16 +569,22 @@ public class BookingPageAndroid extends BookingPageBase {
     public boolean isCouponCodeAppliedSuccessfully() {
         Logger.logAction("Checking coupon code is applied or not ?");
         try {
-            if(isElementDisplayedById(COUPON_AMOUNT)){
+//            scrollToAnElementById_ANDROID(FINAL_FARE,true);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(COUPON_CODE_LOADING_INDICATOR);
+            if(isElementDisplayedById(COUPON_CODE_CLOSE_BUTTON)){
                 Logger.logComment("Coupon code is applied successfully");
                 return true;
-            }else if(isElementDisplayedById(COUPON_CODE_TEXT_VIEW)){
+            }else if(isElementDisplayedById(COUPON_CODE_APPLY_TEXT_VIEW)){
                 if (isElementDisplayedById(COUPON_CODE_VALIDATION_MESSAGE)){
                     String couponValidationMessage = driver.findElementById(COUPON_CODE_VALIDATION_MESSAGE).getText();
                     if (couponValidationMessage.equals(COUPON_INVALID_MESSAGE)){
                         Logger.logComment("Coupon code is not applied because of incorrect coupon code");
                         return false;
-                    }else {
+                    }else if (couponValidationMessage.contains("This booking qualifies")){
+                        Logger.logComment("Coupon code is applied :- "+couponValidationMessage);
+                        return true;
+                    }
+                    else {
                         Logger.logComment("Coupon code is not applied due to the reason :- "+couponValidationMessage);
                         return false;
                     }
@@ -569,7 +597,8 @@ public class BookingPageAndroid extends BookingPageBase {
                     return false;
                 }
             }else {
-                Logger.logError(COUPON_CODE_TEXT_VIEW+" Or "+COUPON_AMOUNT+" element names are not displayed in the current active screen");
+                Logger.logWarning(COUPON_CODE_TEXT_VIEW+" Or "+COUPON_AMOUNT+" element names are not displayed in the current active screen");
+                return false;
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check whether the coupon is applied or not ?");
@@ -631,14 +660,9 @@ public class BookingPageAndroid extends BookingPageBase {
     public static void compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout() {
         Logger.logAction("Comparing the final price displayed in footer view is matches with the final fare displayed in offers and discounts layout");
         try{
-//            disableOnlineCheckInToggleButton();
             Double reviewBookingPriceInFooterView = getTheBookingPriceDisplayedInFooterView();
             Logger.logComment("Review Booking price in footer view :- "+reviewBookingPriceInFooterView);
             Double FinalFareAmountInBookingPage = Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
-//            if (finalLetterInFinalFareAmountInBookingPage.equals("0")){
-//                String finalFarePayablePriceInBookingPage = Labels_Hotels.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN.replace("0","");
-//                Labels_Hotels.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = finalFarePayablePriceInBookingPage;
-//            }
             Logger.logComment("Final Fare displayed in the offers and discounts layout :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
             if (FinalFareAmountInBookingPage == reviewBookingPriceInFooterView){
                 Logger.logStep("Final price displayed in footer view is matches with the final fare displayed in offers and discounts layout");
@@ -736,7 +760,6 @@ public class BookingPageAndroid extends BookingPageBase {
             if (isElementDisplayedById(SEARCH_TEXTFIELD_IN_SELECT_COUNTRY_MODAL)){
                 sendTextById(SEARCH_TEXTFIELD_IN_SELECT_COUNTRY_MODAL,parsingCountryName);
                 Thread.sleep(2000);
-//                driver.findElementById(SEARCH_TEXTFIELD_IN_SELECT_COUNTRY_MODAL).sendKeys(parsingCountryName);
                 if (isElementDisplayedByXPath(XPATH_OF_FIRST_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN)){
                     WebElement firstSearchResult = driver.findElementByXPath(XPATH_OF_FIRST_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN);
                     if (firstSearchResult.getText().equalsIgnoreCase(parsingCountryName)){

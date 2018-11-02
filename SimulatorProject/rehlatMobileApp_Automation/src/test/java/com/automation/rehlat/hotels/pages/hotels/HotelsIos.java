@@ -1,5 +1,6 @@
 package com.automation.rehlat.hotels.pages.hotels;
 
+import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.By;
@@ -12,12 +13,12 @@ public class HotelsIos extends HotelsBase{
     public static final String XPATH_OF_SEARCH_TEXT_FIELD_IN_HOTELS_TAB = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeTextField";
     public static final String XPATH_OF_SEARCH_TEXT_FIELD_IN_SEARCH_PLACE_SCREEN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeTextField";
     public static final String XPATH_OF_CHECK_IN_AND_CHECK_OUT_LAYOUT = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[2]";
-    public static final String XPATH_OF_ROOMS_AND_GUEST_COUNT_LAYOUT = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[3]";
+    public static final String ROOMS_AND_GUEST_LAYOUT_ID = "GuestRoom_Btn";
     public static final String CALENDER_MODAL_VIEW_XPATH = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeCollectionView";
-    public static final String XPATH_OF_DEPARTURE_DAY_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeStaticText[2]";
-    public static final String XPATH_OF_DEPARTURE_MONTH_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeStaticText[1]";
-    public static final String XPATH_OF_RETURN_DAY_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeStaticText[2]";
-    public static final String XPATH_OF_RETURN_MONTH_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeStaticText[1]";
+    public static final String DEPARTURE_DAY_ID_IN_CALENDAR_VIEW = "fromDate";
+    public static final String DEPARTURE_MONTH_ID_IN_CALENDAR_VIEW = "fromMonth";
+    public static final String RETURN_DAY_ID_IN_CALENDAR_VIEW = "toDate";
+    public static final String RETURN_MONTH_ID_IN_CALENDAR_VIEW = "toMonth";
     public static final String DONE_BUTTON_IN_CALENDAR_VIEW = "Done";
     public static final String MENU_BUTTON = "careemMenu";
     public static final String CHECK_IN_BUTTON_ACCESSIBILITY_ID_IN_HOTELS_HOME_SCREEN = "Check-In";
@@ -27,22 +28,24 @@ public class HotelsIos extends HotelsBase{
     public static final String CHILD_COUNT_ID_IN_HOTELS_SCREEN = "com.app.rehlat:id/childrencount_txt";
     public static final String XPATH_OF_ROOMS_COUNT_IN_HOTELS_SCREEN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeStaticText[3]";
     public static final String ADULTS_AND_CHILD_COUNT_LAYOUT_ACCESSIBILITY_ID = "Guests";
-    public static final String ROOMS_LIST_VIEW_SCREEN_ACCESSIBILITY_ID = "ROOMS";
-    public static final String ROOMS_STRING = "ROOMS";
-    public static final String ADD_ROOM_BUTTON = "ADD ROOM";
+    public static final String ROOMS_LIST_VIEW_SCREEN_ACCESSIBILITY_ID = "Rooms & Guests";
+    public static final String ROOMS_STRING = "Rooms & Guests";
+    public static final String ADD_ROOM_BUTTON = "Add Room";
     public static final String DONE_BUTTON_IN_ROOM_LIST_VIEW = "Done";
     public static final String XPATH_OF_ROOM_NUMBER_LABEL_WITHOUT_INDEX = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeTable/XCUIElementTypeCell[";
-    public static final String XPATH_OF_ADULT_COUNT_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeStaticText[@name=\"1\"])[";
-    public static final String XPATH_OF_ADULT_PLUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeButton[@name=\"+\"])[";
-    public static final String XPATH_OF_ADULT_MINUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeButton[@name=\"-\"])[";
-    public static final String XPATH_OF_CHILD_COUNT_WITHOUT_ROOM_CELL_NUMBER_XPATH = "//XCUIElementTypeStaticText[@name=\"0\"])[";
-    public static final String XPATH_OF_CHILD_PLUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "\t(//XCUIElementTypeButton[@name=\"+\"])[";
-    public static final String XPATH_OF_CHILD_MINUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeButton[@name=\"-\"])[";
-    public static final String XPATH_OF_CHILD_AGE_CELL_NUMBER_WITHOUT_ROOM_CELL_NUMBER_XPATH = "]/android.widget.FrameLayout[1]/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[";
+    public static final String XPATH_OF_ADULT_COUNT_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeStaticText[@name=\"AdultCount\"])[";
+    public static final String XPATH_OF_ADULT_PLUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeButton[@name=\"AdultPlusButton\"])[";
+    public static final String XPATH_OF_ADULT_MINUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeButton[@name=\"AdultSubButton\"])[";
+    public static final String XPATH_OF_CHILD_COUNT_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeStaticText[@name=\"ChildCount\"])[";
+    public static final String XPATH_OF_CHILD_PLUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeButton[@name=\"ChildPlusButton\"])[";
+    public static final String XPATH_OF_CHILD_MINUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeButton[@name=\"ChildSubButton\"])[";
+    public static final String XPATH_OF_CHILD_AGE_CELL_NUMBER_WITHOUT_ROOM_CELL_NUMBER_XPATH = "(//XCUIElementTypeStaticText[@name=\"ChildCount\"])[";
     public static final String XPATH_OF_CLOSE_BUTTON_OF_ROOM_LAYOUT_WITHOUT_ROOM_INDEX = "(//XCUIElementTypeButton[@name=\"X\"])[";
     public static final String CHECK_AVAILABILITY_BUTTON_ID = "Check Availability";
+    public static final String ROOM_LABEL_IN_ROOMS_LIST_VIEW_SCREEN = "ROOM";
     public static Integer ROOMS_COUNT_IN_HOTELS_SCREEN;
     public static Integer ROOMS_COUNT_IN_ROOM_LIST_VIEW;
+    public static Integer DISPLAYING_ROOM_CELL_NUMBER ;
     /**
      * check is hotels screen is displayed
      */
@@ -133,7 +136,7 @@ public class HotelsIos extends HotelsBase{
     public String tapOnFirstCityNameInSearchResults(String nameOnFirstSearchResults){
         Logger.logAction("Tapping on first city name in search results");
         try {
-//            closeTheKeyboard_iOS(); //Todo:- This line of code is to enabled after implementing the close keyboard action only (currently tapping on Done button closes the search view) after tapping on Done button
+            closeTheKeyboard_iOS();
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR,1);
             findElementByAccessibilityIdAndClick(nameOnFirstSearchResults);
             Logger.logStep("Tapped on search text field");
@@ -493,7 +496,7 @@ public class HotelsIos extends HotelsBase{
      */
     public static String getTheCheckInMonthDisplayedInCalenderView() throws Exception{
         Logger.logAction("Getting the month displayed in the calendar view");
-        String departureMonth = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_DEPARTURE_MONTH_IN_CALENDAR_VIEW);
+        String departureMonth = findElementByAccessibilityIdAndReturnText(DEPARTURE_MONTH_ID_IN_CALENDAR_VIEW,Labels_Hotels.VALUE_ATTRIBUTE);
         Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
         return departureMonth;
     }
@@ -505,7 +508,7 @@ public class HotelsIos extends HotelsBase{
      */
     public static String getTheCheckInDayDisplayedInCalenderView() throws Exception{
         Logger.logAction("Getting the day displayed in the calendar view");
-        String departureDay = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_DEPARTURE_DAY_IN_CALENDAR_VIEW);
+        String departureDay = findElementByAccessibilityIdAndReturnText(DEPARTURE_DAY_ID_IN_CALENDAR_VIEW, Labels_Hotels.VALUE_ATTRIBUTE);
         Logger.logComment("Selected day value in calendar view is :- "+departureDay);
         return departureDay;
     }
@@ -517,7 +520,7 @@ public class HotelsIos extends HotelsBase{
      */
     public static String getTheCheckOutMonthDisplayedInCalenderView() throws Exception{
         Logger.logAction("Getting the month displayed in the calendar view");
-        String departureMonth = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_RETURN_MONTH_IN_CALENDAR_VIEW);
+        String departureMonth = findElementByAccessibilityIdAndReturnText(RETURN_MONTH_ID_IN_CALENDAR_VIEW, Labels_Hotels.VALUE_ATTRIBUTE);
         Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
         return departureMonth;
     }
@@ -529,7 +532,7 @@ public class HotelsIos extends HotelsBase{
      */
     public static String getTheCheckOutDayDisplayedInCalenderView() throws Exception {
         Logger.logAction("Getting the day displayed in the calendar view");
-        String departureDay = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_RETURN_DAY_IN_CALENDAR_VIEW);
+        String departureDay = findElementByAccessibilityIdAndReturnText(RETURN_DAY_ID_IN_CALENDAR_VIEW, Labels_Hotels.VALUE_ATTRIBUTE);
         Logger.logComment("Selected day value in calendar view is :- " + departureDay);
         return departureDay;
     }
@@ -560,8 +563,12 @@ public class HotelsIos extends HotelsBase{
         Logger.logAction("Tapping on adult and child count layout");
         try {
             getTheRoomsCountInHotelsHomePage();
-            findElementByXPathAndClick(XPATH_OF_ROOMS_AND_GUEST_COUNT_LAYOUT); //Todo:- As interaction is not set for child count layout so tapping on the full layout view of Rooms and guests count
-            Logger.logStep("Tapped on adult and child count layout");
+            boolean status = findElementByAccessibilityIdAndClick(ROOMS_AND_GUEST_LAYOUT_ID); //Todo:- As interaction is not set for child count layout so tapping on the full layout view of Rooms and guests count
+            if (status == true){
+                Logger.logStep("Tapped on adult and child count layout");
+            }else {
+                Logger.logError(" Didn't tapped on adult and child count layout");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to tap on adult and child layout");
         }
@@ -593,14 +600,15 @@ public class HotelsIos extends HotelsBase{
         try {
             if (isElementDisplayedByAccessibilityId(ROOMS_STRING)){
                 try {
-                    for (int count =0; count <5 ; count++){
-                        if (isElementDisplayedByXPath(XPATH_OF_CLOSE_BUTTON_OF_ROOM_LAYOUT_WITHOUT_ROOM_INDEX + ROOMS_COUNT_IN_HOTELS_SCREEN + "]")) {
-                            ROOMS_COUNT_IN_HOTELS_SCREEN = ROOMS_COUNT_IN_HOTELS_SCREEN+1;
-                            ROOMS_COUNT_IN_ROOM_LIST_VIEW = ROOMS_COUNT_IN_ROOM_LIST_VIEW+1;
+                    for (int count =0; count <=5 ; count++){
+                        Integer roomNumber = count+1;
+                        if (isElementDisplayedByAccessibilityId(ROOM_LABEL_IN_ROOMS_LIST_VIEW_SCREEN+ Labels_Flights.ONE_CHARACTER_SPACE + roomNumber)) {
+//                            ROOMS_COUNT_IN_HOTELS_SCREEN = ROOMS_COUNT_IN_HOTELS_SCREEN+1;
+                            ROOMS_COUNT_IN_ROOM_LIST_VIEW = roomNumber;
                         }else {
-                            if (count == 0){
-                                ROOMS_COUNT_IN_ROOM_LIST_VIEW = 1;
-                            }
+//                            if (count == 0){
+                                ROOMS_COUNT_IN_ROOM_LIST_VIEW = count;
+//                            }
                             return ROOMS_COUNT_IN_ROOM_LIST_VIEW;
                         }
                     }
@@ -620,14 +628,14 @@ public class HotelsIos extends HotelsBase{
     public Integer getTheRoomsCountInHotelsHomePage(){
         Logger.logAction("Getting the child count in home page");
         try {
-            String roomsCount = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_ROOMS_COUNT_IN_HOTELS_SCREEN);
-            if (roomsCount.contains(ROOMS_STRING)){
-                String roomsCountWithOnlyDecimal = roomsCount.replace(ROOMS_STRING, Labels_Hotels.STRING_NULL).trim();
-                ROOMS_COUNT_IN_HOTELS_SCREEN = Integer.valueOf(roomsCountWithOnlyDecimal);
-                return ROOMS_COUNT_IN_HOTELS_SCREEN;
-            }else {
-                Logger.logError("Xpath of the rooms count is wrong, value of the parsed xpath is :- "+roomsCount);
-            }
+//            String roomsCount = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_ROOMS_COUNT_IN_HOTELS_SCREEN);
+//            if (roomsCount.contains(ROOMS_STRING)){
+//                String roomsCountWithOnlyDecimal = roomsCount.replace(ROOMS_STRING, Labels_Hotels.STRING_NULL).trim();
+//                ROOMS_COUNT_IN_HOTELS_SCREEN = Integer.valueOf(roomsCountWithOnlyDecimal);
+                return ROOMS_COUNT_IN_HOTELS_SCREEN = 1;
+//            }else {
+//                Logger.logError("Xpath of the rooms count is wrong, value of the parsed xpath is :- "+roomsCount);
+//            }
         }catch (Exception exception){
             exception.printStackTrace();
             Logger.logError("Encountered error:- Unable to get the rooms count in home page");
@@ -642,12 +650,16 @@ public class HotelsIos extends HotelsBase{
     @Override
     public void resetTheRoomsCountToDefaultCount(Integer roomsCount){
         try {
-            findElementByXPathAndClick(XPATH_OF_CHECK_IN_AND_CHECK_OUT_LAYOUT);
-            for (int count=0; count <= roomsCount;count++){
-                Integer roomNumber = count+1;
-                String xpathOfCloseButtonOfRoomLayout = XPATH_OF_CLOSE_BUTTON_OF_ROOM_LAYOUT_WITHOUT_ROOM_INDEX+roomNumber+"]";
-                findElementByXPathAndClick(xpathOfCloseButtonOfRoomLayout);
-            }
+
+            Logger.logStep("No need to reset the rooms count to default as in iOS no cache information of previous hotels search");
+
+            //Todo:- The below logic needs to be implemented when the iOS is caching the previous search rooms count
+//            findElementByXPathAndClick(XPATH_OF_CHECK_IN_AND_CHECK_OUT_LAYOUT);
+//            for (int count=0; count <= roomsCount;count++){
+//                Integer roomNumber = count+1;
+//                String xpathOfCloseButtonOfRoomLayout = XPATH_OF_CLOSE_BUTTON_OF_ROOM_LAYOUT_WITHOUT_ROOM_INDEX+roomNumber+"]";
+//                findElementByXPathAndClick(xpathOfCloseButtonOfRoomLayout);
+//            }// Todo:- Logic ends here..,
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to reset the rooms count to default count");
         }
@@ -690,12 +702,12 @@ public class HotelsIos extends HotelsBase{
         try {
             if (isRoomsListViewIsDisplayed()){
                 Integer roomsCountInRoomsListView = getTheRoomsCountInRoomsListView();
-                if (ROOMS_COUNT_IN_HOTELS_SCREEN == roomsCountInRoomsListView){
+                if (roomNumber == roomsCountInRoomsListView){
                     setTheAdultCountTo(roomNumber, adultCount);
                     setTheChildCountTo(roomNumber,childCount);
                     setTheChildAge(roomNumber,childCount); // Todo:- In this method child age is an random number
                 }else {
-                    Logger.logError("Rooms count in hotels screen and in rooms list view screen are not same :- "+ROOMS_COUNT_IN_HOTELS_SCREEN);
+                    Logger.logError("Rooms count in rooms & guests screen and the parsing room number are not same :- "+ROOMS_COUNT_IN_HOTELS_SCREEN);
                 }
             }else {
                 Logger.logError("Rooms list view screen is not displayed");
@@ -738,7 +750,7 @@ public class HotelsIos extends HotelsBase{
      * Getting the adult count in rooms list view
      */
     public Integer getTheAdultCountInTheRoomNumberOf(Integer roomNumber){
-        Logger.logAction("Getting the adult count in home page");
+        Logger.logAction("Getting the adult count in the room number :- "+roomNumber);
         try {
             String xpathOfAdultsCountOfParsingRoomNumber = XPATH_OF_ADULT_COUNT_WITHOUT_ROOM_CELL_NUMBER_XPATH+roomNumber+"]";
             String adultCountDisplaying = findElementByXpathAndReturnItsAttributeValue(xpathOfAdultsCountOfParsingRoomNumber);
@@ -756,13 +768,34 @@ public class HotelsIos extends HotelsBase{
      */
     public void setTheChildCountTo(Integer roomNumber, Integer childCount){
         Logger.logAction("Setting the child count to :- "+childCount);
+        String xpathOfPlusButtonOfParsingRoom;
+        Integer cell_Number_To_Tap = 0;
         try {
             Integer countDisplayingWithoutIncrementOrDecrement = getTheChildCountInTheRoomNumberOf(roomNumber);
+            cell_Number_To_Tap = DISPLAYING_ROOM_CELL_NUMBER;
             if (countDisplayingWithoutIncrementOrDecrement <= childCount){
                 Integer tapsOnIncrementalButton = childCount - countDisplayingWithoutIncrementOrDecrement;
-                String xpathOfPlusButtonOfParsingRoom = XPATH_OF_CHILD_PLUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH+roomNumber+"]";
+                xpathOfPlusButtonOfParsingRoom = XPATH_OF_CHILD_PLUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH+cell_Number_To_Tap+"]";
                 for (int tapCount = 0; tapCount < tapsOnIncrementalButton; tapCount++){
-                    findElementByXPathAndClick(xpathOfPlusButtonOfParsingRoom);
+                    if(isElementDisplayedByXPath(xpathOfPlusButtonOfParsingRoom)){
+                        findElementByXPathAndClick(xpathOfPlusButtonOfParsingRoom);
+//                        break;
+                    }else {
+                        cell_Number_To_Tap = cell_Number_To_Tap-1;
+                        for (int count =0 ; count <= cell_Number_To_Tap; cell_Number_To_Tap--){
+                            xpathOfPlusButtonOfParsingRoom = XPATH_OF_CHILD_PLUS_BUTTON_WITHOUT_ROOM_CELL_NUMBER_XPATH+cell_Number_To_Tap+"]";
+                            try{
+                                if (isElementDisplayedByXPath(xpathOfPlusButtonOfParsingRoom)){
+                                    findElementByXPathAndClick(xpathOfPlusButtonOfParsingRoom);
+//                                    break;
+                                }else {
+                                    continue;
+                                }
+                            }catch (Exception exception){
+                                Logger.logError("Unable to find the element of the tapping cell number :- "+cell_Number_To_Tap);
+                            }
+                        }
+                    }
                 }
                 Logger.logStep("For room number "+roomNumber+" child count is set as :- "+childCount);
             }else {
@@ -782,11 +815,18 @@ public class HotelsIos extends HotelsBase{
      * Getting the child count in rooms list view
      */
     public Integer getTheChildCountInTheRoomNumberOf(Integer roomNumber){
-        Logger.logAction("Getting the child count in home page");
+        Logger.logAction("Getting the child count in rooms & guests view");
         try {
-            String xpathOfChildCountOfParsingRoomNumber = XPATH_OF_CHILD_COUNT_WITHOUT_ROOM_CELL_NUMBER_XPATH+roomNumber+"]";
-            String adultCountDisplaying = findElementByXpathAndReturnItsAttributeValue(xpathOfChildCountOfParsingRoomNumber);
-            return Integer.parseInt(adultCountDisplaying);
+            for (int count =0 ; count <= roomNumber; roomNumber--){
+                String xpathOfChildCountOfParsingRoomNumber = XPATH_OF_CHILD_COUNT_WITHOUT_ROOM_CELL_NUMBER_XPATH+roomNumber+"]";
+                try{
+                    String adultCountDisplaying = findElementByXpathAndReturnItsAttributeValue(xpathOfChildCountOfParsingRoomNumber);
+                    DISPLAYING_ROOM_CELL_NUMBER = roomNumber;
+                    return Integer.parseInt(adultCountDisplaying);
+                }catch (Exception exception){
+                    continue;
+                }
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to get the child count in home page");
         }
@@ -799,11 +839,25 @@ public class HotelsIos extends HotelsBase{
      */
     public void setTheChildAge(Integer roomNumber, Integer childCount){
         Logger.logAction("Setting the child count to :- "+childCount);
+        Integer sizeOfXCUIElementCells;
         try {
-            for (int count=0 ; childCount<childCount; count++){
-                Integer randomNumber = getTheRandomValue(7);
-                String xpathOfChildAge = XPATH_OF_CHILD_AGE_CELL_NUMBER_WITHOUT_ROOM_CELL_NUMBER_XPATH+randomNumber+"]";
-                    findElementByXPathAndClick(xpathOfChildAge);
+            WebElement roomsTableView = driver.findElementByXPath("//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeTable");
+            List<WebElement> listOfXCUIElementCells = roomsTableView.findElements(By.className(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_CELL));
+            sizeOfXCUIElementCells = listOfXCUIElementCells.size();
+            String xpathOfChildAgeWithoutChildNumber = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeTable/XCUIElementTypeCell[";
+            for (int count=0 ; count<childCount; count++){
+                Integer randomNumber = getTheRandomValue(6);
+                if (randomNumber == 0){
+                    randomNumber = 1;
+                }
+                if (count == 0){
+                    sizeOfXCUIElementCells = sizeOfXCUIElementCells -count;
+                }else {
+                    sizeOfXCUIElementCells = sizeOfXCUIElementCells -1;
+                }
+                String xpathOfChildAge = xpathOfChildAgeWithoutChildNumber+sizeOfXCUIElementCells+"]/XCUIElementTypeStaticText["+randomNumber+"]";
+                findElementByXPathAndClick(xpathOfChildAge);
+                sizeOfXCUIElementCells = listOfXCUIElementCells.size();
                 Logger.logStep("For room number "+roomNumber+", tapped on child age of :- "+randomNumber);
             }
         }catch (Exception exception){
@@ -849,6 +903,25 @@ public class HotelsIos extends HotelsBase{
             Logger.logStep("Tapped on check availability button");
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to tap on check availability button");
+        }
+    }
+
+    /**
+     * Set the domain as per the parsing domain
+     * @param parsingDomain
+     */
+    @Override
+    public void setTheDomainAs(String parsingDomain){
+        Logger.logAction("Setting the domain as :- "+parsingDomain);
+        try {
+            tapOnMenuButton();
+            MenuScreen.tapOnSettingsButton();
+            SettingsScreen.tapOnChangeCountryOption();
+            SettingsScreen.selectTheDomain(parsingDomain);
+            SettingsScreen.tapOnContinueButton();
+            MenuScreen.navigateToFlightsTab();
+        }catch (Exception exception){
+            Logger.logError("Unable to set the domain as :- "+parsingDomain);
         }
     }
 

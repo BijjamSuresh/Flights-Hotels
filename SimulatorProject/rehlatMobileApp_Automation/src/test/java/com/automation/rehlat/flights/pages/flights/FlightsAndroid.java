@@ -54,10 +54,10 @@ public class FlightsAndroid extends FlightsBase{
     public static final String TRAVELLERS_PASSENGER_INFANTS_NUMBER_PICKER = "com.app.rehlat:id/infantNumberPicker";
     public static final String NOTIFICATIONS_BUTTON = "com.app.rehlat:id/notification_image";
     public static final String XPATH_OF_KARAM_TAB = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.HorizontalScrollView/android.widget.LinearLayout/android.support.v7.app.ActionBar.Tab[4]/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.TextView";
-//    public static final String TRAVELLERS_PASSENGER_ICON = "";
-//    public static final String TRAVELLERS_PASSENGER_ICON = "";
-//    public static final String TRAVELLERS_PASSENGER_ICON = "";
-//    public static final String TRAVELLERS_PASSENGER_ICON = "";
+    public static final String DEPARTURE_DAY_IN_CALENDAR_VIEW = "com.app.rehlat:id/onwardDayDialogTextView";
+    public static final String DEPARTURE_MONTH_IN_CALENDAR_VIEW = "com.app.rehlat:id/onwardMonthDialogTextView";
+    public static final String RETURN_DAY_IN_CALENDAR_VIEW = "com.app.rehlat:id/returnDayDialogTextView";
+    public static final String RETURN_MONTH_IN_CALENDAR_VIEW = "com.app.rehlat:id/returnMonthDialogTextView";
 
     /**
      * Check select language modal is displayed
@@ -256,7 +256,6 @@ public class FlightsAndroid extends FlightsBase{
         Logger.logAction("Checking keyboard is triggered or not ?");
         try {
             Thread.sleep(1000);
-//            String iOSKeyboard = driver.findElement(By.xpath(IOS_KEYBOARD_XPATH)).getAttribute("type");
             if (isKeyboardDisplayed()){
                 Logger.logComment("Keyboard is triggered");
             }
@@ -323,12 +322,6 @@ public class FlightsAndroid extends FlightsBase{
                         Logger.logComment(" Searched Airport code - "+airportCode+ "- is not matching with the filtered result - "+airportCodeFromSearchResults+" -");
                     }
                 }
-//                // This logic is an work around for android app in Samsung devices...Issue is mentioned inside the logger.logStep messages, please read them for more information..,
-//                // Todo:- Discuss this issue with developers and implement final solution if there is no way to fix this issue
-//                Logger.logStep("Current test running device is a Samsung device.., After navigating from FROM search list screen (or from departure calendar view) flights tab elements visibility is showing as invisible in samsung devices.., To make flights tab elements visible we are pushing the app for a second and getting it back to foreground");
-//                Logger.logStep("This is just an work around yet to discuss with the developers for better solution");
-//                runAppInBackground(1);
-//                // The workaround logic ends here
             }else{
                 Logger.logError("Unable to tap on the airport code - " +airportCode);
             }
@@ -380,15 +373,15 @@ public class FlightsAndroid extends FlightsBase{
             if (isElementDisplayedById(CALENDER_MODAL_VIEW)){
                 scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,true);
                 if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                    tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                    tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
                 }else {
                     scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,false);
                     if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                        tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                        tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
                     }else {
                         Logger.logWarning("Unable to select the accurate departure date :- " +departureDay+ "," + departureMonthAndYear+"..., Going with the random selected date after scrolling the calender view");
                         scrollTheCalenderPageDownAMonthGap_Android();
-                        tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                        tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
                     }
                 }
             }else{
@@ -409,11 +402,11 @@ public class FlightsAndroid extends FlightsBase{
             if (isElementDisplayedById(CALENDER_MODAL_VIEW)){
                 scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,true);
                 if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                    tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                    tapOnDayInTheCalender("RETURN", departureMonthAndYear, departureDay);
                 }else {
                     scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,false);
                     if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                        tapOnDayInTheCalender(departureMonthAndYear,departureDay);
+                        tapOnDayInTheCalender("RETURN", departureMonthAndYear, departureDay);
                     }else {
                         Logger.logWarning("Unable to select the accurate return date :- " +departureDay+ "," + departureMonthAndYear+"..., Going with the default selected date");
                     }
@@ -431,14 +424,24 @@ public class FlightsAndroid extends FlightsBase{
      * @param parsingMonthAndYear
      * @param parsingDay
      */
-    public static void tapOnDayInTheCalender(String parsingMonthAndYear, String parsingDay) {
+    public static void tapOnDayInTheCalender(String journeyType, String parsingMonthAndYear, String parsingDay) {
         Logger.logAction("Trying to tap on the day "+parsingDay+" in the calender view");
+        int iterations = 0;
+        boolean parsingDateSelectionStatus = false;
+        String departureMonthName = Labels_Flights.STRING_NULL;
+        String departureDayValue = Labels_Flights.STRING_NULL;
         try{
-            Thread.sleep(WAIT_TIME_MIN);
-            WebElement calenderView = driver.findElement(By.id(CALENDER_MODAL_VIEW));
+            WebElement calenderView = driver.findElementById(CALENDER_MODAL_VIEW);
             try {
-                List<WebElement> monthTitle = calenderView.findElements(By.className(ANDROID_LINEAR_LAYOUT));
-                for (int index = 0; index <= monthTitle.size()-1; index++) {
+                    List<WebElement> monthTitle = calenderView.findElements(By.className(ANDROID_LINEAR_LAYOUT));
+                while (iterations < 7)
+                {
+                    if (!(iterations == 0)){
+                        scrollTheCalenderPageUpByDaysGap_Android();
+                    }
+                    for (int index = 0; index <= monthTitle.size()-1; index++)
+                {
+                        try{
                     WebElement monthCalenderLayout = monthTitle.get(index);
                     WebElement monthCalenderTitleLayout = monthCalenderLayout.findElement(By.className(Labels_Flights.ANDROID_TEXT_VIEW));
                     String monthCalenderTitleValue = monthCalenderTitleLayout.getText();
@@ -458,26 +461,88 @@ public class FlightsAndroid extends FlightsBase{
                                     WebElement locationOfDay = driver.findElement(By.xpath(xpathOfDay));
                                     Point table = locationOfDay.getLocation();
                                     int elementYAxisValue = table.getY();
-                                    if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_20_PERCENT <= elementYAxisValue){
-                                        scrollTheCalenderPageUpByDaysGap_Android();
-                                        tapOnDayInTheCalender(parsingMonthAndYear,parsingDay);
+                                    if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValue)
+                                    {
+                                        locationOfDay.click();
                                     }else {
-                                        driver.findElementByXPath(xpathOfDay).click();
-                                        break;
+                                        for (int count =0 ; count <=5; count++){
+                                            scrollTheCalenderPageUpByDaysGap_Android();
+                                            WebElement locationOfDayAfterScrolling = driver.findElement(By.xpath(xpathOfDay));
+                                            Point tableAfterScrolling = locationOfDayAfterScrolling.getLocation();
+                                            int elementYAxisValueAfterScrolling = tableAfterScrolling.getY();
+                                            if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValueAfterScrolling)
+                                            {
+                                                locationOfDayAfterScrolling.click();
+                                                break;
+                                            }
+                                        }
                                     }
+                                    if (journeyType == "ONWARD"){
+                                        departureMonthName = getTheDepartureMonthDisplayedInCalenderView();
+                                        departureDayValue = getTheDepartureDayDisplayedInCalenderView();
+                                    }else if (journeyType == "RETURN"){
+                                        departureMonthName = getTheReturnMonthDisplayedInCalenderView();
+                                        departureDayValue = getTheReturnDayDisplayedInCalenderView();
+                                    }else {
+                                        Logger.logError("Parsing journey type is neither onward nor return");
+                                    }
+                                        if (departureMonthName.equalsIgnoreCase(Labels_Flights.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
+                                            if (Integer.valueOf(departureDayValue) == Integer.valueOf(parsingDay)){
+                                                Logger.logComment("Tapped on correct departure day:- "+parsingDay);
+                                                parsingDateSelectionStatus = true;
+                                                break;
+                                            }else {
+                                                Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                            }
+                                        }else {
+                                            Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
+                                            if (iterations <= 6){
+                                            }else {
+                                                Logger.logError("Tried "+iterations+" times didn't find the exact date");
+                                            }
+                                        }
                                 }else {
                                     continue;
                                 }
+                            }
+                            if (parsingDateSelectionStatus == true){
+                                iterations = 7;
+                                break;
                             }
                         }
                     }else {
                         continue;
                     }
-                    Thread.sleep(WAIT_TIME_MIN);
+                        if (parsingDateSelectionStatus == true){
+                            iterations = 7;
+                        }
+
+                        }catch (Exception exception){
+                            if (parsingDateSelectionStatus == true){
+                                iterations = 7;
+                            }
+                        }
+                 }
+                    if (parsingDateSelectionStatus == true){
+                        iterations = 7;
+                        break;
+                    }
+                    else {
+                        iterations ++;
+                    }
                 }
             }catch (Exception exception){
-                scrollTheCalenderPageUpByDaysGap_Android();
-                tapOnDayInTheCalender(parsingMonthAndYear,parsingDay);
+                if (parsingDateSelectionStatus == true){
+                    iterations = 7;
+                }
+                else {
+                    iterations ++;
+                }
+            }
+            if (parsingDateSelectionStatus == true){
+                Logger.logComment("Tapped on correct date and going for next action");
+            }else {
+                Logger.logError("Tapped on in-correct date");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on the calender day");
@@ -504,7 +569,7 @@ public class FlightsAndroid extends FlightsBase{
                             Logger.logComment(flightBookingMonthAndYear+" - calender month is displayed");
                             return true;
                         }else {
-                            Logger.logComment(flightBookingMonthAndYear+" - calender month is not matching with -"+nameOfEachTextView);
+                            Logger.logComment(flightBookingMonthAndYear+" - calender month is not matching with - "+nameOfEachTextView);
                         }
                     }else {
                         continue;
@@ -535,7 +600,7 @@ public class FlightsAndroid extends FlightsBase{
                         Logger.logComment(counter + "  time trying to find the calender month and year - " + flightBookingMonthAndYear +" - by scrolling down ");
                         scrollTheCalenderPageUpByAMonthGap_Android();
                         counter++;
-                        if (counter > 6) {
+                        if (counter > 10) {
                             break;
                         }
                     }
@@ -554,7 +619,7 @@ public class FlightsAndroid extends FlightsBase{
                         Logger.logComment(counter + "  time trying to find the calender month and year - " + flightBookingMonthAndYear +" - by scrolling up ");
                         scrollTheCalenderPageDownAMonthGap_Android();
                         counter++;
-                        if (counter > 6) {
+                        if (counter > 10) {
                             break;
                         }
                     }
@@ -587,14 +652,6 @@ public class FlightsAndroid extends FlightsBase{
             if (isElementDisplayedById(DONE_BUTTON_IN_CALENDAR_VIEW)){
                 driver.findElementById(DONE_BUTTON_IN_CALENDAR_VIEW).click();
                 Logger.logStep("Tapped on Done button");
-
-//                // This logic is an work around for android app in Samsung devices...Issue is mentioned inside the logger.logStep messages, please read them for more information..,
-//                // Todo:- Discuss this issue with developers and implement final solution if there is no way to fix this issue
-//                Logger.logStep("Current test running device is a Samsung device.., After navigating from FROM search list screen (or from departure calendar view) flights tab elements visibility is showing as invisible in samsung devices.., To make flights tab elements visible we are pushing the app for a second and getting it back to foreground");
-//                Logger.logStep("This is just an work around yet to discuss with the developers for better solution");
-//                runAppInBackground(1);
-//                // The workaround logic ends here
-
             }else {
                 Logger.logError("Done button is not displayed in the calendar view");
             }
@@ -803,9 +860,8 @@ public class FlightsAndroid extends FlightsBase{
      * @param parsingChildrenCount
      * @param parsingInfantsCount
      * @return
-     * @throws Exception
      */
-    public static String setThePassengerCountStringToBeDisplayedInFlightsTab(Integer parsingAdultsCount, Integer parsingChildrenCount,Integer parsingInfantsCount) throws Exception{
+    public static String setThePassengerCountStringToBeDisplayedInFlightsTab(Integer parsingAdultsCount, Integer parsingChildrenCount,Integer parsingInfantsCount) {
         Logger.logAction("Setting the passengers count string to be displayed in flights tab");
         if (parsingAdultsCount !=0 && parsingChildrenCount !=0 && parsingInfantsCount !=0){
             String passengersCountNeedToBeDisplayed = ""+parsingAdultsCount+" Adult, "+parsingChildrenCount+" Child, "+parsingInfantsCount+" Infant";
@@ -1098,5 +1154,53 @@ public class FlightsAndroid extends FlightsBase{
         }
     }
 
+    /**
+     * Get the departure month displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheDepartureMonthDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the onward month displayed in the calendar view");
+        String departureMonth = findElementByIdAndReturnText(DEPARTURE_MONTH_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
+        return departureMonth;
+    }
 
+    /**
+     * Get the departure day displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheDepartureDayDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the onward day displayed in the calendar view");
+        String departureDay = findElementByIdAndReturnText(DEPARTURE_DAY_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected day value in calendar view is :- "+departureDay);
+        return departureDay;
+    }
+
+
+
+    /**
+     * Get the return month displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheReturnMonthDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the return month displayed in the calendar view");
+        String departureMonth = findElementByIdAndReturnText(RETURN_MONTH_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected month name in calendar view is :- "+departureMonth);
+        return departureMonth;
+    }
+
+    /**
+     * Get the return day displayed in the calendar view
+     * @return
+     * @throws Exception
+     */
+    public static String getTheReturnDayDisplayedInCalenderView() throws Exception{
+        Logger.logAction("Getting the return day displayed in the calendar view");
+        String departureDay = findElementByIdAndReturnText(RETURN_DAY_IN_CALENDAR_VIEW);
+        Logger.logComment("Selected day value in calendar view is :- "+departureDay);
+        return departureDay;
+    }
 }

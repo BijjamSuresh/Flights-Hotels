@@ -1,6 +1,7 @@
 package com.automation.rehlat.flights.pages.travellerDetails;
 
 import com.automation.rehlat.flights.Labels_Flights;
+import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -37,7 +38,9 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
     public static final String XPATH_OF_FIRST_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[1]";
     public static final String XPATH_OF_SECOND_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.TextView[1]";
     public static final String[] monthsList = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-//    public static final String XPATH_OF_TRAVELLERS_TYPE_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.HorizontalScrollView/android.widget.LinearLayout/android.support.v7.app.ActionBar.Tab[";
+    public static final String FIRST_NAME_PLACE_HOLDER_LABEL = "FIRST NAME";
+    public static final String MIDDLE_NAME_PLACE_HOLDER_LABEL = "MIDDLE NAME";
+    public static final String LAST_NAME_PLACE_HOLDER_LABEL = "LAST NAME";
     public static final String TRAVELLERS_TITTLE = "com.app.rehlat:id/travelleritypetitle";
 
     /**
@@ -91,26 +94,34 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
      * Accept the auto fill populate modal if displayed
      */
     @Override
-    public boolean acceptAutoFillPopulateModalIfDisplayed() {
+    public boolean acceptAutoFillPopulateModalIfDisplayed(Integer parsingPassengersCount) {
         Logger.logAction("Accepting the auto fill popup if displayed");
-        try{
-            if (isElementDisplayedById(TRAVELLERS_PRE_POPULATED_LAYOUT)){
-                if (isElementDisplayedById(FIRST_TRAVLLERS_NAME_IN_PREPOPULATED_LIST)){
-                    WebElement closeButton = driver.findElementById(FIRST_TRAVLLERS_NAME_IN_PREPOPULATED_LIST);
-                    closeButton.click();
-                    return true;
-                }else {
-                    Logger.logError("Travellers data is not displayed in the pre populated list layout");
+        Integer count = 0;
+        try {
+//            while (count <= parsingPassengersCount) {
+                if (isElementDisplayedById(TRAVELLERS_PRE_POPULATED_LAYOUT)) {
+                    if (isElementDisplayedById(FIRST_TRAVLLERS_NAME_IN_PREPOPULATED_LIST)) {
+                        WebElement closeButton = driver.findElementById(FIRST_TRAVLLERS_NAME_IN_PREPOPULATED_LIST);
+                        closeButton.click();
+//                        if (!(parsingPassengersCount == count+1)){
+//                            tapOnNextButton();
+//                        }
+                        count++;
+                    } else {
+                        Logger.logError("Travellers data is not displayed in the pre populated list layout");
+                    }
+                } else {
+                    Logger.logComment("PopUp modal is not displayed in the current active screen and moving to next test step");
+                    return false;
                 }
-            } else {
-                Logger.logComment("PopUp modal is not displayed in the current active screen and moving to next test step");
-                return false;
-            }
-        }catch (Exception exception){
+//            }
+            return true;
+        }catch(Exception exception){
             Logger.logError("Encountered error: Unable to decline the auto fill popup ");
         }
         return false;
     }
+
 
     /**
      * Enter travellers details for passengers
@@ -247,15 +258,20 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
         Logger.logStep("Entering travellers first name");
         try{
             if (isElementDisplayedById(TRAVELLERS_FIRST_NAME)){
-                String firstName = driver.findElementById(TRAVELLERS_FIRST_NAME).getText();
-                if (firstName.equals(Labels_Flights.STRING_NULL)){
-                    driver.findElementById(TRAVELLERS_FIRST_NAME).sendKeys(Labels_Flights.TRAVELLERS_FIRST_NAME);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_FIRST_NAME+" :- element name is entered as first name");
+                String firstNameLabel = driver.findElementById(TRAVELLERS_FIRST_NAME).getText();
+                String firstName = General.getTheTestDataOfField("First_Name");
+                if (firstNameLabel.equals(Labels_Flights.STRING_NULL)){
+                    driver.findElementById(TRAVELLERS_FIRST_NAME).sendKeys(firstName);
+                    Logger.logComment(firstName+" :- element name is entered as first name");
+                    closeTheKeyboard_Android();
+                }else if (firstNameLabel.equals(FIRST_NAME_PLACE_HOLDER_LABEL)){
+                    driver.findElementById(TRAVELLERS_FIRST_NAME).sendKeys(firstName);
+                    Logger.logComment(firstName+" :- element name is entered as first name");
                     closeTheKeyboard_Android();
                 }else {
-                    clearKeysByUsingKeycode(TRAVELLERS_FIRST_NAME,firstName.length());
-                    driver.findElementById(TRAVELLERS_FIRST_NAME).sendKeys(Labels_Flights.TRAVELLERS_FIRST_NAME);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_FIRST_NAME+" :- element name is entered as first name");
+                    clearKeysByUsingKeycode(TRAVELLERS_FIRST_NAME,firstNameLabel.length());
+                    driver.findElementById(TRAVELLERS_FIRST_NAME).sendKeys(firstName);
+                    Logger.logComment(firstName+" :- element name is entered as first name");
                     closeTheKeyboard_Android();
                 }
             }else {
@@ -274,21 +290,26 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
         Logger.logStep("Entering travellers middle name");
         try{
             if (isElementDisplayedById(TRAVELLERS_MIDDLE_NAME)){
-                String middleName = driver.findElementById(TRAVELLERS_MIDDLE_NAME).getText();
-                if (middleName.equals(Labels_Flights.STRING_NULL)){
-                    driver.findElementById(TRAVELLERS_MIDDLE_NAME).sendKeys(Labels_Flights.TRAVELLERS_MIDDLE_NAME);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_MIDDLE_NAME+" :- element name is entered as middle name");
+                String middleNameLabel = driver.findElementById(TRAVELLERS_MIDDLE_NAME).getText();
+                String middleName = General.getTheTestDataOfField("Middle_Name");
+                if (middleNameLabel.equals(Labels_Flights.STRING_NULL)){
+                    driver.findElementById(TRAVELLERS_MIDDLE_NAME).sendKeys(middleName);
+                    Logger.logComment(middleName+" :- element name is entered as middle name");
                     closeTheKeyboard_Android();
-                }else {
-                    clearKeysByUsingKeycode(TRAVELLERS_MIDDLE_NAME,middleName.length());
-                    driver.findElementById(TRAVELLERS_MIDDLE_NAME).sendKeys(Labels_Flights.TRAVELLERS_FIRST_NAME);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_MIDDLE_NAME+" :- element name is entered as middle name");
+                }else if (middleNameLabel.equals(MIDDLE_NAME_PLACE_HOLDER_LABEL)){
+                    driver.findElementById(TRAVELLERS_MIDDLE_NAME).sendKeys(middleName);
+                    Logger.logComment(middleName+" :- element name is already entered as middle name");
+                    closeTheKeyboard_Android();
+                }
+                else {
+                    clearKeysByUsingKeycode(TRAVELLERS_MIDDLE_NAME,middleNameLabel.length());
+                    driver.findElementById(TRAVELLERS_MIDDLE_NAME).sendKeys(middleName);
+                    Logger.logComment(middleName+" :- element name is already entered as middle name");
                     closeTheKeyboard_Android();
                 }
             }else {
                 Logger.logError("Travellers middle name field is not displayed in the current active screen");
             }
-
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter the travellers middle name");
         }
@@ -301,21 +322,26 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
         Logger.logStep("Entering travellers last name");
         try{
             if (isElementDisplayedById(TRAVELLERS_LAST_NAME)){
-                String lastName = driver.findElementById(TRAVELLERS_LAST_NAME).getText();
-                if (lastName.equals(Labels_Flights.STRING_NULL)){
-                    driver.findElementById(TRAVELLERS_LAST_NAME).sendKeys(Labels_Flights.TRAVELLERS_LAST_NAME);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_LAST_NAME+" :- element name is entered as middle name");
+                String lastNameLabel = driver.findElementById(TRAVELLERS_LAST_NAME).getText();
+                String lastName = General.getTheTestDataOfField("Last_Name");
+                if (lastNameLabel.equals(Labels_Flights.STRING_NULL)){
+                    driver.findElementById(TRAVELLERS_LAST_NAME).sendKeys(lastName);
+                    Logger.logComment(lastName+" :- element name is entered as middle name");
                     closeTheKeyboard_Android();
-                }else {
-                    clearKeysByUsingKeycode(TRAVELLERS_LAST_NAME,lastName.length());
-                    driver.findElementById(TRAVELLERS_LAST_NAME).sendKeys(Labels_Flights.TRAVELLERS_LAST_NAME);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_LAST_NAME+" :- element name is entered as middle name");
+                } else if (lastNameLabel.equals(LAST_NAME_PLACE_HOLDER_LABEL)){
+                    driver.findElementById(TRAVELLERS_LAST_NAME).sendKeys(lastName);
+                    Logger.logComment(lastName+" :- element name is entered as middle name");
+                    closeTheKeyboard_Android();
+                }
+                else {
+                    clearKeysByUsingKeycode(TRAVELLERS_LAST_NAME,lastNameLabel.length());
+                    driver.findElementById(TRAVELLERS_LAST_NAME).sendKeys(lastName);
+                    Logger.logComment(lastName+" :- element name is entered as middle name");
                     closeTheKeyboard_Android();
                 }
             }else {
                 Logger.logError("Travellers last name field is not displayed in the current active screen");
             }
-
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter the travellers last name");
         }
@@ -355,7 +381,7 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
                         swipeTheCalendarViewToDate(Labels_Flights.DATEOFBIRTH_CALENDAR, Labels_Flights.TRAVELLERS_DATEOFBIRTH_ANDROID);
                         if (isElementDisplayedById(Labels_Flights.TRAVELLERS_DATEOFBIRTH_ANDROID)){
                             driver.findElementById(Labels_Flights.TRAVELLERS_DATEOFBIRTH_ANDROID).click();
-                            Logger.logComment(Labels_Flights.TRAVELLERS_LAST_NAME+" :- element name is selected as date of birth");
+                            Logger.logComment(Labels_Flights.TRAVELLERS_DATEOFBIRTH_ANDROID+" :- element name is selected as date of birth");
                             closeTheCalendarView();
                         }else {
                             driver.findElementById(CALENDER_MONTH_VIEW_ANDROID).click();
@@ -555,14 +581,15 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
         try{
             if (isElementDisplayedById(TRAVELLERS_PASSPORT_TEXTFIELD)){
                 String passportName = driver.findElementById(TRAVELLERS_PASSPORT_TEXTFIELD).getText();
+                String passportNumber = General.getTheTestDataOfField("Passport_No");
                 if (passportName.equals(Labels_Flights.STRING_NULL)){
-                    driver.findElementById(TRAVELLERS_PASSPORT_TEXTFIELD).sendKeys(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER+" :- element name is parsed as passport number");
+                    driver.findElementById(TRAVELLERS_PASSPORT_TEXTFIELD).sendKeys(passportNumber);
+                    Logger.logComment(passportNumber+" :- element name is parsed as passport number");
                     closeTheKeyboard_Android();
                 }else {
                     clearKeysByUsingKeycode(TRAVELLERS_PASSPORT_TEXTFIELD,passportName.length());
-                    driver.findElementById(TRAVELLERS_PASSPORT_TEXTFIELD).sendKeys(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER);
-                    Logger.logComment(Labels_Flights.TRAVELLERS_PASSPORT_NUMBER+" :- element name is parsed as passport number");
+                    driver.findElementById(TRAVELLERS_PASSPORT_TEXTFIELD).sendKeys(passportNumber);
+                    Logger.logComment(passportNumber+" :- element name is parsed as passport number");
                     closeTheKeyboard_Android();
                 }
             }else {
@@ -694,6 +721,25 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
      */
     @Override
     public void tapOnSaveButton() {
+        Logger.logAction("Tapping on save travellers details button");
+        try{
+            if (isElementDisplayedById(SAVE_BUTTON)){
+                driver.findElementById(SAVE_BUTTON).click();
+                Logger.logComment(SAVE_BUTTON+" :- element name is selected");
+            }else {
+//                if (isElementDisplayedByName("Next")) // Implement a method such that should verify multiple travellers info (Verify the save button name if it is NEXT, return false and call a method that enters the other travellers info), this process needs to be continued till save button is displayed.
+                Logger.logError("Save button is not displayed in the current active screen");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to find the save button in the current active screen");
+        }
+    }
+
+    /**
+     * Tap on Next button
+     */
+    @Override
+    public void tapOnNextButton() {
         Logger.logAction("Tapping on save travellers details button");
         try{
             if (isElementDisplayedById(SAVE_BUTTON)){
