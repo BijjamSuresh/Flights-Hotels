@@ -1,16 +1,20 @@
-package com.automation.rehlat.hotels.tests.workFlows;
+package com.automation.rehlat.hotels.tests.workFlows.IndividualRun;
 
+import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import com.automation.rehlat.hotels.tests.BaseTest;
 import org.junit.Test;
 
 import static com.automation.rehlat.hotels.Labels_Hotels.*;
 
-public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_BookingSummaryScreen extends BaseTest {
+public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_BookingSummaryScreen extends BaseTest {
     @Test
-    public void testTicketBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_BookingSummaryScreen() throws Exception{
-        createNewSignUpEmailId();
-        Logger.beginTest("Ticket booking with coupon code and without karam cash by sing up from Booking summary screen");
+    public void testTicketBooking_WithCouponCode_AndWithoutKaramCash_BySignIn_From_BookingSummaryScreen() throws Exception{
+        Logger.beginTest("Ticket booking with coupon code and without karam cash and by sign in from booking summary screen");
+        printCurrentTestRunningInformation();
+        Integer iterationCount = 0;
+        Integer childCountInRoom1 = 2;
+        Integer childCountInRoom2 = 2;
         HotelsScreen.tapOnHotelsTab();
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnMenuButton();
@@ -23,8 +27,8 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
         }
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnSearchButton();
-        HotelsScreen.sendKeysToSearchResultsScreen("kuwait");
-        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Kuwait, Kuwait");
+        HotelsScreen.sendKeysToSearchResultsScreen("Dubai");
+        String selectedName = HotelsScreen.tapOnFirstCityNameInSearchResults("Dubai, United Arab Emirates");
         HotelsScreen.checkTheSearchTextFieldIsFilledWithSelectedNameOf(selectedName);
         HotelsScreen.tapOnCheckInButton();
         HotelsScreen.tapOnCheckInOptionInCalendarView();
@@ -34,13 +38,43 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
         HotelsScreen.selectCheckOutDate(CHECK_OUT_MONTH,CHECK_OUT_DAY);
         HotelsScreen.tapOnDoneButtonInCalendarView();
         HotelsScreen.tapOnAdultAndChildLayout();
-        HotelsScreen.setTheGuestCountTo(1,1,2); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
+        HotelsScreen.setTheGuestCountTo(1,1,childCountInRoom1); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
         HotelsScreen.tapOnAddRoomButton();
-        HotelsScreen.setTheGuestCountTo(2,2,1); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
+        HotelsScreen.setTheGuestCountTo(2,1,childCountInRoom2); //Todo:- Discuss with stake holder or dev on allowing the selection of child more than adults
         HotelsScreen.tapOnDoneButtonOnRoomListView();
         HotelsScreen.checkHotelScreenISDisplayed();
         HotelsScreen.tapOnCheckAvailabilityButton();
         HotelsSearchResultsScreen.checkTheHotelsSRPScreenIsDisplayed();
+        while (iterationCount<6){ //Todo:- Below condition is to change the pax value if sold outs are displayed in SRP
+            boolean status = HotelsSearchResultsScreen.isSoldOutsAreDisplayedInSRP();
+            if (status == false){
+                iterationCount = 6;
+                break;
+            }else {
+                if (childCountInRoom2 == 0){
+                    childCountInRoom1 = childCountInRoom1-1;
+                    if (childCountInRoom1 == -1){
+                        iterationCount =6;
+                    }
+                }else {
+                    childCountInRoom2 = childCountInRoom2-1;
+                }
+                if (iterationCount == 6 && status == false){
+                    addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Hotel is Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
+                    Logger.logError("Tried reducing the pax count to minimum.ie..,2-Rooms, 2-Adult (one in each room) and 0-Child from 2-Rooms, 2-Adults & 4-child, still showing sold outs in SRP");
+                }else {
+                    iterationCount = iterationCount + 1;
+                    HotelsSearchResultsScreen.tapOnNavigateBackButtonInSRP();
+                    HotelsScreen.tapOnAdultAndChildLayout();
+                    HotelsScreen.setTheGuestCountTo(1, 1, childCountInRoom1);
+                    HotelsScreen.setTheGuestCountTo(2, 1, childCountInRoom2);
+                    HotelsScreen.tapOnDoneButtonOnRoomListView();
+                    HotelsScreen.checkHotelScreenISDisplayed();
+                    HotelsScreen.tapOnCheckAvailabilityButton();
+                    HotelsSearchResultsScreen.checkTheHotelsSRPScreenIsDisplayed();
+                }
+            }
+        }
         HotelsSearchResultsScreen.getThePriceOfHotelAndTapOnItsCardView(1);
         if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
             Logger.logStep("Sold out alert is displayed, so re selecting the hotel from SRP");
@@ -55,6 +89,7 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
                 HotelsScreen.selectCheckOutDate(SECOND_CHECK_OUT_MONTH,"2");
                 HotelsScreen.tapOnDoneButtonInCalendarView();
                 if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+                    addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Hotel is Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                     Logger.logError("Tried selecting new hotel and changing the dates still shows the sold out alert");
                 }
             }
@@ -79,6 +114,7 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
                 HotelsScreen.selectCheckOutDate(SECOND_CHECK_OUT_MONTH,"3");
                 HotelsScreen.tapOnDoneButtonInCalendarView();
                 if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
+                    addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Hotel is Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                     Logger.logError("Tried selecting new hotel and changing the dates still shows the sold out alert");
                 }
             }
@@ -86,10 +122,11 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
             HotelsProfileScreen.compareSelectedHotelPriceInSRPAndInHotelProfileScreens();
             HotelsProfileScreen.tapOnSelectRoomButton();
             SelectRoomsScreen.checkSelectRoomScreenIsDisplayed();
-            SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(5,1); // Todo:- Yet to discuss with the dev as multiple individual rooms selection is not possible [Eg: One user, multiple types of room selections are not possible]
+            SelectRoomsScreen.tapOnSelectButtonInRoomCellNumber(2,1); // Todo:- Yet to discuss with the dev as multiple individual rooms selection is not possible [Eg: One user, multiple types of room selections are not possible]
             SelectRoomsScreen.compareSelectedRoomPriceInSelectRoomScreenAndHotelProfileScreen(1);
             SelectRoomsScreen.tapOnContinueButton();
             if (SelectRoomsScreen.isHotelsSoldOutAlertIsDisplayed()) {
+                addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Hotel is Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                 Logger.logError("Tried two times still shows the sold out alert even after selecting the new hotel from SRP when sold out alert is displayed in hotel profile screen");
             }
         }
@@ -98,14 +135,12 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
         }
         BookingSummaryScreen.checkBookingPageScreenIsDisplayed();
         if (BookingSummaryScreen.isUserIsSignedIn()){
-            Logger.logError("User is not signed in menu screen but shows signed up booking summary screen");
+            Logger.logError("User is not signed in menu screen but shows signed in booking summary screen");
         }else {
             BookingSummaryScreen.tapOnLoginToUseKaramCashButton();
             SignInScreen.checkSignInScreenIsDisplayed();
-            SignInScreen.tapOnCreateAccountButton();
-            SignUpScreen.checkSignUpScreenIsDisplayed();
-            SignUpScreen.enterSignUpCredentials();
-            SignUpScreen.tapOnSignUpButton();
+            SignInScreen.enterLoginCredentials();
+            SignInScreen.tapOnLoginButton();
             BookingSummaryScreen.checkBookingPageScreenIsDisplayed();
         }
         BookingSummaryScreen.enterUserBookingInfo();
@@ -117,7 +152,7 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
         GuestTravellersDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
         GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(1,1,2);
         GuestTravellersDetailsScreen.tapOnSaveButton();
-        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(2,2,1);
+        GuestTravellersDetailsScreen.enterTravellersDetailsForPassengers(2,1,2);
         GuestTravellersDetailsScreen.tapOnSaveButton();
         BookingSummaryScreen.tapOnContinueButton();
 //        if (HotelsProfileScreen.isSoldOutAlertIsDisplayed()){
@@ -137,8 +172,13 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
 //                }
 //            }
 //        }
-        PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
-        PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
+        if(PaymentOptionsScreen.isTicketSoldOutPopUpIsDisplayed()){
+            addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Hotel is Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
+            Logger.logError("Hotel is sold out on navigating from booking details screen to payment screen");
+        }else {
+            PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
+            PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
+        }
         // KNET PAYMENT PROCESS
 //        PaymentOptionsScreen.tapOnKnetPaymentGateWay();
 //        PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
@@ -155,6 +195,7 @@ public class HotelBooking_WithCouponCode_AndWithoutKaramCash_BySignUp_From_Booki
 //        PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
 //        PaymentOptionsScreen.tapOnContinueButtonIn3DSecurePaymentScreenOfCreditOrDebitCardCheckOutPayment();
 //        PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
-        Logger.endTest("Ticket booking with coupon code and without karam cash by sing up from Booking summary screen");
+        Logger.endTest("Ticket booking with coupon code and without karam cash and by sign in from booking summary screen");
+        addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"true");
     }
 }
