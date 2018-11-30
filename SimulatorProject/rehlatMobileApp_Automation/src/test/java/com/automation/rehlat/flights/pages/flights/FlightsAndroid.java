@@ -106,15 +106,35 @@ public class FlightsAndroid extends FlightsBase{
     public void checkFlightsTabIsDisplayed() {
         Logger.logAction("Checking flights screen tab is displayed");
         try {
-            runAppInBackground(2); //Todo:- Discuss with developer and find out the permanent solution
+            runAppInBackground(1); //Todo:- Discuss with developer and find out the permanent solution
             Thread.sleep(2000);
             if (isElementDisplayedById(MENU_BUTTON)){
-                    Logger.logStep("Flights Screen is displayed");
+                Logger.logStep("Flights Screen is displayed");
             }else{
                 Logger.logError("Menu button is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to verify the flights screen name");
+        }
+    }
+
+    /**
+     * Tap on one way trip
+     */
+    public void tapOnOneWayTrip() throws Exception {
+        Logger.logAction("Tapping on one way trip");
+        try {
+//            MobileElement element = (MobileElement) driver.findElementByXPath(Labels_Flights.XCUI);
+//            element.click();
+            boolean  status = findElementByIdAndClick(ONE_WAY_SEGMENT_CONTROL_BUTTON);
+            if (status == true){
+                Logger.logStep("Tapped on one way trip");
+            }else {
+                Logger.logError("Didn't tapped on one way trip");
+            }
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Encountered error:- Unable to tap on one way trip button");
         }
     }
 
@@ -338,6 +358,7 @@ public class FlightsAndroid extends FlightsBase{
     public void tapOnDepartureDateBookingButton() {
         Logger.logAction("Tapping on departure button");
         try{
+            tapOnOneWayTrip();
             if (isElementDisplayedById(DEPARTURE_BUTTON)){
                 driver.findElementById(DEPARTURE_BUTTON).click();
                 Logger.logStep("Departure button is tapped");
@@ -441,7 +462,7 @@ public class FlightsAndroid extends FlightsBase{
                     }
                     for (int index = 0; index <= monthTitle.size()-1; index++)
                 {
-                        try{
+                    try{
                     WebElement monthCalenderLayout = monthTitle.get(index);
                     WebElement monthCalenderTitleLayout = monthCalenderLayout.findElement(By.className(Labels_Flights.ANDROID_TEXT_VIEW));
                     String monthCalenderTitleValue = monthCalenderTitleLayout.getText();
@@ -464,17 +485,44 @@ public class FlightsAndroid extends FlightsBase{
                                     if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValue)
                                     {
                                         locationOfDay.click();
+                                        parsingDateSelectionStatus = true;
                                     }else {
                                         for (int count =0 ; count <=5; count++){
-                                            scrollTheCalenderPageUpByDaysGap_Android();
-                                            WebElement locationOfDayAfterScrolling = driver.findElement(By.xpath(xpathOfDay));
-                                            Point tableAfterScrolling = locationOfDayAfterScrolling.getLocation();
-                                            int elementYAxisValueAfterScrolling = tableAfterScrolling.getY();
-                                            if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValueAfterScrolling)
-                                            {
-                                                locationOfDayAfterScrolling.click();
-                                                break;
+                                            WebElement daysCalenderLayout2 = monthCalenderLayout.findElement(By.className(ANDROID_VIEW_GROUP));
+                                            List<WebElement> groupViewOfDaysIncludingRows2 = daysCalenderLayout2.findElements(By.className(ANDROID_VIEW_GROUP));
+                                            for (int row2 = 0; row2 <= groupViewOfDaysIncludingRows2.size()-1; row2++) {
+                                                WebElement eachRowInaGroupView2 = groupViewOfDaysIncludingRows.get(row2);
+                                                List<WebElement> listOfRowsInMonthCalender2 = eachRowInaGroupView2.findElements(By.className(Labels_Flights.ANDROID_TEXT_VIEW));
+                                                for (int text2 = 0; text2 <= listOfRowsInMonthCalender2.size() - 1; text2++) {
+                                                    String valueOfEachDay2 = listOfRowsInMonthCalender2.get(text2).getText();
+                                                    if (valueOfEachDay2.equals(parsingDay)) {
+                                                        index = index+1;
+                                                        row = row+1;
+                                                        text = text+1;
+                                                        String xpathOfDay2 = CALENDER_VIEW_XPATH+"android.widget.LinearLayout["+index+"]/"+"android.view.ViewGroup/android.view.ViewGroup["+row+"]/"+"android.widget.TextView["+text+"]";
+                                                        WebElement locationOfDay2 = driver.findElement(By.xpath(xpathOfDay2));
+                                                        Point table2 = locationOfDay2.getLocation();
+                                                        int elementYAxisValue2 = table2.getY();
+                                                        if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValue2)
+                                                        {
+                                                            locationOfDay2.click();
+                                                            parsingDateSelectionStatus = true;
+                                                        }else {
+                                                            scrollTheCalenderPageUpByDaysGap_Android();
+                                                        }
+                                                    }
+                                                }
                                             }
+//                                            scrollTheCalenderPageUpByDaysGap_Android();
+//                                            WebElement locationOfDayAfterScrolling = driver.findElement(By.xpath(xpathOfDay));
+//                                            Point tableAfterScrolling = locationOfDayAfterScrolling.getLocation();
+//                                            int elementYAxisValueAfterScrolling = tableAfterScrolling.getY();
+//                                            if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT >= elementYAxisValueAfterScrolling)
+//                                            {
+//                                                locationOfDayAfterScrolling.click();
+//                                                parsingDateSelectionStatus = true;
+//                                                break;
+//                                            }
                                         }
                                     }
                                     if (journeyType == "ONWARD"){
@@ -492,9 +540,11 @@ public class FlightsAndroid extends FlightsBase{
                                                 parsingDateSelectionStatus = true;
                                                 break;
                                             }else {
+                                                parsingDateSelectionStatus = false;
                                                 Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
                                             }
                                         }else {
+                                            parsingDateSelectionStatus = false;
                                             Logger.logStep("Tapped on incorrect date. So re tapping on the departure date");
                                             if (iterations <= 6){
                                             }else {

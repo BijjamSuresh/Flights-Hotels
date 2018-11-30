@@ -20,12 +20,16 @@ public class SelectRoomsIos extends SelectRoomsBase {
     public static final String HOTELS_PRO_LIST_ID_OF_SELECT_ROOM = "com.app.rehlat:id/hotel_selectroom_pro_list";
     public static final String PRICE_ID_IN_HOTELS_PROFILE_SCREEN_FOOTER_VIEW_PRO = "//XCUIElementTypeStaticText[@name=\"SelectRoomProFooter\"]";
     public static final String PRICE_ID_IN_HOTELS_PROFILE_SCREEN_FOOTER_VIEW_BEDS = "//XCUIElementTypeStaticText[@name=\"SelectRoomBedsFooter\"]";
-    public static final String CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE  = "com.app.rehlat:id/noHotelFareDifference";
-    public static final String OK_BUTTON_IN_ROOM_SOLD_OUT_ALERT_ID  = "com.app.rehlat:id/okBtn";
-    public static final String CHANGE_YOUR_DATES_BUTTON_LABEL  = "Change your Room type";
+    public static final String CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE  = "Change your Dates";
     public static final String HOTELS_BEDS_PRICE_LABEL= "HotelSelectBedsPrice";
     public static final String HOTELS_BEDS_SELECTED_ROOM_LAYOUT_LABEL = "SelectedRoomBeds";
-    public static final String SEE_AVAILABLE_PROPERTIES_BUTTON_IN_SOLD_OUT_ALERT_ID  = "See Available Properties";
+    public static final String HOTEL_SOLD_OUT_ALERT_ID  = "hotel_sold_out";
+    public static final String CHANGE_YOUR_ROOM_TYPE_LABEL  = "Change your Room type";
+    public static final String SEE_AVAILABILITY_PROPERTIES_LABEL = "See Available Properties";
+    public static final String CHANGE_YOUR_ROOM_TYPE_BUTTON_ID  = "CustomAlert_Blue_Button";
+    public static final String SEE_AVAILABILITY_PROPERTIES_BUTTON_ID  = "CustomAlert_Red_Button";
+    public static final String XPATH_OF_CHANGE_ROOM_TYPE_LABEL_IN_SOLD_OUT_ALERT  = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeStaticText";
+    public static final String XPATH_OF_SEE_AVAILABLE_PROPERTIES_LABEL_IN_SOLD_OUT_ALERT  = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeStaticText";
     private static String API_RESPONSE_TYPE_IN_SELECT_ROOMS;
 
     /**
@@ -113,15 +117,26 @@ public class SelectRoomsIos extends SelectRoomsBase {
             if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_PROS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 String xpathOfRoomPriceInParsingCellNumber = XPATH_OF_SELECTED_ROOM_PRICE_WITHOUT_INDEX_PROS+parsingRoomCellNumber+"]";
                 String roomPriceInParsingCellNumber = findElementByXpathAndReturnItsAttributeText(xpathOfRoomPriceInParsingCellNumber).replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
-                return Double.parseDouble(roomPriceInParsingCellNumber);
+                if (roomPriceInParsingCellNumber.contains(Labels_Hotels.STRING_COMMA)){
+                    String roomPriceWithoutComma = roomPriceInParsingCellNumber.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL);
+                    return Double.parseDouble(roomPriceWithoutComma);
+                }else {
+                    return Double.parseDouble(roomPriceInParsingCellNumber);
+                }
             }else if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_BEDS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 String xpathOfRoomPriceInParsingCellNumber = XPATH_OF_SELECTED_ROOM_PRICE_WITHOUT_INDEX_BEDS+parsingRoomCellNumber+"]";
                 String roomPriceInParsingCellNumber = findElementByXpathAndReturnItsAttributeText(xpathOfRoomPriceInParsingCellNumber).replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
-                return Double.parseDouble(roomPriceInParsingCellNumber);
+                if (roomPriceInParsingCellNumber.contains(Labels_Hotels.STRING_COMMA)){
+                    String roomPriceWithoutComma = roomPriceInParsingCellNumber.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL);
+                    return Double.parseDouble(roomPriceWithoutComma);
+                }else {
+                    return Double.parseDouble(roomPriceInParsingCellNumber);
+                }
             }else {
                 Logger.logError("API response is neither PRO nor BEDS");
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error:- Unable to get the price of an selected room :- "+parsingRoomCellNumber);
         }
         return null;
@@ -136,7 +151,7 @@ public class SelectRoomsIos extends SelectRoomsBase {
         Logger.logAction("Comparing the selected Room in Select Room screen and the price of hotel profile screen");
         try {
             if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_PROS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
-                Double priceFromHotelProfileScreen = Double.parseDouble(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN);
+                Double priceFromHotelProfileScreen = Double.valueOf(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN);
                 Logger.logComment("Price in the hotel profile screen is :- "+priceFromHotelProfileScreen);
                 Double priceInTheSelectedRoomCellView = getThePriceOfTheSelectedRoomNumber(parsingRoomNumber);
                 Logger.logComment("Price in the select room is :- "+priceInTheSelectedRoomCellView);
@@ -164,6 +179,7 @@ public class SelectRoomsIos extends SelectRoomsBase {
                 Logger.logError("Encountered error:- Select rooms API response is neither PRO nor BEDS ..,");
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error:- Unable to compare the selected room price selected rooms screen and hotels profile screen");
         }
     }
@@ -177,21 +193,21 @@ public class SelectRoomsIos extends SelectRoomsBase {
         try {
             if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_PROS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 String hotelPriceInFooterViewWithCurrency = findElementByXpathAndReturnItsAttributeValue(PRICE_ID_IN_HOTELS_PROFILE_SCREEN_FOOTER_VIEW_PRO);
-                String hotelPriceWithoutCurrency = hotelPriceInFooterViewWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL);
-                if(hotelPriceInFooterViewWithCurrency.contains(Labels_Hotels.STRING_COMMA)){
-                    String hotelPriceWithoutComma = hotelPriceWithoutCurrency.replace(Labels_Hotels.STRING_COMMA, Labels_Hotels.STRING_NULL).trim();
+                String hotelPriceWithoutCurrencyType = hotelPriceInFooterViewWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL);
+                if(hotelPriceWithoutCurrencyType.contains(Labels_Hotels.STRING_COMMA)){
+                    String hotelPriceWithoutComma = hotelPriceWithoutCurrencyType.replace(Labels_Hotels.STRING_COMMA, Labels_Hotels.STRING_NULL).trim();
                     return Double.parseDouble(hotelPriceWithoutComma);
                 }else {
-                    return Double.parseDouble(hotelPriceWithoutCurrency);
+                    return Double.parseDouble(hotelPriceWithoutCurrencyType);
                 }
             }else if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_BEDS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 String hotelPriceInFooterViewWithCurrency = findElementByXpathAndReturnItsAttributeValue(PRICE_ID_IN_HOTELS_PROFILE_SCREEN_FOOTER_VIEW_BEDS);
-                String hotelPriceWithoutCurrency = hotelPriceInFooterViewWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL);
-                if(hotelPriceInFooterViewWithCurrency.contains(Labels_Hotels.STRING_COMMA)){
-                    String hotelPriceWithoutComma = hotelPriceWithoutCurrency.replace(Labels_Hotels.STRING_COMMA, Labels_Hotels.STRING_NULL).trim();
+                String hotelPriceWithoutCurrencyType = hotelPriceInFooterViewWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL);
+                if(hotelPriceWithoutCurrencyType.contains(Labels_Hotels.STRING_COMMA)){
+                    String hotelPriceWithoutComma = hotelPriceWithoutCurrencyType.replace(Labels_Hotels.STRING_COMMA, Labels_Hotels.STRING_NULL).trim();
                     return Double.parseDouble(hotelPriceWithoutComma);
                 }else {
-                    return Double.parseDouble(hotelPriceWithoutCurrency);
+                    return Double.parseDouble(hotelPriceWithoutCurrencyType);
                 }
             }else {
                 Logger.logError("API response is neither PRO nor BEDS type..,");
@@ -225,14 +241,9 @@ public class SelectRoomsIos extends SelectRoomsBase {
         try {
             Thread.sleep(4000);
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(LOADING_INDICATOR_ID_IN_FOOTER_VIEW ,1); //Todo:- This method is for to wait till the sold out alert is displayed
-            if (isElementEnabledById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
-                String alertMessageName = findElementByIdAndReturnText(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE);
-                if (alertMessageName.equalsIgnoreCase(CHANGE_YOUR_DATES_BUTTON_LABEL)){
-                    Logger.logStep("SoldOut alert is displayed");
-                    return true;
-                }else {
-                    Logger.logComment("Sold out alert is not displayed");
-                }
+            if (isElementDisplayedByAccessibilityId(HOTEL_SOLD_OUT_ALERT_ID)){
+                Logger.logStep("SoldOut alert is displayed");
+                return true;
             }else {
                 Logger.logComment("Sold out alert is not displayed");
             }
@@ -243,37 +254,48 @@ public class SelectRoomsIos extends SelectRoomsBase {
     }
 
     /**
-     * Tapped on ok button in the sold out alert
+     * Tapped on change your room type button in the sold out alert
      */
     @Override
     public void tapOnChangeYourRoomTypeButtonInSoldOutAlert(){
-        Logger.logAction("Tapping on ok button in the sold out alert");
+        Logger.logAction("Tapping on change your room type button in the sold out alert");
         try{
-            if (isElementEnabledById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
-                driver.findElementById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
-                Logger.logComment("Tapped on on button in the sold out alert");
-                runAppInBackground(2);
+            String nameString = findElementByXpathAndReturnItsAttributeName(XPATH_OF_CHANGE_ROOM_TYPE_LABEL_IN_SOLD_OUT_ALERT);
+            if (nameString.equalsIgnoreCase(CHANGE_YOUR_ROOM_TYPE_LABEL)){
+                boolean status = findElementByAccessibilityIdAndClick(CHANGE_YOUR_ROOM_TYPE_BUTTON_ID);
+                if (status == true){
+                    Logger.logComment("Tapped on change your room type button in the sold out alert");
+                }else {
+                    Logger.logError("Din't tapped on change your room type button in the sold out alert");
+                }
+            }else {
+                Logger.logComment("Unable to tap on change your room type button in the sold out alert");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
+            Logger.logError("Encountered error:- Unable to tap on change your room type button in sold out alert");
         }
     }
 
     /**
-     * Tapped on change your dates button in the sold out alert
+     * Tapped on see available properties button in the sold out alert
      */
     @Override
     public void tapOnSeeAvailablePropertiesButtonInSoldOutAlert(){
-        Logger.logAction("Tapping on change your dates button in the sold out alert");
+        Logger.logAction("Tapping on see available properties button in the sold out alert");
         try{
-            boolean status = findElementByAccessibilityIdAndClick(SEE_AVAILABLE_PROPERTIES_BUTTON_IN_SOLD_OUT_ALERT_ID);
-            if (status==true){
-                Logger.logComment("Tapped on change your dates button in the sold out alert");
+            String nameString = findElementByXpathAndReturnItsAttributeName(XPATH_OF_SEE_AVAILABLE_PROPERTIES_LABEL_IN_SOLD_OUT_ALERT);
+            if (nameString.equalsIgnoreCase(SEE_AVAILABILITY_PROPERTIES_LABEL)){
+                boolean status = findElementByAccessibilityIdAndClick(SEE_AVAILABILITY_PROPERTIES_BUTTON_ID);
+                if (status==true){
+                    Logger.logComment("Tapped on see available properties button in the sold out alert");
+                }else {
+                    Logger.logError("Didn't tapped on see available properties button in the sold out alert");
+                }
             }else {
-                Logger.logError("Unable to tap on change your dates button in the sold out alert");
+                Logger.logError("Unable to tap on see available properties button in the sold out alert");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
+            Logger.logError("Encountered error:- Unable to tap on see available properties button in sold out alert");
         }
     }
 }

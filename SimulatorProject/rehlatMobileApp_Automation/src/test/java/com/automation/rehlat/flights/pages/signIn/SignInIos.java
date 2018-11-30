@@ -27,11 +27,15 @@ public class SignInIos extends SignInBase {
             declineTheFaceIdAccessSetUpPopupIfDisplayed();
             declineTheTouchIdAccessSetUpPopupIfDisplayed();
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
-            scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
             if (isElementDisplayedByName(LOGIN_BUTTON) && isElementDisplayedByName(CREATE_ACCOUNT_BUTTON) && isElementDisplayedByName(NOT_REGISTERED_LABEL)){
                 Logger.logStep("Sign In screen is displayed");
             }else {
-                Logger.logError("Sign In screen is not displayed");
+                scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
+                if (isElementDisplayedByName(LOGIN_BUTTON) && isElementDisplayedByName(CREATE_ACCOUNT_BUTTON) && isElementDisplayedByName(NOT_REGISTERED_LABEL)){
+                    Logger.logStep("Sign In screen is displayed");
+                }else {
+                    Logger.logError("Sign In screen is not displayed");
+                }
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");

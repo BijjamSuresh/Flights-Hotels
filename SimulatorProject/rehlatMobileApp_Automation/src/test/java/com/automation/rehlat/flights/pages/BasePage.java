@@ -29,6 +29,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
+import static com.automation.rehlat.flights.tests.BaseTest.isUserSignedIn;
+
 public class BasePage extends Base {
 
     ////////////////////////////// Initialising The Screen Names W.R.T. The Screen Base Names //////////////////////////////////////
@@ -62,7 +64,6 @@ public class BasePage extends Base {
     public static final String TOGGLE_SWITCH = "XCUIElementTypeSwitch";
     public static String TRIP_TYPE = Labels_Flights.STRING_NULL;
     public static String SELECTED_AIRLINE_NAME_IN_SRP;
-    public static boolean isUserSignedIn = false;
     public static final String SRP_ONE_WAY_VIEW = "SRPOneWayCell";
     public static final String SRP_TWO_WAY_VIEW = "SRPRoundTripCell";
     public static final String NO_BUTTON = "No";
@@ -87,8 +88,9 @@ public class BasePage extends Base {
     public static void scrollTheCalenderPageUpByAMonthGap_Android() {
         Logger.logAction("Scrolling up action with more length is started");
         try {
+            Thread.sleep(2000);
             TouchAction action = new TouchAction(driver);
-            action.longPress(459, 758).moveTo(459, 50).release().perform();
+            action.longPress(459, 962).moveTo(459, 532).release().perform();
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to scroll the screen");
         }
@@ -100,6 +102,7 @@ public class BasePage extends Base {
     public static void scrollTheCalenderPageDownAMonthGap_Android() {
         Logger.logAction("Scrolling down action with more length is started");
         try {
+            Thread.sleep(2000);
             TouchAction action = new TouchAction(driver);
             action.longPress(459, 831).moveTo(459, 1630).release().perform();
         }catch (Exception exception){
@@ -113,6 +116,7 @@ public class BasePage extends Base {
     public static void scrollTheCalenderPageUpByDaysGap_Android() {
         Logger.logAction("Scrolling up action with less length is started");
         try {
+            Thread.sleep(2000);
             TouchAction action = new TouchAction(driver);
             action.longPress(500, 967).moveTo(500, 532).release().perform();
         } catch (Exception exception) {
@@ -211,12 +215,14 @@ public class BasePage extends Base {
      * Wait till the progress indicator is invisible
      * @throws Exception
      */
-    public static void waitTillTheProgressIndicatorIsInvisibleById_ANDROID( String parsingID) throws Exception{
+    public static void waitTillTheProgressIndicatorIsInvisibleById_ANDROID( String parsingID, boolean backgroundRun) throws Exception{
         int count =1;
         while (count< Labels_Flights.MIN_ATTEMPTS){
             try{
-                driver.runAppInBackground(3);
-                Thread.sleep(3000);
+                if (backgroundRun == true){
+                    driver.runAppInBackground(3);
+                    Thread.sleep(2000);
+                }
                 if (isElementDisplayedById(parsingID)){
                     Logger.logStep("Waiting till the activity indicator is invisible in the current active screen");
                     driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(parsingID)));

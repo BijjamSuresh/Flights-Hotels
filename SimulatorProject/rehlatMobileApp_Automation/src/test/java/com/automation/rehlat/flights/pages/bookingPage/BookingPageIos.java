@@ -8,6 +8,9 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
+import static com.automation.rehlat.flights.tests.BaseTest.COUPON_CODE_APPLIED_STATUS;
+import static com.automation.rehlat.flights.tests.BaseTest.isUserSignedIn;
+
 public class BookingPageIos extends BookingPageBase {
 
     public static final String XPATH_OF_EMAIL_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeTextField[1]";
@@ -26,12 +29,13 @@ public class BookingPageIos extends BookingPageBase {
     public static final String XPATH_OF_CONTACT_INFO_COUNTRY_CELL = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeButton";
     public static final String XPATH_OF_CONTACT_INFO_COUNTRY_NAME = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeStaticText";
     public static final String CHOOSE_COUNTRY_MODAL="Choose Country";
-    public static boolean COUPON_CODE_APPLIED_STATUS = false;
     public static final String COUPON_CODE_CLOSE_BUTTON = "X";
     public static final String XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL = "//XCUIElementTypeStaticText[@name=\"Add Travellers Details\"]";
     public static final String KARAM_WALLET_MESSAGE_ID = "Your Karam wallet is empty.";
     public static final String USE_KARAM_CASH_LABEL_ID = "Use Karam Points";
     public static final String FOOTER_VIEW_PRICE_ID = "price";
+    public static final String XPATH_OF_FOOTER_VIEW_PRICE_ID = "//XCUIElementTypeStaticText[@name=\"price\"]";
+    public static final String TERMS_AND_CONDITIONS_URL_ID = "By clicking on Continue you agree to our Terms & Conditions";
 
 
     /**
@@ -102,9 +106,13 @@ public class BookingPageIos extends BookingPageBase {
         Logger.logAction("Entering the text in phone number text field");
         try {
 //            String phoneNumber = General.getTheTestDataOfField("Phone_Number");
-            sendTextByXpath(XPATH_OF_PHONE_NUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
-            Logger.logComment(Labels_Flights.PHONE_NUMBER+" :- is parsed");
-            closeTheKeyboard_iOS();
+            boolean status = sendTextByXpath(XPATH_OF_PHONE_NUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
+            if (status == true){
+                Logger.logComment(Labels_Flights.PHONE_NUMBER+" :- is parsed");
+                closeTheKeyboard_iOS();
+            }else {
+                Logger.logError(Labels_Flights.PHONE_NUMBER+" :- is not parsed");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter tje text in phone number text field");
         }
@@ -120,9 +128,13 @@ public class BookingPageIos extends BookingPageBase {
             String firstName = General.getTheTestDataOfField("First_Name");
             String lastName = General.getTheTestDataOfField("Last_Name");
             String gmailId = firstName+"."+lastName+"@gmial.cm";
-            sendTextByXpath(XPATH_OF_EMAIL_FIELD, gmailId);
-            Logger.logComment(gmailId+" :- is parsed");
-            closeTheKeyboard_iOS();
+            boolean status = sendTextByXpath(XPATH_OF_EMAIL_FIELD, gmailId);
+            if (status == true){
+                Logger.logComment(gmailId+" :- is parsed");
+                closeTheKeyboard_iOS();
+            }else {
+                Logger.logError(gmailId+" :- is not parsed");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter tje text in phone number text field");
         }
@@ -158,7 +170,7 @@ public class BookingPageIos extends BookingPageBase {
     public void tapOnAdultAddTravellersDetailsButton() {
         Logger.logStep("Tapping on adult add travellers details button");
         try{
-            scrollDown();
+            scrollToAnElementByAccessibiltiyId_IOS(TERMS_AND_CONDITIONS_URL_ID,true);
             if (isElementDisplayedByName(ADULT_TRAVELLERS_BUTTON)){
                 driver.findElementByName(ADULT_TRAVELLERS_BUTTON).click();
                 Logger.logComment("Tapped on adult button");
@@ -205,7 +217,8 @@ public class BookingPageIos extends BookingPageBase {
                             if (fareWithCurrency.contains(Labels_Flights.STRING_COMMA)){
                                 fareWithCurrency = fareWithCurrency.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
                             }
-                            Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                            Double fareWithoutCurrency = Double.valueOf(fareWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                            Logger.logComment("Actual fare is :- "+fareWithoutCurrency);
                             return  fareWithoutCurrency;
                         }else {
                             Logger.logError("Actual Fare element is not displayed");
@@ -214,10 +227,11 @@ public class BookingPageIos extends BookingPageBase {
                         if (isElementDisplayedByAccessibilityId("couponAmount")){
                             fareWithCurrency = driver.findElementByAccessibilityId("couponAmount").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
                             try {
-                                if(!(fareWithCurrency == null)){
-                                    Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.MINUS_WITH_IN_BRACKETS+Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+//                                if(!(fareWithCurrency == null)){
+                                    Double fareWithoutCurrency = Double.valueOf(fareWithCurrency.replace(Labels_Flights.MINUS_WITH_IN_BRACKETS+Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                                    Logger.logComment("Applied coupon Amount is :- "+fareWithoutCurrency);
                                     return  fareWithoutCurrency;
-                                }
+//                                }
                             }catch (Exception exception){
                                 Logger.logComment("Coupon code is not applied or amount is null..,");
                                 return  0.00;
@@ -228,7 +242,8 @@ public class BookingPageIos extends BookingPageBase {
                 case "karamCash":
                         if (isElementDisplayedByAccessibilityId("karamCash")){
                             fareWithCurrency = driver.findElementByAccessibilityId("karamCash").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-                            Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.MINUS_WITH_IN_BRACKETS+Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                            Double fareWithoutCurrency = Double.valueOf(fareWithCurrency.replace(Labels_Flights.MINUS_WITH_IN_BRACKETS+Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                            Logger.logComment("Karam cash is :- "+fareWithoutCurrency);
                             return  fareWithoutCurrency;
                         }else {
                             Logger.logError("Karam amount element is not displayed");
@@ -239,7 +254,8 @@ public class BookingPageIos extends BookingPageBase {
                             if (fareWithCurrency.contains(Labels_Flights.STRING_COMMA)){
                                 fareWithCurrency = fareWithCurrency.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
                             }
-                            Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                            Double fareWithoutCurrency = Double.valueOf(fareWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
+                            Logger.logComment("Final fare is :- "+fareWithoutCurrency);
                             return  fareWithoutCurrency;
                         }else {
                             Logger.logError("Final amount element is not displayed");
@@ -262,7 +278,7 @@ public class BookingPageIos extends BookingPageBase {
     public void checkFinalFareCalculationIsCorrect() {
         Logger.logStep("Checking the final fare calculation is correct or not ?");
         try {
-            Double reviewBookingPriceInFooterView = Double.valueOf(getTheDisplayedTicketBookingValueInFooterView("BookingPageScreen",3));
+            Double reviewBookingPriceInFooterView = Double.valueOf(getTheBookingPriceDisplayedInFooterView());
             Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(reviewBookingPriceInFooterView);
             Logger.logComment("Cost of ticket in Booking page is :- "+reviewBookingPriceInFooterView);
 
@@ -307,7 +323,7 @@ public class BookingPageIos extends BookingPageBase {
             Logger.logComment("Final Fare cost of booking flight (Displaying value) :- "+finalDisplayedFare);
             Logger.logAction("All the values are ready for to calculate the math");
             if (displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
-                Double finalFareMathCalculation = (displayedActualFare)-(couponAmount)-(karamPoints); // Internal math calculation logic
+                Double finalFareMathCalculation = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)); // Internal math calculation logic
                 Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
                 if (finalFareMathCalculation.equals(finalDisplayedFare)){
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
@@ -336,7 +352,7 @@ public class BookingPageIos extends BookingPageBase {
         try
         {
             scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true); // This logic is to for different iPhones with different sizes
-            if ((!(isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID))) || isElementDisplayedByAccessibilityId(USE_KARAM_CASH_LABEL_ID)){
+            if ((!(isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID))) || (isElementDisplayedByAccessibilityId(USE_KARAM_CASH_LABEL_ID))){
             if (isElementEnabledByClassName(TOGGLE_SWITCH)){
                 String karamPointsToggleStatus = driver.findElement(By.className(KARAM_POINTS_TOGGLE_BUTTON)).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
                if (karamPointsToggleStatus.equals(Labels_Flights.VALUE_ONE)){
@@ -522,15 +538,17 @@ public class BookingPageIos extends BookingPageBase {
     public static Double getTheBookingPriceDisplayedInFooterView(){
         Logger.logAction("Getting the booking price displayed in footer view");
         try{
-            String hotelPriceInFooterViewWithCurrency = driver.findElementByAccessibilityId(FOOTER_VIEW_PRICE_ID).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-            String hotelPriceWithoutCurrency = hotelPriceInFooterViewWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
-            if (hotelPriceWithoutCurrency .contains(Labels_Flights.STRING_COMMA)) {
+            String  priceInFooterView = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_FOOTER_VIEW_PRICE_ID);
+//            String hotelPriceInFooterViewWithCurrency = driver.findElementByAccessibilityId(FOOTER_VIEW_PRICE_ID).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            String hotelPriceWithoutCurrency = priceInFooterView.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
+            if (hotelPriceWithoutCurrency.contains(Labels_Flights.STRING_COMMA)) {
                 String hotelPriceWithoutComma = hotelPriceWithoutCurrency.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL).trim();
                 return Double.parseDouble(hotelPriceWithoutComma);
             }else {
                 return Double.parseDouble(hotelPriceWithoutCurrency);
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to get the booking price displayed in footer view");
         }
         return null;

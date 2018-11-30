@@ -10,10 +10,13 @@ public class HotelsProfileIos extends HotelsProfileBase {
     public static final String AMENITIES_LABEL_ID = "Amenities";
     public static final String PRICE_ID_IN_FOOTER_VIEW_OF_HOTEL_PROFILE_PAGE = "//XCUIElementTypeStaticText[@name=\"ProfilePriceInFooter\"]";
     public static final String SELECT_ROOM_BUTTON_ID = "Select Room";
-    public static final String XPATH_OF_SOLD_OUT_ALERT  = "//XCUIElementTypeImage[@name=\"hotel_sold_out\"]";
-    public static final String SOLD_OUT_ALERT_ID_MESSAGE  = "hotel_sold_out";
-    public static final String CHANGE_DATES_BUTTON_IN_SOLD_OUT_ALERT_ID  = "Change your Dates";
-    public static final String SEE_AVAILABLE_PROPERTIES_BUTTON_IN_SOLD_OUT_ALERT_ID  = "See Available Properties";
+    public static final String SOLD_OUT_ALERT_ID  = "hotel_sold_out";
+    public static final String CHANGE_YOUR_DATES_LABEL  = "Change your Dates";
+    public static final String SEE_AVAILABILITY_PROPERTIES_LABEL = "See Available Properties";
+    public static final String CHANGE_YOUR_DATES_BUTTON_ID  = "CustomAlert_Blue_Button";
+    public static final String SEE_AVAILABILITY_PROPERTIES_BUTTON_ID  = "CustomAlert_Red_Button";
+    public static final String XPATH_OF_CHANGE_DATES_LABEL_IN_SOLD_OUT_ALERT  = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeStaticText";
+    public static final String XPATH_OF_SEE_AVAILABLE_PROPERTIES_LABEL_IN_SOLD_OUT_ALERT  = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeStaticText";
 
 
     /**
@@ -42,11 +45,15 @@ public class HotelsProfileIos extends HotelsProfileBase {
             Double hotelPriceInHotelProfilePage = getTheBookingPriceDisplayedInFooterView();
             Logger.logComment("Hotel price in the footer view of profile screen is :- "+hotelPriceInHotelProfilePage);
             Double selectedHotelPriceInSRP = Double.valueOf(Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP);
-            Logger.logComment("Selected Hotel price in the SRP is :- "+hotelPriceInHotelProfilePage);
+            Logger.logComment("Selected Hotel price in the SRP is :- "+selectedHotelPriceInSRP);
             if ((hotelPriceInHotelProfilePage == selectedHotelPriceInSRP) || (hotelPriceInHotelProfilePage.equals(selectedHotelPriceInSRP))){
                 Logger.logStep("Selected hotel price in SRP and hotel profile screen are same");
+                Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN = String.valueOf(hotelPriceInHotelProfilePage);
             }else {
-                Logger.logError("Selected hotel price in SRP and hotel profile screen are not same");
+                Logger.logComment("Selected hotel price in SRP screen is :- "+selectedHotelPriceInSRP);
+                Logger.logComment("Selected hotel price in hotel profile page :- "+hotelPriceInHotelProfilePage);
+                Logger.logStep("Selected hotel price in SRP and Hotel profile screen are not same but continuing with the latest hotel price as :- "+hotelPriceInHotelProfilePage);
+                Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN = String.valueOf(hotelPriceInHotelProfilePage);
             }
         }catch (Exception exception){
             Logger.logError("Encountered error:- unable to compare the selected hotel price in srp and hotel profile screen");
@@ -96,14 +103,9 @@ public class HotelsProfileIos extends HotelsProfileBase {
     public boolean isSoldOutAlertIsDisplayed(){
         Logger.logAction("Checking the sold out alert is displayed or not ?");
         try {
-            if (isElementDisplayedByXPath(XPATH_OF_SOLD_OUT_ALERT)) {
-                String alertMessageName = findElementByXpathAndReturnItsAttributeName(XPATH_OF_SOLD_OUT_ALERT);
-                if (alertMessageName.equalsIgnoreCase(SOLD_OUT_ALERT_ID_MESSAGE)) {
-                    Logger.logStep("SoldOut alert is displayed");
-                    return true;
-                } else {
-                    Logger.logComment("Sold out alert is not displayed");
-                }
+            if (isElementDisplayedByAccessibilityId(SOLD_OUT_ALERT_ID)) {
+                Logger.logStep("SoldOut alert is displayed");
+                return true;
             }else {
                 Logger.logComment("Sold out alert is not displayed");
             }
@@ -120,32 +122,42 @@ public class HotelsProfileIos extends HotelsProfileBase {
     public void tapOnChangeYourDatesButtonInSoldOutAlert(){
         Logger.logAction("Tapping on change your dates button in the sold out alert");
         try{
-            boolean status = findElementByAccessibilityIdAndClick(CHANGE_DATES_BUTTON_IN_SOLD_OUT_ALERT_ID);
-            if (status==true){
-                Logger.logComment("Tapped on change your dates button in the sold out alert");
+            String nameString = findElementByXpathAndReturnItsAttributeName(XPATH_OF_CHANGE_DATES_LABEL_IN_SOLD_OUT_ALERT);
+            if (nameString.equalsIgnoreCase(CHANGE_YOUR_DATES_LABEL)){
+                boolean status = findElementByAccessibilityIdAndClick(CHANGE_YOUR_DATES_BUTTON_ID);
+                if (status == true){
+                    Logger.logComment("Tapped on change your dates button in the sold out alert");
+                }else {
+                    Logger.logError("Didn't tapped on change your dates button in the sold out alert");
+                }
             }else {
                 Logger.logError("Unable to tap on change your dates button in the sold out alert");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
+            Logger.logError("Encountered error:- Unable to tap on change dates button in sold out alert");
         }
     }
 
     /**
-     * Tapped on change your dates button in the sold out alert
+     * Tapped on see available properties button in the sold out alert
      */
     @Override
     public void tapOnSeeAvailablePropertiesButtonInSoldOutAlert(){
-        Logger.logAction("Tapping on change your dates button in the sold out alert");
+        Logger.logAction("Tapping on see available properties button in the sold out alert");
         try{
-            boolean status = findElementByAccessibilityIdAndClick(SEE_AVAILABLE_PROPERTIES_BUTTON_IN_SOLD_OUT_ALERT_ID);
-            if (status==true){
-                Logger.logComment("Tapped on change your dates button in the sold out alert");
+            String nameString = findElementByXpathAndReturnItsAttributeName(XPATH_OF_SEE_AVAILABLE_PROPERTIES_LABEL_IN_SOLD_OUT_ALERT);
+            if (nameString.equalsIgnoreCase(SEE_AVAILABILITY_PROPERTIES_LABEL)){
+                boolean status = findElementByAccessibilityIdAndClick(SEE_AVAILABILITY_PROPERTIES_BUTTON_ID);
+                if (status==true){
+                    Logger.logComment("Tapped on see available properties button in the sold out alert");
+                }else {
+                    Logger.logError("Didn't tapped on see available properties button in the sold out alert");
+                }
             }else {
-                Logger.logError("Unable to tap on change your dates button in the sold out alert");
+                Logger.logError("Unable to tap on see available properties button in the sold out alert");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
+            Logger.logError("Encountered error:- Unable to tap on see available properties button in sold out alert");
         }
     }
 }

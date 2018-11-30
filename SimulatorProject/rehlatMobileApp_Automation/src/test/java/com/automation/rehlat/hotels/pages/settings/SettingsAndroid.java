@@ -47,7 +47,7 @@ public class SettingsAndroid extends SettingsBase {
     public void tapOnChangeCountryOption() {
         Logger.logAction("Tapping on change country option");
         try {
-            runAppInBackground(1);
+            runAppInBackground(2);
             Thread.sleep(3000);
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR,1);
             boolean status = findElementByIdAndClick(SELECT_COUNTRY_LAYOUT);

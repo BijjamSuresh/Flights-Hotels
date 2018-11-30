@@ -20,7 +20,7 @@ public class MyTripsAndroid extends MyTripsBase {
     public void checkMyTripsScreenIsDisplayed() {
         Logger.logAction("Checking my profile screen is displayed or not ?");
         try{
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(PROGRESS_BAR_OF_MY_TRIPS);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(PROGRESS_BAR_OF_MY_TRIPS,false);
             if (isElementEnabledById(MY_TRIPS_SCREEN_TITLE)){
                 Logger.logStep("My Trips screen is displayed");
             }else {

@@ -10,9 +10,9 @@ import static com.automation.rehlat.flights.Labels_Flights.*;
 public class TwoWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithoutSignUpOrSignIn extends BaseTest {
     @Test
     public void testTicketBookingWithAppliedCouponCodeAndWithoutSignUpOrSignIn() throws Exception{
-        BasePage.waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
+        Logger.beginTest("TwoWay_Domestic_Ticket booking with applied coupon code and without sign in or sign up ");
+        printCurrentTestRunningInformation();
         Labels_Flights.FLIGHT_BOOKING_TYPE = DOMESTIC_FLIGHT_BOOKING;
-        Logger.beginTest(" - Ticket booking with applied coupon code and without sign in or sign up ");
         FlightsScreen.selectCountryNameInSelectLanguageModal(Labels_Flights.CURRENT_USER_COUNTRY_NAME); // Country name needs to changed while testing for countries other than Kuwait.
         FlightsScreen.checkFlightsTabIsDisplayed();
         FlightsScreen.tapOnMenuButton();
@@ -65,7 +65,7 @@ public class TwoWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithoutSignU
         if (Labels_Flights.FLIGHT_BOOKING_TYPE == INTERNATIONAL_FLIGHT_BOOKING){
             BookingPageScreen.applyTheCouponCode();
         }else {
-            Logger.logComment("No coupon codes for domestic flights of live/stage configuration");
+            Logger.logStep("No coupon codes for domestic flights of live/stage configuration");
         }
         BookingPageScreen.tapOnAdultAddTravellersDetailsButton();
         TravellerDetailsScreen.EnterTravellersDetailsForPassengers(2); // This should be same as passengers count in flights tab
@@ -94,7 +94,7 @@ public class TwoWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithoutSignU
             if (Labels_Flights.FLIGHT_BOOKING_TYPE == INTERNATIONAL_FLIGHT_BOOKING){
                 BookingPageScreen.applyTheCouponCode();
             }else {
-                Logger.logComment("No coupon codes for domestic flights of live/stage configuration");
+                Logger.logStep("No coupon codes for domestic flights of live/stage configuration");
             }
             BookingPageScreen.tapOnAdultAddTravellersDetailsButton();
             if (platform.equalsIgnoreCase(Labels_Flights.IOS)){
@@ -107,7 +107,7 @@ public class TwoWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithoutSignU
             BookingPageScreen.checkFinalFareCalculationIsCorrect();
             BookingPageScreen.tapOnContinueButton();
             if (PaymentOptionsScreen.isTicketSoldOutPopUpIsDisplayed()) {
-                PaymentOptionsScreen.tapOnOkButtonInTicketSoldOutPopup();
+                addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Tickets Are Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                 Logger.logError("Tried booking seats for two flights, both tickets are sold out......, Please re-run the script with different dates");
             }else {
                 PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
@@ -155,5 +155,6 @@ public class TwoWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithoutSignU
             }
         }
         Logger.endTest(" - Ticket booking with applied coupon code and without sign in or sign up ");
+        addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"true");
     }
 }

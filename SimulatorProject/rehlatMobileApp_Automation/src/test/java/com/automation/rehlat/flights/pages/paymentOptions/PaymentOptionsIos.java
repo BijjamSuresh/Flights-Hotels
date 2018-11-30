@@ -3,7 +3,6 @@ package com.automation.rehlat.flights.pages.paymentOptions;
 import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.flights.libCommon.Logger;
 import com.automation.rehlat.flights.tests.BaseTest;
-import com.automation.rehlat.hotels.Labels_Hotels;
 import io.appium.java_client.ios.IOSElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -163,10 +162,15 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
 //                        Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
 //                    }
                 else {
-                    Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                    Double priceDifference = finalAmountPayablePriceInPaymentCheckOutScreen-ticketAmountDisplayedInBookingPageScreen;
+                    if (priceDifference <= 0.2){ // Todo:- This condition is due to showing the final price in 3 decimal points where as in other screens it is 2 decimal points
+                        Logger.logStep("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen. Have the "+priceDifference +" , which is very less. So continuing with the final price as : "+finalAmountPayablePriceInPaymentCheckOutScreen);
+                    }else {
+                        Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                    }
                 }
                 }else {
-                    Logger.logComment("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalAmountPayablePriceInPaymentCheckOutScreen);
+                    Logger.logStep("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalAmountPayablePriceInPaymentCheckOutScreen);
                 }
             }else {
                 Logger.logError("Total amount payable cell is not displaying in payment checkout screen");

@@ -15,6 +15,8 @@ public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
     public static final String PRICE_ID = "priceLabel";
     public static final String XPATH_OF_HOTEL_CARD_VIEW_LAYOUT_WITHOUT_INDEX = "(//XCUIElementTypeCell[@name=\"HotelList\"])[";
     public static final String XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH = "(//XCUIElementTypeStaticText[@name=\"SRPFinalPrice\"])[";
+    public static final String SOLD_OUT_STRING = "Sold Out";
+    public static final String NAVIGATE_BACK_BUTTON_IN_SRP = "SRP_Back_Button";
 
     /**
      * Check the hotel srp is displayed
@@ -26,7 +28,7 @@ public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
 //           waitTillTheProgressIndicatorIsInvisibleById_ANDROID(SRP_SEARCH_LOADER_CELL_ID,2);
             waitForAnElementToDisappear_ByName(SRP_SEARCH_LOADER_CELL_ID,2);
             runAppInBackground(2);
-            if (isElementDisplayedByAccessibilityId(SRP_SCREEN_TITLE_ID)){
+            if (isElementDisplayedByAccessibilityId(NAVIGATE_BACK_BUTTON_IN_SRP)){ //Todo:- Replace this with "SRP_SCREEN_TITLE_ID" title
                 Logger.logStep("Hotels SRP is displayed");
             }else {
                 Logger.logError("Hotels SRP is not displayed");
@@ -56,7 +58,8 @@ public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
                 if (selectedHotelPriceWithoutCurrencyType.contains(Labels_Hotels.STRING_COMMA)){
                     String selectedHotelPriceWithoutComma = selectedHotelPriceWithoutCurrencyType.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL).trim();
                     Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutComma;
-                }else {
+                }
+                else {
                     Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutCurrencyType;
                 }
             }else {
@@ -77,6 +80,45 @@ public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
 //            driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(PRICE_ID))); //Todo:- This line of code needs to be enabled after dev set the price identifier for each hotel in stage
         }catch (Exception exception){
             Logger.logError("waited 30 seconds..,Hotel with the price labels is not displayed");
+        }
+    }
+
+    /**
+     * Check the sold outs are displayed in SRP
+     * @return
+     */
+    @Override
+    public boolean isSoldOutsAreDisplayedInSRP(){
+        Logger.logAction("Checking the sold outs are displayed in SRP results");
+        try {
+            waitForAnElementToDisappear_ByName(SRP_SEARCH_LOADER_CELL_ID,1);
+            String priceValueOfFirstCell = findElementByXpathAndReturnItsAttributeValue(XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH+"1]");
+            if (priceValueOfFirstCell.equalsIgnoreCase(SOLD_OUT_STRING)){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to check the SRP results are displayed as sold outs or not ?");
+        }
+        return false;
+    }
+
+    /**
+     * Tap on navigate back button in SRP
+     */
+    @Override
+    public void tapOnNavigateBackButtonInSRP(){
+        Logger.logAction("Tapping on navigate back button in SRP");
+        try {
+            boolean status = findElementByAccessibilityIdAndClick(NAVIGATE_BACK_BUTTON_IN_SRP);
+            if (status == true){
+                Logger.logStep("Tapped on navigate back button in SRP screen");
+            }else {
+                Logger.logError("Didn't tapped on navigate back button in SRP screen");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on navigate back button in SRP");
         }
     }
 

@@ -28,11 +28,15 @@ public class SignUpIos extends SignUpBase {
     public void checkSignUpScreenIsDisplayed() {
         Logger.logAction("Checking the sign in or sign up screen is displayed or not ?");
         try {
-            scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
             if (isElementDisplayedByAccessibilityId(SIGN_UP_BUTTON) && isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_REPEAT_PASSWORD_TEXT_FIELD) && isElementDisplayedByName(TOUCH_ID__AS_SIGN_UP_BUTTON) || isElementDisplayedByName(FACE_ID__AS_SIGN_UP_BUTTON)){
                 Logger.logStep("Sign Up screen is displayed");
             }else {
-                Logger.logError("Sign Up screen is not displayed");
+                scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
+                if (isElementDisplayedByAccessibilityId(SIGN_UP_BUTTON) && isElementDisplayedByAccessibilityId(ACCESSIBILITY_ID_OF_REPEAT_PASSWORD_TEXT_FIELD) && isElementDisplayedByName(TOUCH_ID__AS_SIGN_UP_BUTTON) || isElementDisplayedByName(FACE_ID__AS_SIGN_UP_BUTTON)){
+                    Logger.logStep("Sign Up screen is displayed");
+                }else {
+                    Logger.logError("Sign Up screen is not displayed");
+                }
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -181,7 +185,7 @@ public class SignUpIos extends SignUpBase {
     public static void selectCountryNameAndTapOnContinueButton() {
         Logger.logAction("Selecting user country domain and tap on tap on continue button");
         try {
-            WebElement element = driver.findElementByAccessibilityId(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL);
+            WebElement element = driver.findElementByAccessibilityId(Labels_Flights.LANGUAGE_COUNTRY_LABEL_FOR_IOS);
             tapOnElementBasedOnLocation(element,"bottomRight");
 //            findElementByNameAndClick(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL);
             findElementByAccessibilityIdAndClick(FlightsIos.CONTINUE_BUTTON);

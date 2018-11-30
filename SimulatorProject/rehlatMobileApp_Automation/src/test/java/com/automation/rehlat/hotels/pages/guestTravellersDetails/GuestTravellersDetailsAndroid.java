@@ -104,36 +104,40 @@ public class GuestTravellersDetailsAndroid extends GuestTravellersDetailsBase {
     public void enterTravellersDetailsForPassengers(Integer parsingRoomNumber, Integer parsingGuestTravellersAdultCount, Integer parsingGuestTravellersChildCount){
         Logger.logStep("Entering the travelling details of passengers in room number :-"+parsingRoomNumber);
         try {
-            Integer enteringTravellersAdultCount = 0;
-            Integer enteringTravellersChildCount = 0;
-            Integer childCardViewNumber;
-            Integer adultCardViewNumber;
             declineAutoFillPopulateModalIfDisplayed();
-            if(GetTheSelectedTravellerTypeof(parsingRoomNumber)){
-                while (enteringTravellersAdultCount < parsingGuestTravellersAdultCount){
-                    adultCardViewNumber =enteringTravellersAdultCount+1;
-                    enterAdultTravellersDetails(parsingRoomNumber,"Adult",adultCardViewNumber);
-                    enteringTravellersAdultCount++;
-                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
-                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
-                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
-                }
-                while (enteringTravellersChildCount < parsingGuestTravellersChildCount){
-                    Integer cellNumber = enteringTravellersChildCount+parsingGuestTravellersAdultCount+1;
-                    childCardViewNumber = cellNumber;
-                    enterChildTravellersDetails(parsingRoomNumber,"Child",childCardViewNumber);
-                    enteringTravellersChildCount++;
-                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
-                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
-                    if (parsingGuestTravellersChildCount == enteringTravellersChildCount+1){
-                        driver.navigate().back();
-                    }else {
-                        General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
-                    }
-                }
-            }else {
-                Logger.logError("Current selected paring room number is incorrect. i.e.., parsing room number:- "+parsingRoomNumber);
-            }
+            enterAdultTravellersDetails(parsingRoomNumber,"Adult",1);// Todo:- Adult number is hardcoded to one as 1 adult details are enough for hotel booking
+            //Todo:- Below logic is to be enabled when all the selected adults and the child details are needed to add
+//            Integer enteringTravellersAdultCount = 0;
+//            Integer enteringTravellersChildCount = 0;
+//            Integer childCardViewNumber;
+//            Integer adultCardViewNumber;
+//            declineAutoFillPopulateModalIfDisplayed();
+//            if(GetTheSelectedTravellerTypeof(parsingRoomNumber)){
+//                while (enteringTravellersAdultCount < parsingGuestTravellersAdultCount){
+//                    adultCardViewNumber =enteringTravellersAdultCount+1;
+//                    enterAdultTravellersDetails(parsingRoomNumber,"Adult",adultCardViewNumber);
+//                    enteringTravellersAdultCount++;
+//                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
+//                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
+//                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
+//                }
+//                while (enteringTravellersChildCount < parsingGuestTravellersChildCount){
+//                    Integer cellNumber = enteringTravellersChildCount+parsingGuestTravellersAdultCount+1;
+//                    childCardViewNumber = cellNumber;
+//                    enterChildTravellersDetails(parsingRoomNumber,"Child",childCardViewNumber);
+//                    enteringTravellersChildCount++;
+//                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
+//                    General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
+//                    if (parsingGuestTravellersChildCount == enteringTravellersChildCount+1){
+//                        driver.navigate().back();
+//                    }else {
+//                        General.executeTerminalCommand("adb shell input keyevent KEYCODE_TAB");
+//                    }
+//                }
+//            }else {
+//                Logger.logError("Current selected paring room number is incorrect. i.e.., parsing room number:- "+parsingRoomNumber);
+//            }
+            //Todo:- Below logic is to be enabled when all the selected adults and the child details are needed to add
         }catch (Exception exception){
             exception.printStackTrace();
             Logger.logError("Encountered error: Unable to enter the travellers details of passengers :- "+parsingRoomNumber);

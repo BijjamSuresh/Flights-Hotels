@@ -5,6 +5,7 @@ import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class SignUpAndroid extends SignUpBase {
     public static final String REFERRAL_CODE_TEXT_FIELD = "com.app.rehlat:id/signupreferalcodeEditText";
     public static final String SELECT_COUNTRY_TEXT_VIEW = "android.widget.TextView";
     public static final String XPATH_OF_SELECT_COUNTRY_VIEW_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[";
+    public static final String LOGIN_BUTTON = "com.app.rehlat:id/login_with_rehlat";
+    public static final String CONTACT_DETAILS_VIEW ="com.app.rehlat:id/paymentContainer";
 
 
 
@@ -186,15 +189,15 @@ public class SignUpAndroid extends SignUpBase {
                 List<WebElement> listOfTextViews = driver.findElements(By.className(SELECT_COUNTRY_TEXT_VIEW));
                 for (int index=0 ; index <= listOfTextViews.size()-1; index++){
                     String eachTextViewName = listOfTextViews.get(index).getText();
-                    if (eachTextViewName.matches(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL)){
-                        Thread.sleep(4000);
+                    if (eachTextViewName.matches(Labels_Flights.LANGUAGE_COUNTRY_LABEL_FOR_ANDROID)){
+                        Thread.sleep(2000);
                         index =index+1;
                         driver.findElement(By.xpath(XPATH_OF_SELECT_COUNTRY_VIEW_WITHOUT_INDEX+index+"]")).click();
                         break;
                     }
                 }
             }else {
-                Logger.logError(Labels_Flights.KUWAIT_LANGUAGE_COUNTRY_LABEL+" - element name is not displayed in the current active screen");
+                Logger.logError(Labels_Flights.LANGUAGE_COUNTRY_LABEL_FOR_ANDROID+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the current active screen name");
@@ -229,14 +232,35 @@ public class SignUpAndroid extends SignUpBase {
         Logger.logAction("Taping on create account button");
         try {
             if (isElementDisplayedById(SIGN_UP_BUTTON)){
-                findElementByIdAndClick(SIGN_UP_BUTTON);
-                Logger.logComment(" Tapped on signed up button");
-                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
-                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
-                closeTheKeyboard_Android();
-                if (isElementDisplayedById(SIGN_UP_BUTTON)){
-                    Logger.logError("Sign up screen is displaying on getting the app to back ground after tapping on sign up button with valid sign up credentials");
+                boolean status = findElementByIdAndClick(SIGN_UP_BUTTON);
+                if (status == true){
+                    Logger.logComment(" Tapped on signed up button");
+//                    declineTheSyncPreviousTravellersDataModalView_Android(); //Todo:- This line of method is added to avoid the issue TFS ID #:- 21149
+//                    declineTheSyncPreviousTravellersDataModalView_Android(); //Todo:- This line of method is added to avoid the issue TFS ID #:- 21149
+//                    driver.runAppInBackground(3);
+//                    Thread.sleep(3000);
+                }else {
+                    Logger.logError(" Didn't tapped on signed up button");
                 }
+                waitTillTheSignUpProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+                waitTillTheSignUpProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+//                closeTheKeyboard_Android();
+//                if (isElementDisplayedById(SIGN_UP_BUTTON)){
+//                    closeTheKeyboard_Android();
+//                    Logger.logComment("Sign up screen is displaying on getting the app to back ground after tapping on sign up button with valid sign up credentials");
+//                    driver.navigate().back();
+//                    driver.navigate().back();
+//                    if (isElementDisplayedById(LOGIN_BUTTON)){
+//                        driver.navigate().back();
+//                    }else{
+//                        if (isElementDisplayedById(CONTACT_DETAILS_VIEW)){
+//                            Logger.logStep("Booking Page screen is displayed");
+//                        }
+//                        else {
+//                            Logger.logError("Booking Page screen is not displayed");
+//                        }
+//                    }
+//                }
                 declineTheSyncPreviousTravellersDataModalView_Android();
             }else {
                 Logger.logComment(SIGN_UP_BUTTON+" - element name is not displayed in the current active screen");
@@ -255,6 +279,28 @@ public class SignUpAndroid extends SignUpBase {
 
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check all the fields are filled with valid information or not ?");
+        }
+    }
+
+    /**
+     * Wait till the progress indicator is invisible
+     * @throws Exception
+     */
+    public static void waitTillTheSignUpProgressIndicatorIsInvisibleById_ANDROID( String parsingID) throws Exception{
+        int count =1;
+        while (count< Labels_Flights.MIN_ATTEMPTS){
+            try{
+                if (isElementDisplayedById(parsingID)){
+                    Logger.logStep("Waiting till the activity indicator is invisible in the current active screen");
+                    driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(parsingID)));
+                }else {
+                    Logger.logStep("Activity indicator is not displayed in the current active screen");
+                }
+            }catch (Exception exception){
+                Logger.logComment(count+" :- time trying to find the progress indicator element name");
+            }
+            Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
+            count++;
         }
     }
 }

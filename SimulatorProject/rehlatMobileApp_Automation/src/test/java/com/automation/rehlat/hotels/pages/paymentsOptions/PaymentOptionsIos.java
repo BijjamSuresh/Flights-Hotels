@@ -36,7 +36,13 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static final String XPATH_OF_PASSWORD_FIELD_IN_3D_SECURE_DEBIT_OR_CREDIT_PAYMENT_SCREEN = "//XCUIElementTypeOther[@name=\"Checkout 3D Simulator\"]/XCUIElementTypeOther[5]/XCUIElementTypeSecureTextField";
     public static final String CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN = "Continue";
     public static final String XPATH_OF_FINAL_PAYMENT_CELL_IN_PAYMENT_OPTIONS_SCREEN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]";
-    public static final String TICKET_SOLD_OUT_POPUP = "Ticket had been Sold out";
+    public static final String TICKET_SOLD_OUT_POPUP = "hotel_sold_out";
+    public static final String CHANGE_YOUR_ROOM_TYPE_LABEL  = "Change your Room type";
+    public static final String SEE_AVAILABILITY_PROPERTIES_LABEL = "See Available Properties";
+    public static final String CHANGE_YOUR_ROOM_TYPE_BUTTON_ID  = "CustomAlert_Blue_Button";
+    public static final String SEE_AVAILABILITY_PROPERTIES_BUTTON_ID  = "CustomAlert_Red_Button";
+    public static final String XPATH_OF_CHANGE_ROOM_TYPE_LABEL_IN_SOLD_OUT_ALERT  = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeStaticText";
+    public static final String XPATH_OF_SEE_AVAILABLE_PROPERTIES_LABEL_IN_SOLD_OUT_ALERT  = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeStaticText";
     public static final String OK_BUTTON = "OK";
     public static final String SETUP_APPLE_PAY_MODAL_SHEET = "Set up Apple Pay";
     public static final String CHANGE_PAYMENT_OPTION = "Change Payment Method";
@@ -153,7 +159,12 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
 //                        Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
 //                    }
                     else {
-                        Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                        Double priceDifference = finalAmountPayablePriceInPaymentCheckOutScreen-ticketAmountDisplayedInBookingPageScreen;
+                        if (priceDifference <= 0.2){ // Todo:- This condition is due to showing the final price in 3 decimal points where as in other screens it is 2 decimal points
+                            Logger.logStep("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen. Have the "+priceDifference +" , which is very less. So continuing with the final price as : "+finalAmountPayablePriceInPaymentCheckOutScreen);
+                        }else {
+                            Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                        }
                     }
                 }else {
                     Logger.logComment("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalAmountPayablePriceInPaymentCheckOutScreen);
@@ -175,7 +186,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
         Logger.logAction("Checking the ticket sold out popup is displayed or not ?");
         try{
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR,1);
-            if (isElementDisplayedByName(TICKET_SOLD_OUT_POPUP)){
+            if (isElementDisplayedByAccessibilityId(TICKET_SOLD_OUT_POPUP)){
                 BaseTest.takeScreenshotAndSaveInSoldOutsFolder();
                 Logger.logStep(TICKET_SOLD_OUT_POPUP +" - popup is displayed in the current active screen");
                 return true;

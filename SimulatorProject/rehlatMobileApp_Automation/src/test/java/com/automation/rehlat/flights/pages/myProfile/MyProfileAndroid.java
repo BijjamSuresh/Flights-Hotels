@@ -23,7 +23,7 @@ public class MyProfileAndroid extends MyProfileBase {
     public void checkMyProfileScreenIsDisplayed() {
         Logger.logAction("Checking my profile screen is displayed or not ?");
         try {
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
             if (isElementEnabledById(MY_PROFILE_TITLE)) {
                 Logger.logStep("My Profile screen is displayed");
             } else {

@@ -98,11 +98,10 @@ public interface Hotels {
      */
     void resetTheRoomsCountToDefaultCount(Integer roomsCount);
 
-//    /**
-//     * Change the domain
-//     * @param parsingCurrencyName
-//     */
-//    void selectTheCurrencyName(String parsingCurrencyName);
+    /**
+     * Tap on check out option in calender view
+     */
+    void tapOnCheckOutOptionInCalendarView();
 
     /**
      * Set the domain as per the parsing domain

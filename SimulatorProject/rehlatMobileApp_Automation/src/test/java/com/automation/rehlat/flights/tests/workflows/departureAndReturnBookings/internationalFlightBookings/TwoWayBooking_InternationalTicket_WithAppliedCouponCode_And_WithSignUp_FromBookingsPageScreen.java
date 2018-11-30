@@ -10,6 +10,8 @@ import static com.automation.rehlat.flights.Labels_Flights.*;
 public class TwoWayBooking_InternationalTicket_WithAppliedCouponCode_And_WithSignUp_FromBookingsPageScreen extends BaseTest {
     @Test
     public void testTicketBookingWithAppliedCouponCodeAndWithSignUpFromBookingsPageScreen() throws Exception{
+        Logger.beginTest("TwoWay_International_Ticket booking with sign in menu screen and with applied coupon code");
+        printCurrentTestRunningInformation();
         Labels_Flights.FLIGHT_BOOKING_TYPE = INTERNATIONAL_FLIGHT_BOOKING;
         createNewSignUpEmailId();
         Logger.beginTest(" - Ticket booking with applied coupon code and with sign up from booking page screen");
@@ -109,14 +111,12 @@ public class TwoWayBooking_InternationalTicket_WithAppliedCouponCode_And_WithSig
             BookingPageScreen.checkFinalFareCalculationIsCorrect();
             BookingPageScreen.tapOnContinueButton();
             if (PaymentOptionsScreen.isTicketSoldOutPopUpIsDisplayed()) {
-                PaymentOptionsScreen.tapOnOkButtonInTicketSoldOutPopup();
+                addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Tickets Are Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                 Logger.logError("Tried booking seats for two flights, both tickets are sold out......, Please re-run the script with different dates");
             }else {
                 PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
                 PaymentOptionsScreen.compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen();
                 if (Labels_Flights.platform.equalsIgnoreCase(IOS)){
-
-                }
                     // KNET PAYMENT PROCESS
                 PaymentOptionsScreen.tapOnKnetPaymentGateWay();
                 PaymentOptionsScreen.checkKnetPaymentOptionsScreenIsDisplayed();
@@ -127,7 +127,7 @@ public class TwoWayBooking_InternationalTicket_WithAppliedCouponCode_And_WithSig
                 PaymentOptionsScreen.checkPostTransactionScreenIsDisplayed();
                 PaymentOptionsScreen.tapOnConfirmButton();
                 PaymentOptionsScreen.checkTheKnetBookingProcessIsSuccess();
-
+                }
                 // CREDIT OR DEBIT CARD PAYMENT PROCESS
 //            PaymentOptionsScreen.enterCreditOrDebitCardDetails();
 //            PaymentOptionsScreen.enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment();
@@ -158,5 +158,6 @@ public class TwoWayBooking_InternationalTicket_WithAppliedCouponCode_And_WithSig
             }
         }
         Logger.endTest(" - Ticket booking with applied coupon code and with signUp from booking page screen");
+        addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"true");
     }
 }

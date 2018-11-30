@@ -27,7 +27,9 @@ public class SettingsAndroid extends SettingsBase {
     public void checkSettingsScreenIsDisplayed() {
         Logger.logAction("Checking the settings screen is displayed or not ?");
         try {
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+            runAppInBackground(2);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
+            runAppInBackground(2);
             if (isElementEnabledById(BACK_BUTTON_IN_SETTINGS_SCREEN)){
                 Logger.logStep("Settings screen is displayed");
             }else {

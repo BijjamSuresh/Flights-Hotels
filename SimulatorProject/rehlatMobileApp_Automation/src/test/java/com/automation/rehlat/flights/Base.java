@@ -2,7 +2,6 @@ package com.automation.rehlat.flights;
 
 import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
-import com.automation.rehlat.hotels.Labels_Hotels;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
@@ -11,6 +10,8 @@ import io.appium.java_client.android.AndroidKeyCode;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.HtmlEmail;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -77,11 +78,11 @@ public class Base {
         } else if (Labels_Flights.platform.equals(Labels_Flights.ANDROID)) {
             new DesiredCapabilities();
             capabilities = DesiredCapabilities.android();
-            capabilities.setCapability("deviceName", Labels_Flights.ANDROID_CAPABILITIES_DEVICE_NAME);
+            capabilities.setCapability("deviceName", Labels_Flights.DEVICE_NAME);
             capabilities.setCapability("appium-version", Labels_Flights.ANDROID_CAPABILITIES_APPIUM_VERSION);
             capabilities.setCapability("platformName", Labels_Flights.ANDROID);
             capabilities.setCapability("deviceId", Labels_Flights.ANDROID_CAPABILITIES_DEVICE_ID);
-            capabilities.setCapability("platformVersion", Labels_Flights.ANDROID_CAPABILITIES_PLATFORM_VERSION);
+            capabilities.setCapability("platformVersion", Labels_Flights.ANDROID_DEVICE_OS);
 //            capabilities.setCapability("appPackage", Labels_Hotels.ANDROID_CAPABILITIES_PACKAGE_NAME);
 //            capabilities.setCapability("autoAcceptAlerts", true);
             app = new File(ANDROID_CAPABILITIES_APP_PATH);
@@ -122,6 +123,29 @@ public class Base {
             super.failed(e, description);
         }
     };
+
+    /**
+     * Send the email id
+     */
+    public static void sendEmail(String reportInHtml){
+        Logger.logAction("Sending the email..,");
+        try {
+            HtmlEmail email = new HtmlEmail();
+            email.setHostName("smtp.gmail.com");
+            email.setSmtpPort(555);
+            email.setAuthenticator(new DefaultAuthenticator("suresh.bijjam@rehlat.com","L>88G97dd"));
+            email.setSSLOnConnect(true);
+            email.setFrom("suresh.bijjam@rehlat.com");
+            email.setSubject(Labels_Flights.DEFAULT_PLATFORM+": "+Labels_Flights.DEVICE_NAME+":"+Labels_Flights.DEVICE_OS+" Execution Results");
+            email.setMsg("Please find the below html report for in-details");
+            email.addTo("suresh.bijjam@rehlat.com");
+            email.setHtmlMsg(reportInHtml);
+            email.send();
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Encountered error: Unable to send the email");
+        }
+    }
 
     /**
      * Used to take a screen shot of the screen when ever test script fails or error appears on screen.
@@ -349,7 +373,7 @@ public class Base {
             } catch (Exception e) {
                 Logger.logComment(counter + " time trying to find the element id of - " + elementId);
             }
-            Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
+            Thread.sleep(Labels_Flights.WAIT_TIME_DEFAULT);
             counter++;
         }
         Logger.logWarning(elementId + " - element accessibility id is not displayed in the current active screen");

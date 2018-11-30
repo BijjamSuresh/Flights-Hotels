@@ -15,7 +15,7 @@ public class PrivacyPolicyAndroid extends PrivacyPolicyBase {
     public void checkPrivacyPolicyScreenIsDisplayed(){
         Logger.logAction("Checking the privacy policy screen is displayed or not ?");
         try {
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID("com.app.rehlat:id/webview_progress_bar");
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID("com.app.rehlat:id/webview_progress_bar",true);
 //            String elementName = findElementByXpathAndReturnItsAttributeText(XPATH_OF_PRIVACY_POLICY_NAME_IN_WEB_VIEW);
             if (isElementDisplayedByXPath(XPATH_OF_PRIVACY_POLICY_NAME_IN_WEB_VIEW)){
                 Logger.logStep("Privacy policy screens is displayed");

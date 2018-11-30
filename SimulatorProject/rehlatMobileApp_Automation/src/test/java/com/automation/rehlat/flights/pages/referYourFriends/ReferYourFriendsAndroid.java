@@ -18,7 +18,7 @@ public class ReferYourFriendsAndroid extends ReferYourFriendsBase {
     public void checkReferYourFriendsScreenIsDisplayed(){
         Logger.logAction("Refer your friends screen is displayed or not?");
         try{
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
             if(isElementDisplayedById(REFER_YOUR_FRIENDS_BACK_BUTTON_LABEL)){
                 Logger.logStep("Refer your friends screen is displayed");
             }else{
@@ -85,7 +85,7 @@ public class ReferYourFriendsAndroid extends ReferYourFriendsBase {
                 Logger.logComment("Parsed the referral code as :- "+parsingReferralCode);
                 closeTheKeyboard_Android();
                 tapOnReferralSaveButton();
-                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
             }else{
                 Logger.logError("Referral code cell is not displayed");
             }

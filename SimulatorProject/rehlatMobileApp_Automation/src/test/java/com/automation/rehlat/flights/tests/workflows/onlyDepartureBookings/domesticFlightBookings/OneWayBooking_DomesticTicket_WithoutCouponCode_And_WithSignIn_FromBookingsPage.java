@@ -10,8 +10,9 @@ import static com.automation.rehlat.flights.Labels_Flights.*;
 public class OneWayBooking_DomesticTicket_WithoutCouponCode_And_WithSignIn_FromBookingsPage extends BaseTest {
     @Test
     public void testTicketBookingWithoutCouponCodeAndWithSignInFromBookingsPage() throws Exception{
+        Logger.beginTest("OneWay_Domestic_Ticket booking without coupon code and with sign in from bookings page");
+        printCurrentTestRunningInformation();
         Labels_Flights.FLIGHT_BOOKING_TYPE = DOMESTIC_FLIGHT_BOOKING;
-        Logger.beginTest("- Ticket booking without coupon code and with sign in from bookings page");
         FlightsScreen.selectCountryNameInSelectLanguageModal(Labels_Flights.CURRENT_USER_COUNTRY_NAME); // Country name needs to changed while testing for countries other than Kuwait.
         FlightsScreen.checkFlightsTabIsDisplayed();
         FlightsScreen.tapOnMenuButton();
@@ -99,7 +100,7 @@ public class OneWayBooking_DomesticTicket_WithoutCouponCode_And_WithSignIn_FromB
             BookingPageScreen.checkFinalFareCalculationIsCorrect();
             BookingPageScreen.tapOnContinueButton();
             if (PaymentOptionsScreen.isTicketSoldOutPopUpIsDisplayed()) {
-                PaymentOptionsScreen.tapOnOkButtonInTicketSoldOutPopup();
+                addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Tickets Are Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                 Logger.logError("Tried booking seats for two flights, both tickets are sold out......, Please re-run the script with different dates");
             }else {
                 PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
@@ -147,6 +148,7 @@ public class OneWayBooking_DomesticTicket_WithoutCouponCode_And_WithSignIn_FromB
             }
         }
         Logger.endTest("- Ticket booking without coupon code and with sign in from bookings page");
+        addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"true");
 
     }
 }

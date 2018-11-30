@@ -52,6 +52,7 @@ public class FlightsIos extends FlightsBase {
     public static final String ACCESSIBILITY_ID_OF_ADULTS_COUNT = "adultCount";
     public static final String ACCESSIBILITY_ID_OF_CHILDREN_COUNT = "childCount";
     public static final String ACCESSIBILITY_ID_OF_INFANTS_COUNT = "infantCount";
+    public static final String XPATH_OF_RETURN_BUTTON_IN_CALENDAR_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeButton[1]";
 
 
 
@@ -100,7 +101,7 @@ public class FlightsIos extends FlightsBase {
     /**
      * Tap on one way trip
      */
-    public void tapOnOneWayTrip(){
+    public void tapOnOneWayTrip() throws Exception{
         Logger.logAction("Tap on one way trip");
         try {
 //            MobileElement element = (MobileElement) driver.findElementByXPath(Labels_Flights.XCUI);
@@ -326,7 +327,7 @@ public class FlightsIos extends FlightsBase {
         Logger.logAction("Tapping on departure button");
         try{
             findElementByXPathAndClick(XPATH_OF_DEPARTURE);
-                Logger.logStep("Tapped on departure button");
+            Logger.logStep("Tapped on departure button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on Departure button");
         }
@@ -340,7 +341,7 @@ public class FlightsIos extends FlightsBase {
         Logger.logAction("Tapping on return button");
         try{
             findElementByXPathAndClick(XPATH_OF_RETURN);
-                Logger.logStep("Tapped on return button");
+            Logger.logStep("Tapped on return button");
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on Departure button");
         }
@@ -502,6 +503,23 @@ public class FlightsIos extends FlightsBase {
     }
 
     /**
+     * Tap on return month cell in calendar view
+     * @throws Exception
+     */
+    public static void tapOnReturnMonthCellInCalendarView() throws Exception{
+        Logger.logAction("Tapping on return month cell in calendar view");
+        try {
+            boolean status = findElementByXPathAndClick(XPATH_OF_RETURN_BUTTON_IN_CALENDAR_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on return month cell in the calendar view");
+            }else {
+                Logger.logError("Didn't tapped on return cell in the calendar view");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on return button in the calendar view");
+        }
+    }
+    /**
      * Select the return date
      * @param returnMonthAndYear
      * @param returnDay
@@ -513,6 +531,7 @@ public class FlightsIos extends FlightsBase {
         int[] arrayListOfStartingPointLocationXAndY;
         int[] arrayListOfEndingPointLocationXAndY;
         try {
+            tapOnReturnMonthCellInCalendarView();
             if (isElementDisplayedByXPath(CALENDER_MODAL_VIEW_XPATH)){
                 WebElement calendarView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
                 scrollToAnElementByName(calendarView,returnMonthAndYear,true);

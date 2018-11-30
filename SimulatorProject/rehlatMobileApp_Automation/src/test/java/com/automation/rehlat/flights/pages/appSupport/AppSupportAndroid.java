@@ -170,7 +170,7 @@ public class AppSupportAndroid extends AppSupportBase {
     public void checkFAQSScreenIsDisplayed(){
         Logger.logAction("Checking FAQ’S screen is displayed");
         try {
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID("com.app.rehlat:id/webview_progress_bar");
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID("com.app.rehlat:id/webview_progress_bar",false);
 //            String elementName = findElementByXpathAndReturnItsAttributeText(XPATH_OF_FAQS_NAME_IN_WEB_VIEW);
             if (isElementDisplayedByXPath("//android.view.View[@content-desc=\"FAQs\"]")){
                 Logger.logStep("FAQ’S screen is displayed");

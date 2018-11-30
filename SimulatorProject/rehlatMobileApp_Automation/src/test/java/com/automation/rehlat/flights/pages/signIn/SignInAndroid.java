@@ -3,6 +3,7 @@ package com.automation.rehlat.flights.pages.signIn;
 import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.flights.libCommon.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class SignInAndroid extends SignInBase{
 
@@ -26,9 +27,11 @@ public class SignInAndroid extends SignInBase{
     public void checkSignInScreenIsDisplayed() {
         Logger.logAction("Checking the sign in screen is displayed or not ?");
         try {
-            if (!Labels_Flights.ANDROID_CAPABILITIES_DEVICE_NAME.contains("emulator")){
+            runAppInBackground(1);
+            if (!Labels_Flights.ANDROID_CAPABILITIES_DEVICE_TYPE.equalsIgnoreCase("emulator")){
                 closeThePickerTitleIfDisplayed();
             }
+            runAppInBackground(2);
             if (isElementDisplayedById(LOGIN_BUTTON) && isElementDisplayedById(CREATE_ACCOUNT_BUTTON) && isElementDisplayedById(FORGET_PASSWORD_BUTTON)){
                 Logger.logStep("Sign In screen is displayed");
             }else {
@@ -153,10 +156,13 @@ public class SignInAndroid extends SignInBase{
         Logger.logAction("Tapping on Login button");
         try {
             if (isElementDisplayedById(LOGIN_BUTTON)){
-                driver.findElement(By.id(LOGIN_BUTTON)).click();
-                Logger.logComment("Tapped on login button");
-                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
-                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+                boolean status = findElementByIdAndClick(LOGIN_BUTTON);
+                if (status == true){
+                    Logger.logComment("Tapped on login button");
+                }else {
+                    Logger.logError("Didn't tapped in login button");
+                }
+                waitTillTheSignInProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
                 declineTheSyncPreviousTravellersDataModalView_Android();
             }else {
                 Logger.logError(LOGIN_BUTTON+" - element name is not displayed in the current active screen");
@@ -175,6 +181,28 @@ public class SignInAndroid extends SignInBase{
 
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check all the fields are filled with valid information or not ?");
+        }
+    }
+
+    /**
+     * Wait till the progress indicator is invisible
+     * @throws Exception
+     */
+    public static void waitTillTheSignInProgressIndicatorIsInvisibleById_ANDROID( String parsingID) throws Exception{
+        int count =1;
+        while (count< Labels_Flights.MIN_ATTEMPTS){
+            try{
+                if (isElementDisplayedById(parsingID)){
+                    Logger.logStep("Waiting till the activity indicator is invisible in the current active screen");
+                    driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(parsingID)));
+                }else {
+                    Logger.logStep("Activity indicator is not displayed in the current active screen");
+                }
+            }catch (Exception exception){
+                Logger.logComment(count+" :- time trying to find the progress indicator element name");
+            }
+            Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
+            count++;
         }
     }
 }

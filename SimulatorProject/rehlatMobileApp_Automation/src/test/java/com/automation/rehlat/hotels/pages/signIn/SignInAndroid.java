@@ -26,7 +26,7 @@ public class SignInAndroid extends SignInBase {
     public void checkSignInScreenIsDisplayed() {
         Logger.logAction("Checking the sign in screen is displayed or not ?");
         try {
-            if (!Labels_Hotels.ANDROID_CAPABILITIES_DEVICE_NAME.contains("emulator")){
+            if (!Labels_Hotels.ANDROID_CAPABILITIES_DEVICE_TYPE.equalsIgnoreCase("emulator")){
                 closeThePickerTitleIfDisplayed();
                 runAppInBackground(1);
             }

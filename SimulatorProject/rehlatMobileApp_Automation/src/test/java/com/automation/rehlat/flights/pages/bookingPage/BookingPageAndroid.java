@@ -281,9 +281,10 @@ public class BookingPageAndroid extends BookingPageBase {
         Logger.logAction("Checking the final fare calculation is correct or not ?");
         try {
             disableOnlineCheckInToggleButton();
-            scrollTheScreenDownwards();
-            scrollTheScreenDownwards();
+//            scrollTheScreenDownwards();
+//            scrollTheScreenDownwards();
             Double bookingSeatCostInReviewBookingScreen = Double.valueOf(Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
+            scrollToAnElementById_ANDROID(ACTUAL_DISPLAYING_FARE,true);
             displayedActualFare = Double.valueOf(getDisplayedActualFare());
             couponAmount = Double.valueOf(getCouponAmount());
             karamPoints = Double.valueOf(getKaramPoints());
@@ -463,13 +464,17 @@ public class BookingPageAndroid extends BookingPageBase {
      * Check karam points toggle is enabled
      * @return
      */
-    public static boolean isKaramPointsToggleSwitchEnabled() {
+    public static boolean isKaramPointsToggleSwitchEnabled() { // Where ever using this method should check for sing in status only allow when the status is true
         Logger.logAction("Checking the karam points toggle is enabled");
         try
         {
             if (isElementDisplayedById(KARAM_POINTS_TOGGLE_BUTTON)){
                 String karamPointsToggleStatus = driver.findElementById(KARAM_POINTS_TOGGLE_BUTTON).getAttribute(Labels_Flights.CHECKED_ATTRIBUTE);
-                return karamPointsToggleStatus.equals(Labels_Flights.STATUS_TRUE);
+                if (karamPointsToggleStatus.equalsIgnoreCase(Labels_Flights.STATUS_TRUE)){
+                    return true;
+                }else {
+                    return false;
+                }
             }else {
                 Logger.logError(KARAM_POINTS_TOGGLE_BUTTON+" - element id is not displayed in the current active screen");
             }
@@ -488,19 +493,24 @@ public class BookingPageAndroid extends BookingPageBase {
         Logger.logAction("Enabling the karam points toggle");
         try
         {
-            scrollToAnElementById_ANDROID(ACTUAL_DISPLAYING_FARE,true);
-            String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
-            if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
-            if (isKaramPointsToggleSwitchEnabled()){
-                Logger.logComment("karam points toggle button is already enabled");
+            if (isUserIsSignedIn()){
+                scrollToAnElementById_ANDROID(ACTUAL_DISPLAYING_FARE,true);
+                String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
+                Thread.sleep(2000);
+                if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
+                    if (isKaramPointsToggleSwitchEnabled()){
+                        Logger.logComment("karam points toggle button is already enabled");
+                    }else {
+                        WebElement karamPointsToggleSwitch = driver.findElementById(KARAM_POINTS_TOGGLE_BUTTON);
+                        karamPointsToggleSwitch.click();
+                        Logger.logComment("Karam points toggle button is enabled");
+                    }
+                }
+                else {
+                    Logger.logStep("Karam wallet is empty, so tapping functionality over karam toggle  button is blocked");
+                }
             }else {
-                WebElement karamPointsToggleSwitch = driver.findElementById(KARAM_POINTS_TOGGLE_BUTTON);
-                karamPointsToggleSwitch.click();
-                Logger.logComment("Karam points toggle button is enabled");
-            }
-            }
-            else {
-                Logger.logStep("Karam wallet is empty, so tapping functionality over karam toggle  button is blocked");
+                Logger.logStep("User is not signed in.., So no need to check for karam points");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enable the karam points toggle button");
@@ -534,9 +544,14 @@ public class BookingPageAndroid extends BookingPageBase {
         Logger.logAction("Sending the keys to coupon code text field");
         try {
             if (isElementDisplayedById(COUPON_CODE_TEXT_VIEW)){
-                driver.findElementById(COUPON_CODE_TEXT_VIEW).sendKeys(Labels_Flights.COUPON_CODE);
-                Logger.logComment(Labels_Flights.COUPON_CODE+":- coupon code is parsed");
-//                closeTheKeyboard_Android();
+                boolean status = findElementByIdAndClick(COUPON_CODE_TEXT_VIEW);
+                if (status == true){
+                    driver.findElementById(COUPON_CODE_TEXT_VIEW).sendKeys(Labels_Flights.COUPON_CODE);
+                    Logger.logComment(Labels_Flights.COUPON_CODE+":- coupon code is parsed");
+                    closeTheKeyboard_Android();
+                }else {
+                    Logger.logError("Didn't tapped on coupon code text view");
+                }
             }else {
                 Logger.logError(COUPON_CODE_TEXT_VIEW+" - element name is not displayed in the current active screen");
             }
@@ -570,7 +585,7 @@ public class BookingPageAndroid extends BookingPageBase {
         Logger.logAction("Checking coupon code is applied or not ?");
         try {
 //            scrollToAnElementById_ANDROID(FINAL_FARE,true);
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(COUPON_CODE_LOADING_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(COUPON_CODE_LOADING_INDICATOR,false);
             if(isElementDisplayedById(COUPON_CODE_CLOSE_BUTTON)){
                 Logger.logComment("Coupon code is applied successfully");
                 return true;
@@ -597,8 +612,31 @@ public class BookingPageAndroid extends BookingPageBase {
                     return false;
                 }
             }else {
-                Logger.logWarning(COUPON_CODE_TEXT_VIEW+" Or "+COUPON_AMOUNT+" element names are not displayed in the current active screen");
-                return false;
+                scrollToAnElementById_ANDROID(EMAIL_FIELD,false);
+                if(isElementDisplayedById(COUPON_CODE_APPLY_TEXT_VIEW)) {
+                    if (isElementDisplayedById(COUPON_CODE_VALIDATION_MESSAGE)) {
+                        String couponValidationMessage = driver.findElementById(COUPON_CODE_VALIDATION_MESSAGE).getText();
+                        if (couponValidationMessage.equals(COUPON_INVALID_MESSAGE)) {
+                            Logger.logComment("Coupon code is not applied because of incorrect coupon code");
+                            return false;
+                        } else if (couponValidationMessage.contains("This booking qualifies")) {
+                            Logger.logComment("Coupon code is applied :- " + couponValidationMessage);
+                            return true;
+                        } else {
+                            Logger.logComment("Coupon code is not applied due to the reason :- " + couponValidationMessage);
+                            return false;
+                        }
+                    } else if (isElementDisplayedById(COUPON_AMOUNT)) {
+                        Logger.logComment("Coupon code is applied successfully");
+                        return true;
+                    } else {
+                        Logger.logComment("Coupon code is not yet applied");
+                        return false;
+                    }
+                }else {
+                    Logger.logWarning(COUPON_CODE_TEXT_VIEW+" Or "+COUPON_AMOUNT+" element names are not displayed in the current active screen");
+                    return false;
+                }
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check whether the coupon is applied or not ?");
@@ -612,8 +650,10 @@ public class BookingPageAndroid extends BookingPageBase {
     public static void disableOnlineCheckInToggleButton(){
         Logger.logAction("Disabling the online check in toggle button");
         try{
-            scrollToAnElementById_ANDROID(ONLINE_CHECKIN_TOGGLE_BUTTON,true);
-            if(isElementDisplayedByIdWithOneTimeChecking(ONLINE_CHECKIN_TOGGLE_BUTTON)){
+            scrollToAnElementById_ANDROID(TERMS_AND_CONDITIONS_URL_LABLE,true); //Todo:-  This method needs to be recheck such that it should scroll to exactly to the online check in button
+//            scrollTheScreenDownwards(); //Todo:- The below two lines of code needs to be enabled when the above logic is not working
+//            scrollTheScreenDownwards();
+            if(isElementDisplayedById(ONLINE_CHECKIN_TOGGLE_BUTTON)){
                 WebElement locationOfDay = driver.findElementById(ONLINE_CHECKIN_TOGGLE_BUTTON);
                 Point table = locationOfDay.getLocation();
                 int elementYAxisValue = table.getY();
@@ -625,29 +665,13 @@ public class BookingPageAndroid extends BookingPageBase {
                 if (checkedAttribute.equals(Labels_Flights.STATUS_TRUE)){
                     Logger.logComment("Online check in toggle button is enabled.., Going to disable by tapping on it");
                     onlineCheckInToggleButton.click();
+                    scrollTheScreenUpwards();
+                    scrollTheScreenUpwards();
                 }else {
                     Logger.logComment("Online check in toggle button is already disabled");
                 }
-            }else {
-                scrollToAnElementById_ANDROID(ONLINE_CHECKIN_TOGGLE_BUTTON,false);
-                if(isElementDisplayedById(ONLINE_CHECKIN_TOGGLE_BUTTON)){
-                    WebElement locationOfDay = driver.findElementById(ONLINE_CHECKIN_TOGGLE_BUTTON);
-                    Point table = locationOfDay.getLocation();
-                    int elementYAxisValue = table.getY();
-                    if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_20_PERCENT <= elementYAxisValue){
-                        scrollTheCalenderPageUpByDaysGap_Android(); // scrolling values inside are hardcoded by screen basis
-                    }
-                    WebElement onlineCheckInToggleButton = driver.findElementById(ONLINE_CHECKIN_TOGGLE_BUTTON);
-                    String checkedAttribute = onlineCheckInToggleButton.getAttribute(Labels_Flights.CHECKED_ATTRIBUTE);
-                    if (checkedAttribute.equals(Labels_Flights.STATUS_TRUE)){
-                        Logger.logComment("Online check in toggle button is enabled.., Going to disable by tapping on it");
-                        onlineCheckInToggleButton.click();
-                    }else {
-                        Logger.logComment("Online check in toggle button is already disabled");
-                    }
-                }else {
-                    Logger.logWarning("Online check in button is not visible in the current active screen");
-                }
+            } else {
+                Logger.logWarning("Online check in button is not visible in the current active screen");
             }
         }catch(Exception exception){
             Logger.logError("Encountered error: Unable to disable the online check in toggle button");

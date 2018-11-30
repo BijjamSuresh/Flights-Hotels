@@ -82,9 +82,11 @@ public class MenuAndroid extends MenuBase {
             if (isElementDisplayedById(SIGNED_IN_EMAIL_ID_IN_MENU_SCREEN)){
                 String signedInEmailId = driver.findElementById(SIGNED_IN_EMAIL_ID_IN_MENU_SCREEN).getText();
                 {
-                    if (signedInEmailId.matches(emailEnteredInSignUpScreen)){
+                    if (signedInEmailId.equalsIgnoreCase(emailEnteredInSignUpScreen)){
                         Logger.logStep("App is signed up with correct user parsed signed up credentials");
                     }else {
+                        Logger.logComment("Singed in email id is :- "+signedInEmailId);
+                        Logger.logComment("Email Id to be signed in :- "+Labels_Flights.EMAIL_ID_SIGN_IN);
                         Logger.logError("App is not signed up with correct user parsed signed up credentials");
                     }
                 }
@@ -203,7 +205,8 @@ public class MenuAndroid extends MenuBase {
         Logger.logAction("Checking the Settings screen is displayed");
         String valueOfSettingsScreenTitle;
         try{
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+            runAppInBackground(2);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,true);
             if (isElementDisplayedByXPath(XPATH_OF_SETTINGS_SCREEN_TITTLE)){
                 valueOfSettingsScreenTitle = driver.findElementByXPath(XPATH_OF_SETTINGS_SCREEN_TITTLE).getText();
                 if (valueOfSettingsScreenTitle.equals("Settings")){

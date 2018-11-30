@@ -119,9 +119,11 @@ public class HotelsProfileAndroid extends HotelsProfileBase {
     public void tapOnChangeYourDatesButtonInSoldOutAlert(){
         Logger.logAction("Tapping on change your dates button in the sold out alert");
         try{
-            if (isElementEnabledById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
-                driver.findElementById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
+            boolean status = findElementByIdAndClick(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE);
+            if (status == true){
                 Logger.logComment("Tapped on change your dates button in the sold out alert");
+            }else {
+                Logger.logError("Didnn't tapped on change your dates button in the sold out alert");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
@@ -129,18 +131,20 @@ public class HotelsProfileAndroid extends HotelsProfileBase {
     }
 
     /**
-     * Tapped on change your dates button in the sold out alert
+     * Tapped on see available properties button in the sold out alert
      */
     @Override
     public void tapOnSeeAvailablePropertiesButtonInSoldOutAlert(){
-        Logger.logAction("Tapping on change your dates button in the sold out alert");
+        Logger.logAction("Tapping on see available properties button in the sold out alert");
         try{
-            if (isElementEnabledById(SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
-                driver.findElementById(SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
-                Logger.logComment("Tapped on change your dates button in the sold out alert");
+            boolean status = findElementByIdAndClick(SEE_AVAILABLE_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE);
+            if (status == true){
+                Logger.logComment("Tapped on see available properties button in the sold out alert");
+            }else {
+                Logger.logError("Didn't tapped on see available properties button in the sold out alert");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error:- Unable to tap on OK button in sold out alert");
+            Logger.logError("Encountered error:- Unable to tap on see available properties button in sold out alert");
         }
     }
 

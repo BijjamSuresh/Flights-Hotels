@@ -313,7 +313,7 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
             if (isElementDisplayedByAccessibilityId(TRAVELLERS_PASSPORT_NUMBER)){
                 WebElement passportNumberLabel = driver.findElementByAccessibilityId(TRAVELLERS_PASSPORT_NUMBER);
 //                tapOnElementBasedOnLocation(passportNumber,"bottomRight");
-                String passportNumber = General.getTheTestDataOfField("Passport_No");
+                String passportNumber = General.getTheTestDataOfField("Passport_Number");
                 passportNumberLabel.sendKeys(passportNumber);
                 Logger.logComment(passportNumber+" :- is parsed");
                 closeTheKeyboard_iOS();

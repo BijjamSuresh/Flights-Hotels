@@ -24,15 +24,22 @@ import com.automation.rehlat.flights.pages.signIn.SignInBase;
 import com.automation.rehlat.flights.pages.signUp.SignUpBase;
 import com.automation.rehlat.flights.pages.travellerDetails.TravellerDetailsBase;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jetty.util.IO;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.junit.BeforeClass;
 import org.openqa.selenium.OutputType;
 
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 
-import static com.automation.rehlat.flights.Labels_Flights.setCountryLanguageAndAirportFromAndToLabels;
+import static com.automation.rehlat.flights.Labels_Flights.*;
 import static com.automation.rehlat.flights.pages.constructors.PageConstructor.initializePageObject;
 
 
@@ -65,7 +72,8 @@ public class BaseTest extends Base {
     public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS = "1"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
     public static final String CELL_NUMBER_OF_FLIGHT_SEARCH_RESULTS_WHEN_SOLDOUT_POPUP_INTERRUPTRED = "2"; // For Android should give number less than 3, because flight card ids/xpaths are reset to 1 to 4 only
     public static final String TESTING_BANK_CARD = "Knet Test Card [KNET1]";
-
+    public static boolean isUserSignedIn = false;
+    public static boolean COUPON_CODE_APPLIED_STATUS = false;
 
 
     ////////////////////////////// Initialising The Screen Names W.R.T. The Screen Base Names //////////////////////////////////////
@@ -123,7 +131,7 @@ public class BaseTest extends Base {
 
 
         checkAndWaitTillTheSplashScreenIsInvisible();
-        runTheAppInTheConfigurationOf("KUWAIT","Stage");
+        runTheAppInTheConfigurationOf(Labels_Flights.CURRENT_RUNNING_DOMAIN,Labels_Flights.CURRENT_RUNNING_APP_ENVIRONMENTAL_CONFIGURATION);
 //        acceptAutoAlertsIfDisplayed();
     }
 
@@ -136,12 +144,9 @@ public class BaseTest extends Base {
             if (parsingConfiguration.equalsIgnoreCase("Live")){
                 Labels_Flights.CONFIGURATION_TYPE = Labels_Flights.LIVE_CONFIGURATION_TYPE;
                 Labels_Flights.COUPON_CODE = "app8";
-
             }else if (parsingConfiguration.equalsIgnoreCase("Stage")){
-            {
                 Labels_Flights.CONFIGURATION_TYPE =  Labels_Flights.STAGE_CONFIGURATION_TYPE;
                 Labels_Flights.COUPON_CODE = "automate";
-                }
             }else {
                 Logger.logError("App configuration is neither live nor stage");
             }
@@ -149,6 +154,183 @@ public class BaseTest extends Base {
             Logger.logError("Unable to run the live app");
         }
     }
+
+    /**
+     * Print the current running device information
+     */
+    public static void printCurrentTestRunningInformation(){
+        Logger.logAction("Printing the current test running information");
+        try {
+            Logger.logStep("Current test running information is :- ");
+            Logger.logComment("Device Name          :- "+Labels_Flights.DEVICE_NAME);
+            if (platform.equalsIgnoreCase(ANDROID)){
+                Logger.logComment("Device OS            :- "+Labels_Flights.ANDROID_DEVICE_OS);
+            }else if (platform.equalsIgnoreCase(IOS)){
+                Logger.logComment("Device OS            :- "+Labels_Flights.DEVICE_UDID);
+            }else {
+                Logger.logError("Incorrect platform..ie.., Current test running device is neither iOS and Android");
+            }
+            Logger.logComment("App Configuration    :- "+Labels_Flights.CONFIGURATION_TYPE);
+            Logger.logComment("Port Number          :- "+Labels_Flights.CURRENT_RUNNING_PORT_NUMBER_TYPE);
+            Logger.logComment("Current Domain       :- "+Labels_Flights.CURRENT_RUNNING_DOMAIN);
+            addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false");// Todo:- By Default setting the test case execution status as false
+        }catch (Exception exception){
+            Logger.logError("Unable to print the current test running information");
+        }
+    }
+
+    /**
+     * Create a execution results json file
+     */
+    public static void addTestResultStatusToExecutionResultsJsonFile(String testCaseName, String executionStatus){
+        Logger.logAction("Adding the test result status to execution results json file");
+        try {
+            try {
+                JSONParser jsonParser = new JSONParser();
+                FileReader fileReader = new FileReader(ReportFileName);
+                JSONArray jsonArray = (JSONArray) jsonParser.parse(fileReader);
+                JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+                jsonObject.put(testCaseName,executionStatus);
+                FileWriter fileWriter = new FileWriter(ReportFileName);
+                fileWriter.write(jsonArray.toString());
+                fileWriter.flush();
+                Logger.logComment("Added the test result status to execution results json file");
+            }catch (Exception fileWriterException){
+                fileWriterException.printStackTrace();
+                Logger.logError("Unable to create the execution results file");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to create the execution results json file");
+        }
+    }
+
+    /**
+     * Create an html document of execution results from execution results json file
+     */
+    public static String createHtmlStringOfExecutionResults(String htmlReportFile){
+        Logger.logAction("Creating the html document of execution results");
+        try {
+            Integer totalFailTCSCount = 0;
+            Integer totalPassTCSCount = 0;
+            String fullHtmlReport = "";
+            String closingBodyAndTableHtmlStrings = closingBodyAndTableHtmlStrings();
+            String headerHtmlWithoutClosingBodyAndTableHtmlStrings = headerHtmlWithoutClosingBodyAndTableHtmlStrings();
+            String htmlTcRowsReport = "";
+            JSONParser jsonParser = new JSONParser();
+            FileReader fileReader = new FileReader(htmlReportFile);
+            JSONArray jsonArray = (JSONArray) jsonParser.parse(fileReader);
+            JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+            Iterator keys= jsonObject.keySet().iterator();
+            while (keys.hasNext())
+            {
+                String tcName = (String)keys.next();
+                String tcReport = (String) jsonObject.get(tcName);
+                if (tcReport.contains("false")){
+                    totalFailTCSCount = totalFailTCSCount+1;
+                }else if (tcReport.equalsIgnoreCase("true")){
+                    totalPassTCSCount = totalPassTCSCount+1;
+                }else {
+                    Logger.logError(tcReport+" is neither true nor false");
+                }
+                String appendedRow = appendRowInExecutionHtmlReport(tcName,tcReport);
+                htmlTcRowsReport = htmlTcRowsReport.concat(appendedRow);
+            }
+            String totalTCSCount = String.valueOf(jsonObject.size());
+            String totalTestCasesCount_HtmlString = appendRowInExecutionHtmlReport("Total Executed Test Cases Count",totalTCSCount);
+            String totalPassTCSCount_HtmlString = appendRowInExecutionHtmlReport("Total Passed Test Cases Count",totalPassTCSCount.toString());
+            String totalFailTCSCount_HtmlString = appendRowInExecutionHtmlReport("Total Failed Cases Count",totalFailTCSCount.toString());
+            fullHtmlReport = headerHtmlWithoutClosingBodyAndTableHtmlStrings.concat(htmlTcRowsReport).concat(totalTestCasesCount_HtmlString).concat(totalPassTCSCount_HtmlString).concat(totalFailTCSCount_HtmlString).concat(closingBodyAndTableHtmlStrings);
+            Logger.logComment("Execution report in html format is created :- \n"+fullHtmlReport);
+            return fullHtmlReport;
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to create html document of execution results");
+        }
+        return null;
+    }
+
+    /**
+     * Append the row in the html execution report
+     */
+    public static String appendRowInExecutionHtmlReport(String tcName, String tcReport){
+        try {
+            StringBuilder htmlStringBuilder = new StringBuilder();
+            htmlStringBuilder.append("<tbody>");
+            htmlStringBuilder.append("<tr>");
+            if (tcName.contains("Total")){
+                if (tcName.equalsIgnoreCase("Total Passed Test Cases Count")){
+                    htmlStringBuilder.append("<td>"+tcName+Labels_Flights.ONE_CHARACTER_SPACE+"("+"<font color=\"green\">&#10004;<font color=\"black\">)</td>");
+                }else if (tcName.equalsIgnoreCase("Total Failed Cases Count")){
+                    htmlStringBuilder.append("<td>"+tcName+Labels_Flights.ONE_CHARACTER_SPACE+"("+"<font color=\"red\">&#10006;<font color=\"black\">)</td>");
+                }else {
+                    htmlStringBuilder.append("<td>"+tcName+"</td>");
+                }
+                htmlStringBuilder.append("<td align=\"center\"><font color=\"black\">"+tcReport+"</td>");
+            }else {
+                htmlStringBuilder.append("<td>"+tcName+"</td>");
+                if (tcReport.equalsIgnoreCase("true")){
+                    htmlStringBuilder.append("<td align=\"center\"><font color=\"green\">&#10004;</td>");
+                    htmlStringBuilder.append("<td></td>");
+                }else if (tcReport.contains("false")){
+                    String failureReason = tcReport.replace("false",Labels_Flights.STRING_NULL).trim();
+                    htmlStringBuilder.append("<td align=\"center\"><font color=\"red\">&#10006;</td>");
+                    if (failureReason.equalsIgnoreCase("Tickets Are Sold Out In Two Attempts")){
+                        htmlStringBuilder.append("<td>For 2 Attempts - Sold Outs</td>");
+                    }else {
+                        htmlStringBuilder.append("<td>Issue</td>");
+                    }
+                }else {
+                    Logger.logError(tcName+" value is neither true nor false");
+                }
+            }
+            htmlStringBuilder.append("</tr>");
+            htmlStringBuilder.append("</tbody>");
+            return htmlStringBuilder.toString();
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to append the row in execution report");
+        }
+        return null;
+    }
+
+    /**
+     * Header html without closing body and table
+     */
+    public static String headerHtmlWithoutClosingBodyAndTableHtmlStrings(){
+        try {
+            StringBuilder htmlStringBuilder = new StringBuilder();
+            htmlStringBuilder.append("<table style=\"height: 59px; border-color: 330000; background-color:#FFCC99;\" border=\"3\" width=\"585\"");
+            htmlStringBuilder.append("<thead>");
+            htmlStringBuilder.append("<tr>");
+            htmlStringBuilder.append("<th>TC'S NAMES</th>");
+            htmlStringBuilder.append("<th>EXECUTION STATUS</th>");
+            htmlStringBuilder.append("<th>FAILURE REASON</th>");
+            htmlStringBuilder.append("</tr>");
+            htmlStringBuilder.append("</thead>");
+            htmlStringBuilder.append("<tfoot>");
+            htmlStringBuilder.append("<tr>");
+            htmlStringBuilder.append("</tr>");
+            htmlStringBuilder.append("</tfoot>");
+            return htmlStringBuilder.toString();
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to create header html without closing body and table");
+        }
+        return null;
+    }
+
+    /**
+     * Header html without closing body and table
+     */
+    public static String closingBodyAndTableHtmlStrings(){
+        try {
+            StringBuilder htmlStringBuilder = new StringBuilder();
+            htmlStringBuilder.append("</tbody>");
+            htmlStringBuilder.append("</table>");
+            return htmlStringBuilder.toString();
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to create header html without closing body and table");
+        }
+        return null;
+    }
+
     /**
      * Auto accepting the alerts
      */
@@ -180,45 +362,51 @@ public class BaseTest extends Base {
         Logger.logStep("Creating new sign up email id for the current test run");
         Integer newEmailNumber ;
         try {
-            if (Labels_Flights.WDA_LOCAL_PORT=="9001" || Labels_Flights.WDA_LOCAL_PORT=="9010" ){
-                String BASE_EMAIL_ID_FOR_SIGN_UP = "rehlatAutomationPort1TestingEmail";
-                String MAIL_OPERATOR = "@gmail.com";
-                String currentEmailIdForSignUp = Labels_Flights.EMAIL_ID_SIGN_UP_PORT_1;
-                Integer currentEmailIdNumber = Integer.valueOf(currentEmailIdForSignUp.substring(33, 36));
-                for (int index = 0; index <= 999; index++) {
-                    Integer settingEmailValue = index;
-                    if ((settingEmailValue == currentEmailIdNumber) || (settingEmailValue.equals(currentEmailIdNumber)))  {
-                        newEmailNumber = settingEmailValue + 1;
-                        String newEmailId = BASE_EMAIL_ID_FOR_SIGN_UP + newEmailNumber + MAIL_OPERATOR;
-                        Labels_Flights.EMAIL_ID_SIGN_UP = newEmailId;
-                        Labels_Flights.EMAIL_ID_SIGN_UP_PORT_1 = newEmailId;
-                        break;
-                    }
+            Labels_Flights.EMAIL_ID_NUMBER_FOR_SIGN_UP_WRT_PORT_NUMBER = Integer.valueOf(getTheNewEmailNumber(Labels_Flights.CURRENT_RUNNING_PORT_NUMBER_TYPE));
+            String BASE_EMAIL_ID_FOR_SIGN_UP_WITHOUT_PORT_NUMBER = "rehlatAutomationSimu";
+            String BASE_EMAIL_ID_FOR_SIGN_UP = BASE_EMAIL_ID_FOR_SIGN_UP_WITHOUT_PORT_NUMBER+Labels_Flights.CURRENT_RUNNING_PORT_NUMBER_TYPE+"TestingEmail";
+            String MAIL_OPERATOR = "@gmial.cm";
+            Integer currentEmailIdNumberForSignUp = Integer.valueOf(Labels_Flights.EMAIL_ID_NUMBER_FOR_SIGN_UP_WRT_PORT_NUMBER);
+            for (int index = 0; index <= 999; index++) {
+                Integer settingEmailValue = index;
+                if ((settingEmailValue == currentEmailIdNumberForSignUp) || (settingEmailValue.equals(currentEmailIdNumberForSignUp)))  {
+                    newEmailNumber = settingEmailValue + 1;
+                    String newEmailId = BASE_EMAIL_ID_FOR_SIGN_UP + newEmailNumber + MAIL_OPERATOR;
+                    Labels_Flights.EMAIL_ID_SIGN_UP = newEmailId;
+                    break;
                 }
-                Logger.logComment("Newly created email id for to the current test run is :-  " + Labels_Flights.EMAIL_ID_SIGN_UP);
-            }else if(Labels_Flights.WDA_LOCAL_PORT =="9005"|| Labels_Flights.WDA_LOCAL_PORT=="9015"){
-                String BASE_EMAIL_ID_FOR_SIGN_UP = "rehlatAutomationPort2TestingEmail";
-                String MAIL_OPERATOR = "@gmail.com";
-                String currentEmailIdForSignUp = Labels_Flights.EMAIL_ID_SIGN_UP_PORT_2;
-                Integer currentEmailIdNumber = Integer.parseInt(currentEmailIdForSignUp.substring(33, 36));
-                for (int index = 0; index <= 999; index++) {
-                    Integer settingEmailValue = index;
-                    if ((settingEmailValue == currentEmailIdNumber) || (settingEmailValue.equals(currentEmailIdNumber))) {
-                        newEmailNumber = settingEmailValue + 1;
-                        String newEmailId = BASE_EMAIL_ID_FOR_SIGN_UP + newEmailNumber + MAIL_OPERATOR;
-                        Labels_Flights.EMAIL_ID_SIGN_UP = newEmailId;
-                        Labels_Flights.EMAIL_ID_SIGN_UP_PORT_2 = newEmailId;
-                        break;
-                    }
-                }
-                Logger.logComment("Newly created email id for to the current test run is :-  " + Labels_Flights.EMAIL_ID_SIGN_UP);
-            }else {
-                Logger.logError("Encountered error: Unable to get the current WDA LOCAL PORT..,");
             }
+            Logger.logComment("Newly created email id for to the current test run is :-  " + Labels_Flights.EMAIL_ID_SIGN_UP);
         }catch (Exception elementNotFound){
             Logger.logError("Encountered error: Unable to create new email id");
         }
     }
+
+    /**
+     * For sign up get the new email number w.r.t. the port number
+     */
+    public static String getTheNewEmailNumber(String parsingPortNumberType) throws Exception{
+        Logger.logAction("Getting the new email number w.r.t. the port number");
+        try {
+            JSONParser jsonParser = new JSONParser();
+            FileReader fileReader = new FileReader(Labels_Flights.PATH_OF_EMAIL_WRT_PORT_NUMBER_JSON_FILE);
+            JSONArray arrayNumber = (JSONArray) jsonParser.parse(fileReader);
+            JSONObject object = (JSONObject) arrayNumber.get(0);
+            String emailCount = (String) object.get(parsingPortNumberType);
+            Integer updatedEmailCount = Integer.parseInt(String.valueOf(emailCount))+1;
+            object.put(parsingPortNumberType,updatedEmailCount.toString());
+            FileWriter fileWriter = new FileWriter(Labels_Flights.PATH_OF_EMAIL_WRT_PORT_NUMBER_JSON_FILE);
+            fileWriter.write(arrayNumber.toJSONString());
+            fileWriter.flush();
+            return emailCount;
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Encountered error:- Unable to get the new email number");
+        }
+        return null;
+    }
+
+
 
     /**
      * Accepting the User location alerts in iOS
@@ -368,6 +556,25 @@ public class BaseTest extends Base {
     }
 
     /**
+     * Decline the User location in Android
+     * @throws Exception
+     */
+    public static void declineNotificationAlertInAndroid() throws Exception{
+        Logger.logStep("Accepting notification alert");
+        if(isElementDisplayedByName(SELECT_LANGUAGE)){
+            Logger.logComment("Location alert is not displayed, moving to test script execution");
+        }else{
+            if (isElementDisplayedByName(NOTIFICATION_ACCEPTANCE)){
+                Logger.logComment("Notification Acceptance access alert is displayed and declining it");
+                driver.findElementById(ANDROID_DENY_BUTTON).click();
+                Logger.logComment("Tapped on decline button");
+            }else{
+                Logger.logComment("Notification alert is not displayed, moving to test script execution");
+            }
+        }
+    }
+
+    /**
      * Check the splash screen is displayed and waits till invisibility of the splash screen (Implemented only for android platform)
      */
     public static void checkAndWaitTillTheSplashScreenIsInvisible() {
@@ -398,7 +605,7 @@ public class BaseTest extends Base {
         try {
             Logger.logComment(" Failure in the script, so taking the screenshot");
             String nameOfTestCase = getTestCaseName();
-            String pathOfScreenshot = "Screenshots/SoldOuts"+ nameOfTestCase + "_" + getPlatform();
+            String pathOfScreenshot = "Screenshots/SoldOuts/"+ nameOfTestCase + "_" + getPlatform();
             String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
             System.out.println(new File(pathOfScreenshot + "_" + time + ".jpg"));
             File screenshot = driver.getScreenshotAs(OutputType.FILE);

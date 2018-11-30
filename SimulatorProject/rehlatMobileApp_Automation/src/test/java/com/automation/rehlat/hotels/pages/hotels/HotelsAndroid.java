@@ -22,6 +22,7 @@ public class HotelsAndroid extends HotelsBase {
     public static final String CHECK_IN_BUTTON_ID_IN_HOTELS_HOME_SCREEN = "com.app.rehlat:id/hotelCheckInLayout";
     public static final String CHECK_OUT_BUTTON_ID_IN_HOTELS_HOME_SCREEN = "com.app.rehlat:id/hotelCheckoutlayout";
     public static final String CHECK_IN_BUTTON_ID_IN_CALENDER_VIEW = "com.app.rehlat:id/onwardJrnDialogLayout";
+    public static final String CHECK_OUT_BUTTON_ID_IN_CALENDER_VIEW = "com.app.rehlat:id/returnJrnDialogLayout";
     public static final String CALENDER_MODAL_VIEW = "com.app.rehlat:id/calendar_view";
     public static final String MENU_BUTTON = "com.app.rehlat:id/hotel_menuclick";
     public static final String CALENDER_VIEW_XPATH = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout[1]/android.widget.ListView/";
@@ -202,6 +203,7 @@ public class HotelsAndroid extends HotelsBase {
         Logger.logAction("Checking the search text field is filled with the selected name :- "+parsingValue);
         try {
             runAppInBackground(1);
+            scrollToAnElementById_ANDROID(SEARCH_TEXT_FIELD_ID_IN_HOTELS_HOME_SCREEN,false);// This method needs to be removed after fixing the hotels layout issue on selecting the hotel from search view.ie.., Hotels Screen goes up after selecting the hotels search
             String nameOnSearchTextField = findElementByIdAndReturnText(SEARCH_TEXT_FIELD_ID_IN_HOTELS_HOME_SCREEN);
             if (nameOnSearchTextField.equalsIgnoreCase(parsingValue)){
                 Logger.logStep("Selected country name is displayed in the search text field");
@@ -250,13 +252,34 @@ public class HotelsAndroid extends HotelsBase {
      */
     @Override
     public void tapOnCheckInOptionInCalendarView(){
-        Logger.logAction("Tapping on check in option in calender view");
+        Logger.logAction("Tapping on check in option in the calender view");
         try {
-            findElementByIdAndClick(CHECK_IN_BUTTON_ID_IN_CALENDER_VIEW);
-            Logger.logComment("Tapped on check in option calender view");
-
+            boolean status = findElementByIdAndClick(CHECK_IN_BUTTON_ID_IN_CALENDER_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on check in option in the calender view");
+            }else {
+                Logger.logError("Didn't tapped on check in option in the calender view");
+            }
         }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to tap on check in calender view");
+            Logger.logError("Encountered error: Unable to tap on check in option in the calender view");
+        }
+    }
+
+    /**
+     * Tap on check out option in calender view
+     */
+    @Override
+    public void tapOnCheckOutOptionInCalendarView(){
+        Logger.logAction("Tapping on check out option in the calender view");
+        try {
+            boolean status = findElementByIdAndClick(CHECK_OUT_BUTTON_ID_IN_CALENDER_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on check out option in the calender view");
+            }else {
+                Logger.logError("Didn't tapped on check out option in the calender view");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to tap on check out option in the calender view");
         }
     }
 
@@ -264,24 +287,25 @@ public class HotelsAndroid extends HotelsBase {
      * Select Departure date
      */
     @Override
-    public void selectCheckInDate(String departureMonthAndYear, String departureDay) {
-        Logger.logAction("Selecting the departure date : Month & Year -" + departureMonthAndYear + ", Day - "+departureDay);
+    public void selectCheckInDate(String checkInMonthAndYear, String checkInDay) {
+        Logger.logAction("Selecting the departure date : Month & Year - " + checkInMonthAndYear + ", Day - "+checkInDay);
         try {
             if (isElementDisplayedById(CALENDER_MODAL_VIEW)){
-                if (!isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){ // Todo:- This if condition code is to reset the calender view to current running date when the displaying date is not an required selecting date
+                tapOnCheckInOptionInCalendarView();
+                if (!isParsingCalenderMonthIsDisplayed(checkInMonthAndYear)){ // Todo:- This if condition code is to reset the calender view to current running date when the displaying date is not an required selecting date
                     scrollToTheParsingCalendarMonthAndYear(CURRENT_RUNNING_MONTH,false);
                 }
-                scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,true);
-                if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                    tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
+                scrollToTheParsingCalendarMonthAndYear(checkInMonthAndYear,true);
+                if (isParsingCalenderMonthIsDisplayed(checkInMonthAndYear)){
+                    tapOnDayInTheCalender("ONWARD", checkInMonthAndYear, checkInDay);
                 }else {
-                    scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,false);
-                    if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                        tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
+                    scrollToTheParsingCalendarMonthAndYear(checkInMonthAndYear,false);
+                    if (isParsingCalenderMonthIsDisplayed(checkInMonthAndYear)){
+                        tapOnDayInTheCalender("ONWARD", checkInMonthAndYear, checkInDay);
                     }else {
-                        Logger.logWarning("Unable to select the accurate departure date :- " +departureDay+ "," + departureMonthAndYear+"..., Going with the random selected date after scrolling the calender view");
+                        Logger.logWarning("Unable to select the accurate departure date :- " +checkInDay+ "," + checkInMonthAndYear+"..., Going with the random selected date after scrolling the calender view");
                         scrollTheCalenderPageDownAMonthGap_Android();
-                        tapOnDayInTheCalender("ONWARD", departureMonthAndYear, departureDay);
+                        tapOnDayInTheCalender("ONWARD", checkInMonthAndYear, checkInDay);
                     }
                 }
             }else{
@@ -296,19 +320,20 @@ public class HotelsAndroid extends HotelsBase {
      * Select Return date
      */
     @Override
-    public void selectCheckOutDate(String departureMonthAndYear, String departureDay) {
-        Logger.logAction("Selecting the departure date : Month & Year -" + departureMonthAndYear + ", Day - "+departureDay);
+    public void selectCheckOutDate(String checkOutMonthAndYear, String checkOutDay) {
+        Logger.logAction("Selecting the departure date : Month & Year - " + checkOutMonthAndYear + ", Day - "+checkOutDay);
         try {
             if (isElementDisplayedById(CALENDER_MODAL_VIEW)){
-                scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,true);
-                if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                    tapOnDayInTheCalender("RETURN", departureMonthAndYear, departureDay);
+                tapOnCheckOutOptionInCalendarView();
+                scrollToTheParsingCalendarMonthAndYear(checkOutMonthAndYear,true);
+                if (isParsingCalenderMonthIsDisplayed(checkOutMonthAndYear)){
+                    tapOnDayInTheCalender("RETURN", checkOutMonthAndYear, checkOutDay);
                 }else {
-                    scrollToTheParsingCalendarMonthAndYear(departureMonthAndYear,false);
-                    if (isParsingCalenderMonthIsDisplayed(departureMonthAndYear)){
-                        tapOnDayInTheCalender("RETURN", departureMonthAndYear, departureDay);
+                    scrollToTheParsingCalendarMonthAndYear(checkOutMonthAndYear,false);
+                    if (isParsingCalenderMonthIsDisplayed(checkOutMonthAndYear)){
+                        tapOnDayInTheCalender("RETURN", checkOutMonthAndYear, checkOutDay);
                     }else {
-                        Logger.logWarning("Unable to select the accurate return date :- " +departureDay+ "," + departureMonthAndYear+"..., Going with the default selected date");
+                        Logger.logWarning("Unable to select the accurate return date :- " +checkOutDay+ "," + checkOutMonthAndYear+"..., Going with the default selected date");
                     }
                 }
             }else{
@@ -378,11 +403,11 @@ public class HotelsAndroid extends HotelsBase {
                                                 }
                                             }
                                             if (journeyType == "ONWARD"){
-                                                departureMonthName = getTheDepartureMonthDisplayedInCalenderView();
-                                                departureDayValue = getTheDepartureDayDisplayedInCalenderView();
+                                                departureMonthName = getTheDepartureMonthDisplayedInCalenderView().trim();
+                                                departureDayValue = getTheDepartureDayDisplayedInCalenderView().trim();
                                             }else if (journeyType == "RETURN"){
-                                                departureMonthName = getTheReturnMonthDisplayedInCalenderView();
-                                                departureDayValue = getTheReturnDayDisplayedInCalenderView();
+                                                departureMonthName = getTheReturnMonthDisplayedInCalenderView().trim();
+                                                departureDayValue = getTheReturnDayDisplayedInCalenderView().trim();
                                             }else {
                                                 Logger.logError("Parsing journey type is neither onward nor return");
                                             }

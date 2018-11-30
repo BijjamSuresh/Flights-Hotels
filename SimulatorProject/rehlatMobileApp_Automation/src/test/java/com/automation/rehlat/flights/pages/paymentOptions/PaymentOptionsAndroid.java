@@ -35,6 +35,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public static final String XPATH_OF_KNET_PAYMENT_CELL = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout";
     public static final String XPATH_OF_KNET_PAYMENT_CELL_NAME = XPATH_OF_KNET_PAYMENT_CELL+"/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.TextView";
     public static final String XPATH_OF_PAYMENT_BANK_WITHOUT_INDEX = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.CheckedTextView[";
+    public static boolean FARE_JUMP_STATUS = false;
 
     /**
      * Check the payment options screen is displayed
@@ -43,7 +44,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public void checkPaymentOptionsScreenIsDisplayed() {
         Logger.logAction("Checking payment option screen is displayed or not ?");
         try{
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,false);
 //            driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(ACTIVITY_INDICATOR)));
             acceptTheFareDifferAlert();
             Logger.logComment("Checking payment option screen is displayed or not ?");
@@ -73,6 +74,15 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public boolean isTicketSoldOutPopUpIsDisplayed() {
         Logger.logAction("Checking the ticket sold out popup is displayed or not ?");
         try{
+//            acceptTheFareDifferAlert(); // Todo:- This line of code and the below if condition is implemented so that the app may change the layout to payment list screen from booking page
+//            if (isElementDisplayedById(ACTIVITY_INDICATOR)){
+//                Logger.logStep("Waiting till the activity indicator is invisible in the current active screen");
+//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(ACTIVITY_INDICATOR)));
+//            }else {
+//                Logger.logStep("Activity indicator is not displayed in the current active screen");
+//            }
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,false);
+            acceptTheFareDifferAlert();
             if (isElementDisplayedById(TICKET_SOLD_OUT_POPUP)){
                 BaseTest.takeScreenshotAndSaveInSoldOutsFolder();
                 Logger.logStep(TICKET_SOLD_OUT_POPUP +" - popup is displayed in the current active screen");
@@ -82,6 +92,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                 return false;
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to check the popup is displayed or not");
         }
         return false;
@@ -94,8 +105,8 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public void tapOnOkButtonInTicketSoldOutPopup() {
         Logger.logAction("Tapping on "+TICKET_SOLD_OUT_POPUP+ " button");
         try {
-            if (isElementDisplayedById(OK_BUTTON)){
-                driver.findElementById(OK_BUTTON).click();
+            if (isElementDisplayedById(TICKET_SOLD_OUT_POPUP)){
+                driver.findElementById(TICKET_SOLD_OUT_POPUP).click();
                 Logger.logComment("Tapped on ok button in sold out popup");
             }else {
                 Logger.logError(" - button name is not displayed in the current active screen");
@@ -113,6 +124,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
         Logger.logAction("Accepting the fare differ alert if displayed");
         try {
             if (isElementDisplayedById(FARE_DIFFER_ALERT)){
+                FARE_JUMP_STATUS = true;
                 Logger.logStep("Fare differ alert is displayed and going to accept it by tapping on yes button");
                 driver.findElementById(YES_BUTTON_IN_FARE_DIFFER_ALERT).click();
             }else {
@@ -134,17 +146,28 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
             if (isElementDisplayedById(FINAL_AMOUNT_PAYABLE_LINEAR_LAYOUT)){
                 Logger.logAction("Total amount payable price linear layout is displayed");
                 if (isElementDisplayedById(FINAL_AMOUNT_PAYABLE_PRICE)){
-                    finalAmountPayablePriceInPaymentCheckOutScreen = driver.findElementById(FINAL_AMOUNT_PAYABLE_PRICE).getText().replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL).trim();
-                    Double finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(finalAmountPayablePriceInPaymentCheckOutScreen);
+                    finalAmountPayablePriceInPaymentCheckOutScreen = driver.findElementById(FINAL_AMOUNT_PAYABLE_PRICE).getText();
+                    if (finalAmountPayablePriceInPaymentCheckOutScreen.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
+                        finalAmountPayablePriceInPaymentCheckOutScreen = finalAmountPayablePriceInPaymentCheckOutScreen.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim();
+                    }
+                    if(finalAmountPayablePriceInPaymentCheckOutScreen.contains(Labels_Flights.STRING_COMMA)){
+                        finalAmountPayablePriceInPaymentCheckOutScreen = finalAmountPayablePriceInPaymentCheckOutScreen.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL).trim();
+                    }
+                    Double finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen = Double.valueOf(finalAmountPayablePriceInPaymentCheckOutScreen);
 //                    if (finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen.equals("0")){
 //                        finalAmountPayablePriceInPaymentCheckOutScreen = finalAmountPayablePriceInPaymentCheckOutScreen.replace("0","");
 //                    }
-                    Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen);
+                    Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen);
                     Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
-                    if (Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN.equalsIgnoreCase(finalAmountPayablePriceInPaymentCheckOutScreen) || Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN) == (finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen)){
-                        Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
+                    if (FARE_JUMP_STATUS == true){
+                        Logger.logStep("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen);
                     }else {
-                        Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                        if (Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN.equalsIgnoreCase(finalAmountPayablePriceInPaymentCheckOutScreen) || Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN) == (finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen)){
+                            Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
+                        }
+                        else {
+                            Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                        }
                     }
                 }else {
                     Logger.logError(FINAL_AMOUNT_PAYABLE_PRICE+" :- Element id is not displaying in payment checkout screen");
@@ -153,6 +176,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                 Logger.logError(FINAL_AMOUNT_PAYABLE_LINEAR_LAYOUT+" :- Linear layout is not displaying in payment checkout screen");
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to compare the final payment price in payment list screen with the price dispalyed in review booking screen");
         }
     }
@@ -169,18 +193,23 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public void tapOnKnetPaymentGateWay() {
         Logger.logAction("Tapping on KNET payment gateway");
         try{
-            if (isElementDisplayedByXPath(XPATH_OF_KNET_PAYMENT_CELL)){ // Checking the knet payment cell is displayed
-                WebElement paymentGateWayName = driver.findElementByXPath(XPATH_OF_KNET_PAYMENT_CELL_NAME); // Getting the value of KNET payment cell name
-                if (paymentGateWayName.getText().equals("Knet")){
-                    paymentGateWayName.click();
+        List<WebElement> paymentsList = driver.findElementsById("com.app.rehlat:id/card_type_textview");// Checking the knet payment cell is displayed
+        for (int count=0; count < paymentsList.size()-1;count++){
+            WebElement paymentGateWayCell = paymentsList.get(count);
+            String paymentGateWayName = paymentGateWayCell.getText(); // Getting the value of KNET payment cell name
+                if (paymentGateWayName.contains("Knet")){ // 'Contains' is because of in SA domain KNET button is having some text along with KNET label
+                    paymentGateWayCell.click();
                     Logger.logComment("Tapped on Knet payment option");
+                    break;
                 }else {
                     Logger.logError("Knet Payment gateway xpath is changed, please do re check the KNET xpath and re-run again");
                 }
-            }else {
-                Logger.logError("KNET Payment gateway option is not displayed");
-            }
-        }catch (Exception exception){
+                if (count == paymentsList.size()-1){
+                    Logger.logError("KNET Payment gateway option is not displayed");
+                }
+        }
+
+    }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the element name - " + XPATH_OF_KNET_PAYMENT_CELL_NAME);
         }
     }
@@ -193,7 +222,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
         Logger.logAction("Checking KNET payment gateway screen is displayed or not ?");
         try{
 //            driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(ACTIVITY_INDICATOR)));
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,false);
             if (isElementDisplayedById(PAYMENT_GATEWAY_SCREEN_TITLE) && (isElementDisplayedById(SUBMIT_BUTTON))){
                 Logger.logStep("KNET Payment gateway screen is displayed and moving to next step");
             }else if (isElementDisplayedById(PAYMENT_FAILED_TITLE)){
@@ -480,7 +509,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
         try {
             if (isElementDisplayedByName(ACTIVITY_INDICATOR)){
                 Logger.logComment("Booking process is started");
-                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
                 if (isElementDisplayedById("com.app.rehlat:id/paymentDoneLayout")){
                     Logger.logStep("Payment is success");
                 }else if (isElementDisplayedById("com.app.rehlat:id/paymentFailureLayout")){
@@ -641,7 +670,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public boolean check3DPaymentScreenIsDisplayed() {
         Logger.logAction("Checking the 3D payment screen is displayed");
         try {
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
             if (isElementDisplayedById("txtPassword")){
                 Logger.logStep("3D checkout payment screen is displayed");
                 return true;
@@ -659,7 +688,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public void enterKeysInThePasswordFieldOf3DSecureCreditOrDebitCardCheckOutPayment() {
         Logger.logAction("Tapping on pay securely check out button");
         try {
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
             if (isElementDisplayedById("txtPassword")){
                 driver.findElement(By.id("txtPassword")).sendKeys("Checkout1!");
             }else if (isElementDisplayedById(PAYMENT_FAILED_TITLE)){

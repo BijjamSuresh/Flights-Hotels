@@ -45,8 +45,10 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
     public static boolean waitTillFlightsSearchResultsScreenIsDisplayed() {
         Logger.logAction("Waiting till the active screen is loaded");
         try{
-            runAppInBackground(2); //Todo:- Discuss with the developer and find out the final solution
-            if (isElementDisplayedById(SRP_LOADING_PROGRESS_BAR)){ driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(SRP_LOADING_PROGRESS_BAR)));
+            runAppInBackground(1); //Todo:- Discuss with the developer and find out the final solution
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(SRP_LOADING_PROGRESS_BAR,true);
+            if (isElementDisplayedById(SRP_LOADING_PROGRESS_BAR)){
+                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(SRP_LOADING_PROGRESS_BAR)));
                 Logger.logStep("Active screen is loaded and moving to check the screen name");
                 return true;
             }else {
@@ -54,6 +56,7 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
                 return true;
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to find the visibility of an element");
         }
         return false;
@@ -134,7 +137,7 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
             try{
                 Integer flightCellNumber = Integer.valueOf(parsingFlightCellTypeNumber);
                 List<WebElement> priceLists = driver.findElementsById(ACTUAL_PRICE_RESOURCE_ID);
-               String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(flightCellNumber));
+               String bookingCostOfParsingRoomNumber = String.valueOf(priceLists.get(flightCellNumber).getText());
                 String bookingFlightPrice = bookingCostOfParsingRoomNumber.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
                 if (bookingFlightPrice.contains(Labels_Flights.STRING_COMMA)){
                     String bookingFlightPriceWithoutComma = bookingFlightPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
@@ -164,7 +167,7 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
     public static String getTheBookingCostOfSelectingDepartureAndReturnFlightInSearchResults(String  parsingFlightCellTypeNumber) {
         Logger.logAction("Getting the booking cost of first flight in search results");
         try{
-            Integer flightCellNumber = Integer.valueOf(parsingFlightCellTypeNumber);
+            Integer flightCellNumber = Integer.parseInt(parsingFlightCellTypeNumber);
 //            scrollToTheParsingFlightBookingCard(parsingFlightCellTypeNumber,true); Todo:- This line of code is enabled when the selection of flight is random
             try{
 //                flightCellNumber = Integer.valueOf(parsingFlightCellTypeNumber);

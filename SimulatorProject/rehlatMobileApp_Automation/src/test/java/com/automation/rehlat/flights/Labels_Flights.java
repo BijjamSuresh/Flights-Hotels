@@ -1,75 +1,63 @@
 package com.automation.rehlat.flights;
 
 
-import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
 import com.automation.rehlat.flights.tests.BaseTest;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import java.io.FileReader;
 
 public class Labels_Flights extends Base{
                                                                                 //////// APPIUM Capabilities /////////////////////
     public static final String APPIUM_PORT_NUMBER_DEFAULT = "4723";
     public static final String DEVICE_TYPE_DEFAULT = "phone";
+    public static final String PATH_OF_EMAIL_WRT_PORT_NUMBER_JSON_FILE = "/Users/rehlat/Documents/PortNumbers_WRT_EmailCount.json";
+    public static final String PATH_OF_iOS_DEVICES_LIST_WRT_DEVICE_NAMES_JSON_FILE = "/Users/rehlat/Documents/iPhoneSimulatorsDevicesList.json";
+    public static final String PATH_OF_ANDROID_DEVICES_LIST_WRT_DEVICE_NAMES_JSON_FILE = "/Users/rehlat/Documents/AndroidSimulatorsDevicesList.json";
 
 
-                                                                              //////  Multiple Run Capabilities//////////
-    //Todo:- Most Important strings while running multiple runs..,Please be careful on editing the below strings..,!!!!
-    ////////iOS ///////////
-    ///Device One///
-//        public static final String DEVICE_UDID="1e5b8dcad350fb249a73d8dc106efbd9ccea136c"; // iPhone 7 Plus
-        public static final String WDA_LOCAL_PORT_DEFAULT= "9001"; // For each device one unique port number
-
-    ///Device Two ///
-//        public static final String DEVICE_UDID="85108b5bd6265ecc9c4f58a8ad1cdbe1798e21ac"; // iPhone 6
-//        public static final String WDA_LOCAL_PORT_DEFAULT= "9005"; // This helps to run the parallel runs
-
-    ///Device Three ///
-//        public static final String DEVICE_UDID="2EFDD063-1B62-4986-AB49-FCAE6FB55F34"; // iPhone 7Plus simulator
-//        public static final String WDA_LOCAL_PORT_DEFAULT= "8005"; // This helps to run the parallel runs
-
-    //Device Four
-//        public static final String DEVICE_UDID="6B107201-2AD7-4BC1-A0E3-19BD0D10B0E9"; // iPhone6 simulator C9A70795-2CB0-471D-8111-07D424B8EFC9
-
-    //Device Four
-//        public static final String DEVICE_UDID="45692414-3101-468A-9971-B2CEAAC6BF85"; // iPhoneX simulator C9A70795-2CB0-471D-8111-07D424B8EFC9
-
-    // Device Five
-//        public static final String DEVICE_UDID="67CD49A3-498F-444C-A6AC-F03A968FDA03"; // iPhone5s simulator C9A70795-2CB0-471D-8111-07D424B8EFC9
-
-    // Device Six
-//        public static final String DEVICE_UDID="f81b107b5be78e09b76bdc2540ec9a7dbfbe2319"; // iPhone5
-
-    //Device Seven
-    public static final String DEVICE_UDID="DB94E19B-A74A-4484-B7A2-3FEC43C0CC2D"; // iPhoneXS Max
-
-
-
-    ////////Android ///////////
-    ///Device One///
-//        public static final String APPIUM_DEVICE_ID_DEFAULT = "84254a373730374d";  //Samsung Device Id
-//        public static final String WDA_LOCAL_PORT_DEFAULT= "9010"; // This helps to run the parallel runs
-
-    ///Device Two ///
-//    public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5554"; // Nexus Emulator id
-//    public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5556"; // Pixel Emulator id
-    public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5556"; // MI id
-
-
-//    public static final String APPIUM_DEVICE_ID_DEFAULT = "BH901M4F4C"; // Sony device id
-//        public static final String WDA_LOCAL_PORT_DEFAULT= "9015"; // This helps to run the parallel runs
-//            public static final String WDA_LOCAL_PORT_DEFAULT= "192.168.3.111:5555"; // This helps to run the scripts over wifi [WDA Port number == Android device IP address : tcpip address (Used in the terminal to connect the device and PC in same network)]
-
-    ////////Common ///////////
-    // Port 1 and Port 2 email id's are used while running multiple scripts where as on single run we use port one as default
-    public static String EMAIL_ID_SIGN_UP_PORT_1 = "rehlatAutomationPort1TestingEmail290@gmail.com"; // This is for port one connected device [Either iOS or Android]
-    public static String EMAIL_ID_SIGN_UP_PORT_2 = "rehlatAutomationPort2TestingEmail278@gmail.com"; // This is for port two connected device [Either iOS or Android]
-
-
-                                                                         ////////////////////  Types of devices ////////////////////
+    ////////////////////  Types of devices ////////////////////
     public static final String IOS="iOS";
     public static final String ANDROID="Android";
-//    public static final String DEFAULT_PLATFORM = "Android"; // Need to change the default type every time w.r.t. the testing device platform
-    public static final String DEFAULT_PLATFORM = "iOS";
 
+    //////  Important Capabilities//////////
+    //Todo:- Please recheck on editing the below labels
+    public static String DEFAULT_PLATFORM = ANDROID;
+    public static final String CURRENT_RUNNING_DOMAIN = "KWI";
+    public static final String CURRENT_RUNNING_APP_ENVIRONMENTAL_CONFIGURATION = "Stage";
+    public static String DEVICE_NAME = "Pixel2";
+    public static String DEVICE_OS = "12.1"; //Todo:- Device OS needs to be changed only for iOS, for android automatically it will pick up OS while test script running.
+    public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "5"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
+    public static Integer EMAIL_ID_NUMBER_FOR_SIGN_UP_WRT_PORT_NUMBER; // This is for port two connected device [Either iOS or Android]
+    public static String WDA_LOCAL_PORT_DEFAULT = "9010";
+    public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_debug.apk";
+    //    public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_release.apk";
+    public static final String ANDROID_CAPABILITIES_DEVICE_TYPE = "Emulator";
+    public static String DEVICE_UDID ;
+    public static String ANDROID_DEVICE_OS;
+    public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5556"; // MI id
+    public static final String ReportFileName = "Execution_Results_"+DEVICE_NAME+"_KWI_Domain.json"; //Todo:- Before running the scripts make sure this json is created in the project location
+
+    /**
+     * Assigning the device UDUD that needs to be run w.r.t the device name
+     */
+    static {
+        try {
+            if (DEFAULT_PLATFORM.equalsIgnoreCase(IOS)){
+                String UDID_OF_DEVICE_TO_RUN = getTheDeviceUDIDWrtTheDeviceName(DEVICE_NAME);
+                DEVICE_UDID = UDID_OF_DEVICE_TO_RUN;
+            }else if (DEFAULT_PLATFORM.equalsIgnoreCase(ANDROID)){
+                String OS_OF_DEVICE_TO_RUN = getTheAndroidDeviceOS(DEVICE_NAME);
+                ANDROID_DEVICE_OS = OS_OF_DEVICE_TO_RUN;
+                DEVICE_OS = ANDROID_DEVICE_OS;
+            }else {
+                Logger.logError("Current Running platform is neither iOS nor Android");
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
                                                                                 //////  APPIUM  iOS app capabilities//////////
     public static final String IOS_BUNDLE_ID="com.Rehlat.RehlatMobile";
     public static final String appPath = BaseTest.getTheSimulatorAppPath(DEVICE_UDID);
@@ -85,24 +73,11 @@ public class Labels_Flights extends Base{
 
                                                                             /////////  APPIUM  android app capabilities /////////
     public static final String ANDROID_PLATFORM = "Android";
-
-
-//    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Sony";
-//    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "SamsungGalaxy8";
-//        public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Pixel_2_API_24"; //Pixel emulator
-//    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "Nexus_6_API_25"; // Nexus emulator
-    public static final String ANDROID_CAPABILITIES_DEVICE_NAME = "MI_API_25"; // Nexus emulator
-    //    public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "6.0"; // Pixel emulator version
-//    public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "6.0.1"; // Sony version
-        public static final String ANDROID_CAPABILITIES_PLATFORM_VERSION = "7.1.1"; // Nexus emulator version
     public static final String ANDROID_CAPABILITIES_APPIUM_VERSION = "1.8.1";
     public static final String APPIUM_PORT_NUMBER = System.getProperty("port", APPIUM_PORT_NUMBER_DEFAULT);
     protected static final String ANDROID_CAPABILITIES_DEVICE_ID = System.getProperty("deviceId", APPIUM_DEVICE_ID_DEFAULT);
     public static final String ANDROID_CAPABILITIES_URL = "http://localhost:" + APPIUM_PORT_NUMBER + "/wd/hub";
     public static final String ANDROID_CAPABILITIES_PACKAGE_NAME = "com.app.rehlat";
-    public static final String ANDROID_CAPABILITIES_PLATFORM_NAME = "Android";
-    public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_debug.apk";
-//    public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_release.apk";
     public static final int DEFAULT_TAP_DURATION = 50;
     public static final int DEFAULT_FINGER_FOR_TAP = 1;
 
@@ -273,9 +248,9 @@ public class Labels_Flights extends Base{
     ///////////////// User login credentials /////////////////
 
     public static String EMAIL_ID_SIGN_UP = "rehlatAutomationPort0TestingEmail103@gmail.com";
-    public static String EMAIL_ID_SIGN_IN = "rehlatAutomationTestEmail1@gmail.com";  // Always add the two digit email number so that on every test script a new email id is generated for to test sign up
+    public static String EMAIL_ID_SIGN_IN ;  // Always add the two digit email number so that on every test script a new email id is generated for to test sign up
     public static String PASSWORD = "testPasswordFromLabels";
-    public static final String REPEAT_PASSWORD="testPasswordFromLabels";
+    public static String REPEAT_PASSWORD ="testPasswordFromLabels";
     public static final String REFERRAL_CODE = "chaitu";
     public static final String NEW_REFERRAL_CODE = "rehHYD";
     public static String PHONE_NUMBER = "8050510545";
@@ -348,7 +323,7 @@ public class Labels_Flights extends Base{
             ////////////////////////// DEPARTURE & RETURN MONTH FOR BOTH INTERNATIONAL AND DOMESTIC AIRPORTS ///////////////////////
             Labels_Flights.DEPARTURE_MONTH = DEPARTURE_DATE_FOR_ANDROID;
             Labels_Flights.RETURN_DATE_BOOKING_MONTH = RETURN_MONTH_FOR_ANDROID;
-            Integer randomDate = Base.getTheRandomValue(26);
+            Integer randomDate = Base.getTheRandomValue(16);
             if (randomDate==0){
                 randomDate = 1;
             }
@@ -370,12 +345,11 @@ public class Labels_Flights extends Base{
         Logger.logAction("Setting the labels for domain :- "+parsingDomain);
         try {
             switch (parsingDomain){
-                case "KUWAIT":
+                case "KWI":
                 {
                     LANGUAGE_COUNTRY_LABEL_FOR_IOS = "KUWAIT";
                     LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Kuwait";
                     CURRENT_USER_CURRENCY_TYPE = "KWD";
-//                    CURRENT_USER_COUNTRY_NAME = "KUWAIT";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
                     INTERNATIONAL_TO_AIRPORT_NAME_FOR_ANDROID = "Cairo";
@@ -390,13 +364,13 @@ public class Labels_Flights extends Base{
                     DOMESTIC_TO_AIRPORT_CODE = "RUH";
                     EMAIL_ID_SIGN_IN = "ComEmail@gmail.com";
                     PASSWORD = "rehlat@123";
+                    REPEAT_PASSWORD = "rehlat@123";
                     break;
                 }
                 case "SA":
                 {
                     LANGUAGE_COUNTRY_LABEL_FOR_IOS = "SAUDI ARABIA";
                     LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Saudi Arabia";
-//                    CURRENT_USER_COUNTRY_NAME = "SAR";
                     CURRENT_USER_CURRENCY_TYPE = "SAR";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
@@ -418,13 +392,13 @@ public class Labels_Flights extends Base{
                     DOMESTIC_TO_AIRPORT_CODE = "RUH";
                     EMAIL_ID_SIGN_IN = "SaEmail@gmail.com";
                     PASSWORD = "rehlat@123";
+                    REPEAT_PASSWORD = "rehlat@123";
                     break;
                 }
                 case "UAE":
                 {
                     LANGUAGE_COUNTRY_LABEL_FOR_IOS = "UAE";
                     LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "UAE";
-//                    CURRENT_USER_COUNTRY_NAME = "UAE";
                     CURRENT_USER_CURRENCY_TYPE = "AED";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
@@ -446,13 +420,13 @@ public class Labels_Flights extends Base{
                     DOMESTIC_TO_AIRPORT_CODE = "RUH";
                     EMAIL_ID_SIGN_IN = "UaeEmail@gmail.com";
                     PASSWORD = "rehlat@123";
+                    REPEAT_PASSWORD = "rehlat@123";
                     break;
                 }
                 case "EG":
                 {
                     LANGUAGE_COUNTRY_LABEL_FOR_IOS = "EGYPT";
                     LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Egypt";
-//                    CURRENT_USER_COUNTRY_NAME = "EGP";
                     CURRENT_USER_CURRENCY_TYPE = "EGP";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
@@ -474,13 +448,13 @@ public class Labels_Flights extends Base{
                     DOMESTIC_TO_AIRPORT_CODE = "RUH";
                     EMAIL_ID_SIGN_IN = "EgEmail@gmail.com";
                     PASSWORD = "rehlat@123";
+                    REPEAT_PASSWORD = "rehlat@123";
                     break;
                 }
                 default:
                 {
                     LANGUAGE_COUNTRY_LABEL_FOR_IOS = "SAUDI ARABIA";
                     LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "Saudi Arabia";
-//                    CURRENT_USER_COUNTRY_NAME = "EGP";
                     CURRENT_USER_CURRENCY_TYPE = "EGP";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_IOS = "Kuwait";
                     INTERNATIONAL_FROM_AIRPORT_NAME_FOR_ANDROID = "Kuwait";
@@ -500,8 +474,9 @@ public class Labels_Flights extends Base{
                     DOMESTIC_TO_AIRPORT_NAME_FOR_IOS = "Riyadh";
                     DOMESTIC_FROM_AIRPORT_CODE = "JED";
                     DOMESTIC_TO_AIRPORT_CODE = "RUH";
-                    EMAIL_ID_SIGN_IN = "ComEmail@gmail.com";
+                    EMAIL_ID_SIGN_IN = "rehlatAutomationTestEmail1@gmail.com";
                     PASSWORD = "rehlat@123";
+                    REPEAT_PASSWORD = "rehlat@123";
                     break;
                 }
             }
@@ -511,5 +486,43 @@ public class Labels_Flights extends Base{
         }
     }
 
+
+    /**
+     * Get the UDID of device w.r.t. device name
+     */
+    public static String getTheDeviceUDIDWrtTheDeviceName(String parsingDeviceName) throws Exception{
+        Logger.logAction("Getting the new email number w.r.t. the port number");
+        try {
+            JSONParser jsonParser = new JSONParser();
+            FileReader fileReader = new FileReader(Labels_Flights.PATH_OF_iOS_DEVICES_LIST_WRT_DEVICE_NAMES_JSON_FILE);
+            JSONArray arrayNumber = (JSONArray) jsonParser.parse(fileReader);
+            JSONObject object = (JSONObject) arrayNumber.get(0);
+            String deviceUDID = (String) object.get(parsingDeviceName);
+            return deviceUDID;
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Encountered error:- Unable to get the device UDID of :- "+parsingDeviceName);
+        }
+        return null;
+    }
+
+    /**
+     * Get the deviceOS of device w.r.t. device name
+     */
+    public static String getTheAndroidDeviceOS(String parsingDeviceName) throws Exception{
+        Logger.logAction("Getting the new email number w.r.t. the port number");
+        try {
+            JSONParser jsonParser = new JSONParser();
+            FileReader fileReader = new FileReader(Labels_Flights.PATH_OF_ANDROID_DEVICES_LIST_WRT_DEVICE_NAMES_JSON_FILE);
+            JSONArray arrayNumber = (JSONArray) jsonParser.parse(fileReader);
+            JSONObject object = (JSONObject) arrayNumber.get(0);
+            String deviceOS = (String) object.get(parsingDeviceName);
+            return deviceOS;
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Encountered error:- Unable to get the device OS of :- "+parsingDeviceName);
+        }
+        return null;
+    }
 
 }

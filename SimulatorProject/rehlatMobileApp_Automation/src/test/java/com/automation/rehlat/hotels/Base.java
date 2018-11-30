@@ -1,8 +1,10 @@
 package com.automation.rehlat.hotels;
 
 
+import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
+import com.automation.rehlat.hotels.pages.BasePage;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
@@ -11,6 +13,8 @@ import io.appium.java_client.android.AndroidKeyCode;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.HtmlEmail;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -33,6 +37,7 @@ import java.util.regex.Pattern;
 import static com.automation.rehlat.hotels.Labels_Hotels.*;
 import static com.automation.rehlat.hotels.libCommon.General.installApp;
 import static com.automation.rehlat.hotels.libCommon.General.unInstallApp;
+import static com.automation.rehlat.hotels.tests.BaseTest.addTestResultStatusToExecutionResultsJsonFile;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -76,7 +81,7 @@ public class Base {
         } else if (Labels_Hotels.platform.equals(Labels_Hotels.ANDROID)) {
             new DesiredCapabilities();
             capabilities = DesiredCapabilities.android();
-            capabilities.setCapability("deviceName", Labels_Hotels.ANDROID_CAPABILITIES_DEVICE_NAME);
+            capabilities.setCapability("deviceName", Labels_Hotels.DEVICE_NAME);
             capabilities.setCapability("appium-version", Labels_Hotels.ANDROID_CAPABILITIES_APPIUM_VERSION);
             capabilities.setCapability("platformName", Labels_Hotels.ANDROID);
             capabilities.setCapability("deviceId", Labels_Hotels.ANDROID_CAPABILITIES_DEVICE_ID);
@@ -114,11 +119,37 @@ public class Base {
     public TestWatcher watch = new TestWatcher() {
         @Override
         protected void failed(Throwable e, Description description) {
-            driver.runAppInBackground(1);
+            if (platform.equalsIgnoreCase(Labels_Hotels.ANDROID)){
+                driver.runAppInBackground(1);
+                BasePage.closeTheKeyboard_Android();
+            }
             takeScreenshot();
             super.failed(e, description);
         }
     };
+
+    /**
+     * Send the email id
+     */
+    public static void sendEmail(String reportInHtml){
+        Logger.logAction("Sending the email..,");
+        try {
+            HtmlEmail email = new HtmlEmail();
+            email.setHostName("smtp.gmail.com");
+            email.setSmtpPort(555);
+            email.setAuthenticator(new DefaultAuthenticator("suresh.bijjam@rehlat.com","L>88G97dd"));
+            email.setSSLOnConnect(true);
+            email.setFrom("suresh.bijjam@rehlat.com");
+            email.setSubject(Labels_Hotels.DEFAULT_PLATFORM+":"+Labels_Hotels.DEVICE_NAME+":"+Labels_Hotels.DEVICE_OS+" Execution Results");
+            email.setMsg("Please find the below html report for in-details \n");
+            email.addTo("suresh.bijjam@rehlat.com");
+            email.setHtmlMsg(reportInHtml);
+            email.send();
+            Logger.logComment("Email is sent");
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to send the email");
+        }
+    }
 
     /**
      * Used to take a screen shot of the screen when ever test script fails or error appears on screen.
@@ -914,7 +945,7 @@ public class Base {
                     swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
 //                    scrollDown();
                     counter++;
-                    if (counter > 10) {
+                    if (counter > 15) {
                         break;
                     }
                 }
@@ -924,7 +955,7 @@ public class Base {
                         swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
 //                        scrollUp();
                         counter++;
-                        if (counter > 15) {
+                        if (counter > 17) {
                             break;
                         }
                     }
@@ -935,7 +966,7 @@ public class Base {
 //                    scrollUp();
                     swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
                     counter++;
-                    if (counter > 9) {
+                    if (counter > 10) {
                         break;
                     }
                 }
@@ -945,7 +976,7 @@ public class Base {
 //                        scrollDown();
                         swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
                         counter++;
-                        if (counter > 15) {
+                        if (counter > 17) {
                             break;
                         }
                     }
@@ -1649,12 +1680,15 @@ public class Base {
      * @return boolean
      * @throws Exception
      */
-    public static boolean sendTextByXpath(String elementXpath, String message) throws Exception {
+    public static boolean sendTextByXpath(String elementXpath, String message, boolean clearExistingTextBeforeParsing) throws Exception {
         int counter = 0;
         while (counter < Labels_Hotels.MIN_ATTEMPTS) {
             try {
                 WebElement element = driver.findElementByXPath(elementXpath);
                 if (element.isEnabled()) {
+                    if (clearExistingTextBeforeParsing == true){
+                        element.clear();
+                    }
                     Logger.logComment("Sending the keys:- "+message);
                     element.sendKeys(message);
                     Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);

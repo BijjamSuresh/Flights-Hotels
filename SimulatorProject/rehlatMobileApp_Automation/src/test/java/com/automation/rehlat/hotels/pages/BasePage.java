@@ -41,12 +41,14 @@ public class BasePage extends Base {
 
 
     ////////////////////////////// IOS Strings Related To The Methods In Base Page //////////////////////////////////////
-    public static final String IOS_DONE_BUTTON = "Done";
+    public static final String IOS_DONE_BUTTON = "Toolbar Done Button";
     public static final String IOS_DATE_PICKER = "XCUIElementTypeDatePicker";
     public static final String TOGGLE_SWITCH = "XCUIElementTypeSwitch";
     public static String TRIP_TYPE ;
     public static String SELECTED_AIRLINE_NAME_IN_SRP;
-    public static boolean isUserSignedIn = false;
+    public static boolean SIGN_IN_STATUS_IOS = false;
+    public static boolean SIGN_IN_STATUS_ANDROID = false;
+    public static boolean FARE_DIFFER_STATUS_IN_PAYMENT_SCREEN_ANDROID = false;
     public static final String SRP_ONE_WAY_VIEW = "Rehlat.SRPOneWayView";
     public static final String SRP_TWO_WAY_VIEW = "Rehlat.SRPRoundTripView";
     public static final String NO_BUTTON = "No";
@@ -74,7 +76,7 @@ public class BasePage extends Base {
         Logger.logAction("Scrolling up action with more length is started");
         try {
             TouchAction action = new TouchAction(driver);
-            action.longPress(459, 758).moveTo(459, 50).release().perform();
+            action.longPress(459, 962).moveTo(459, 532).release().perform();
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to scroll the screen");
         }
@@ -101,7 +103,7 @@ public class BasePage extends Base {
         try {
             Thread.sleep(2000);
             TouchAction action = new TouchAction(driver);
-            action.longPress(500, 967).moveTo(500, 532).release().perform();
+            action.longPress(500, 900).moveTo(500, 532).release().perform();
         } catch (Exception exception) {
             Logger.logError("Encountered error: Unable to scroll the screen");
         }
@@ -401,11 +403,14 @@ public class BasePage extends Base {
      */
     public static void closeTheKeyboard_iOS() {
         try{
-            if (isElementDisplayedByName(IOS_DONE_BUTTON)){
+            if (isElementDisplayedByName(IOS_DONE_BUTTON)){ //Todo:- This if condition is to be removed after removed the third party api Keyboard
                 driver.findElementByName(IOS_DONE_BUTTON).click();
                 Logger.logComment("Tapped on done button in the Keyboard");
-            }else{
-                Logger.logStep("Keyboard is not displayed in the current active screen");
+            }else if (isElementDisplayedByName("Done")){
+                driver.findElementByName("Done").click();
+                Logger.logComment("Tapped on done button in the Keyboard");
+            }else {
+                Logger.logComment("Keyboard is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to close the keyboard");
@@ -464,7 +469,7 @@ public class BasePage extends Base {
         try{
             int cellIndex;
             // The below if condition is because  footer view cell number is changed to "2" when user is signed in and is "3" when user is not signed in...To handle this logic implemented below if condition.
-            if (screeName.equalsIgnoreCase("BookingPageScreen") && isUserSignedIn==true){
+            if (screeName.equalsIgnoreCase("BookingPageScreen") && SIGN_IN_STATUS_IOS==true){
                 footerViewCellNumber = footerViewCellNumber -1;
             }
             bookingFlightCell = driver.findElementByXPath("//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther["+footerViewCellNumber+"]");

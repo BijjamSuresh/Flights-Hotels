@@ -215,29 +215,30 @@ public class General extends Base {
             Logger.logError("Encountered error: Unable to accept the user location access alert");
         }
     }
+
     /**
-     * Accept the location access alert (if displayed)
+     * Decline the location access alert (if displayed)
      */
-    public static void acceptThenotificationAccessAlert() {
-        Logger.logAction("Accepting the notification access alert (if displayed) ?");
+    public static void declineThenotificationAccessAlert() {
+        Logger.logAction("Declining the notification access alert (if displayed) ?");
         try{
             if (platform.equalsIgnoreCase(Labels_Flights.IOS)){
                 try {
-                    acceptNotificationAlertInIos();
+                    declineNotificationAlertInIos();
                 } catch (Exception exception) {
-                    Logger.logError("Unable to accept the user location access alert");
+                    Logger.logError("Unable to decline the user location access alert");
                 }
             }else if (platform.equalsIgnoreCase(Labels_Flights.ANDROID)) {
                 try {
-                    acceptNotificationAlertInAndroid();
+                    declineNotificationAlertInAndroid();
                 } catch (Exception exception) {
-                    Logger.logError("Unable to accept the user location access alert");
+                    Logger.logError("Unable to decline the user location access alert");
                 }
             }else {
                 Logger.logError("Current testing device is neither android nor iOS");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to accept the user location access alert");
+            Logger.logError("Encountered error: Unable to decline the user location access alert");
         }
     }
 

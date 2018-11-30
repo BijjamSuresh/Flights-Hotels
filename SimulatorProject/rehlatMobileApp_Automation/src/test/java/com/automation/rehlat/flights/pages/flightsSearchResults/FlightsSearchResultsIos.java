@@ -37,6 +37,8 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
         try {
             if (TRIP_TYPE.equalsIgnoreCase(Labels_Flights.STRING_NULL)) {
                 waitTillFlightsSearchResultsScreenIsDisplayed();
+            }else {
+                runAppInBackground(2);
             }
                 if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_ONE_WAY_VIEW))
                 {
@@ -73,6 +75,7 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
                         Logger.logStep("SRP screen is displayed with one way view and waiting for the flights information to be loaded.....,");
                         try {
                             driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
+                            driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                         }catch (Exception exceptionTwo){
                             driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS+1+"]")));
                         }
@@ -81,6 +84,7 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
                     }
                 }catch (Exception exception){
                     try {
+                        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                     }catch (Exception exceptionTwo){
                         driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS+1+"]")));
@@ -93,6 +97,7 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
                     Logger.logStep("SRP screen is displayed with two way view and waiting for the flights information to be loaded.....,");
                     try {
                         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
+                        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                     }catch (Exception exceptionTwo){
                         driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS+1+"]")));
                     }
@@ -101,6 +106,7 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
                 }
                 }catch (Exception exception){
                     try {
+                        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_IN_LOADING_SEARCH_RESULTS)));
                     }catch (Exception exceptionTwo){
                         driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS+1+"]")));

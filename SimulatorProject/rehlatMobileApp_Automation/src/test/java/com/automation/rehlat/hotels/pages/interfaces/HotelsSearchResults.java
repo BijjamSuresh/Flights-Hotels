@@ -12,4 +12,15 @@ public interface HotelsSearchResults {
      * @param parsingCardNumber
      */
     void getThePriceOfHotelAndTapOnItsCardView(Integer parsingCardNumber);
+
+    /**
+     * Check the sold outs are displayed in SRP
+     * @return
+     */
+    boolean isSoldOutsAreDisplayedInSRP();
+
+    /**
+     * Tap on navigate back button in SRP
+     */
+    void tapOnNavigateBackButtonInSRP();
 }

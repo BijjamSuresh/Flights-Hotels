@@ -20,14 +20,14 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public static final String PIN_TEXTFIELD = "Ecom_Payment_Pin_id";
     public static final String SUBMIT_BUTTON = "EntrySubmitAction_id";
     public static final String CONFIRM_BUTTON = "ConfirmAction_id";
-    public static final String FARE_DIFFER_ALERT = "com.app.rehlat:id/information_fare_differ";
-    public static final String YES_BUTTON_IN_FARE_DIFFER_ALERT = "com.app.rehlat:id/yesFareDifference";
+    public static final String FARE_DIFFER_ALERT = "com.app.rehlat:id/hotelinformation_fare_differ";
+    public static final String YES_BUTTON_IN_FARE_DIFFER_ALERT = "com.app.rehlat:id/yesHotelFareDifference";
     public static final String SELECT_YOUR_BANK_MODAL_SHEET = "android:id/customPanel";
     public static final String TRANSACTION_IN_PROGRESS = "Transaction in progress...";
     public static final String PAYMENT_SUCCESS = "Payment Success Please wait for a while and do not refresh the page..........";
     public static final String BOOKING_SUCCESS = "BOOKING SUCCESS";
     public static final String POST_TRANSACTIONS_SCREEN = "form1";
-    public static final String TICKET_SOLD_OUT_POPUP = "com.app.rehlat:id/searchForDifferentFlights";
+    public static final String CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE  = "com.app.rehlat:id/noHotelFareDifference";
     public static final String OK_BUTTON = "OK";
     public static final String FINAL_AMOUNT_PAYABLE_LINEAR_LAYOUT = "com.app.rehlat:id/totalAmoutPayableLinearLayout";
     public static final String FINAL_AMOUNT_PAYABLE_PRICE = "com.app.rehlat:id/totalAmountPayablePrice";
@@ -43,9 +43,10 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public void checkPaymentOptionsScreenIsDisplayed() {
         Logger.logAction("Checking payment option screen is displayed or not ?");
         try{
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,1);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,2);
 //            driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(ACTIVITY_INDICATOR)));
-//            acceptTheFareDifferAlert();
+            acceptTheFareDifferAlert();
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,2);
             Logger.logComment("Checking payment option screen is displayed or not ?");
             if (Labels_Hotels.CURRENT_USER_CURRENCY_TYPE.equalsIgnoreCase(Labels_Hotels.EGYPT_CURRENCY_TYPE)){
                 if (isElementDisplayedById(PAYMENT_RELATIVE_LAYOUT_TITLE_FOR_EG_DOMAIN)){
@@ -73,12 +74,12 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     public boolean isTicketSoldOutPopUpIsDisplayed() {
         Logger.logAction("Checking the ticket sold out popup is displayed or not ?");
         try{
-            if (isElementDisplayedById(TICKET_SOLD_OUT_POPUP)){
+            if (isElementDisplayedById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
                 BaseTest.takeScreenshotAndSaveInSoldOutsFolder();
-                Logger.logStep(TICKET_SOLD_OUT_POPUP +" - popup is displayed in the current active screen");
+                Logger.logStep(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE +" - popup is displayed in the current active screen");
                 return true;
             }else {
-                Logger.logStep(TICKET_SOLD_OUT_POPUP +" - popup is not displayed in the current active screen");
+                Logger.logStep(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE +" - popup is not displayed in the current active screen");
                 return false;
             }
         }catch (Exception exception){
@@ -92,10 +93,10 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
      */
     @Override
     public void tapOnOkButtonInTicketSoldOutPopup() {
-        Logger.logAction("Tapping on "+TICKET_SOLD_OUT_POPUP+ " button");
+        Logger.logAction("Tapping on "+CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE+ " button");
         try {
-            if (isElementDisplayedById(OK_BUTTON)){
-                driver.findElementById(OK_BUTTON).click();
+            if (isElementDisplayedById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
+                driver.findElementById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE).click();
                 Logger.logComment("Tapped on ok button in sold out popup");
             }else {
                 Logger.logError(" - button name is not displayed in the current active screen");
@@ -115,6 +116,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
             if (isElementDisplayedById(FARE_DIFFER_ALERT)){
                 Logger.logStep("Fare differ alert is displayed and going to accept it by tapping on yes button");
                 driver.findElementById(YES_BUTTON_IN_FARE_DIFFER_ALERT).click();
+                FARE_DIFFER_STATUS_IN_PAYMENT_SCREEN_ANDROID = true;
             }else {
                 Logger.logComment(FARE_DIFFER_ALERT+" :- element name is not displayed in the current active screen");
             }
@@ -131,23 +133,33 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
         String finalAmountPayablePriceInPaymentCheckOutScreen;
         Logger.logAction("Comparing the final payment displayed in payment checkout screen with the amount displayed in review booking screen");
         try {
-            if (isElementDisplayedById(FINAL_AMOUNT_PAYABLE_LINEAR_LAYOUT)){
+            if (isElementDisplayedById(FINAL_AMOUNT_PAYABLE_LINEAR_LAYOUT)) {
                 Logger.logAction("Total amount payable price linear layout is displayed");
-                if (isElementDisplayedById(FINAL_AMOUNT_PAYABLE_PRICE)){
+                if (isElementDisplayedById(FINAL_AMOUNT_PAYABLE_PRICE)) {
                     finalAmountPayablePriceInPaymentCheckOutScreen = driver.findElementById(FINAL_AMOUNT_PAYABLE_PRICE).getText().trim();
-                    Double finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(finalAmountPayablePriceInPaymentCheckOutScreen);
+                    if (finalAmountPayablePriceInPaymentCheckOutScreen.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)) {
+                        finalAmountPayablePriceInPaymentCheckOutScreen = finalAmountPayablePriceInPaymentCheckOutScreen.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
+                    }
+                    if (finalAmountPayablePriceInPaymentCheckOutScreen.contains(Labels_Hotels.STRING_COMMA)) {
+                        finalAmountPayablePriceInPaymentCheckOutScreen = finalAmountPayablePriceInPaymentCheckOutScreen.replace(Labels_Hotels.STRING_COMMA, Labels_Hotels.STRING_NULL).trim();
+                    }
+                    Double finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen = Double.valueOf(finalAmountPayablePriceInPaymentCheckOutScreen);
 //                    if (finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen.equals("0")){
 //                        finalAmountPayablePriceInPaymentCheckOutScreen = finalAmountPayablePriceInPaymentCheckOutScreen.replace("0","");
 //                    }
-                    Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen);
-                    Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN);
-                    if (Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN.equalsIgnoreCase(finalAmountPayablePriceInPaymentCheckOutScreen) || Double.parseDouble(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN) == (finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen)){
-                        Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
-                    }else {
-                        Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                    Logger.logComment("Final Amount displayed in the payment check out screen is :- " + finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen);
+                    Logger.logComment("Booking cost displayed in review booking screen is :- " + Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN);
+                    if (FARE_DIFFER_STATUS_IN_PAYMENT_SCREEN_ANDROID == true) {
+                        Logger.logStep("Fare differ alert is accepted by user, so final amount displayed in the payment check out screen is the final payment to be done by user. ie.., "+finalAmountPayablePriceInPaymentCheckOutScreen);
+                    } else{
+                        if (Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN.equalsIgnoreCase(finalAmountPayablePriceInPaymentCheckOutScreen) || Double.parseDouble(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN) == (finalLetterInFinalAmountPayablePriceInPaymentCheckOutScreen)) {
+                            Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
+                        } else {
+                            Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                        }
                     }
-                }else {
-                    Logger.logError(FINAL_AMOUNT_PAYABLE_PRICE+" :- Element id is not displaying in payment checkout screen");
+                } else {
+                    Logger.logError(FINAL_AMOUNT_PAYABLE_PRICE + " :- Element id is not displaying in payment checkout screen");
                 }
             }else {
                 Logger.logError(FINAL_AMOUNT_PAYABLE_LINEAR_LAYOUT+" :- Linear layout is not displaying in payment checkout screen");

@@ -202,14 +202,14 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
         Logger.logAction("Comparing the selected booking flight cost displayed in the search results screen and in the review booking screen");
         String bookingSeatCostDisplayedInReviewBookingScreen;
         try {
-            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR);
+            waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
             bookingSeatCostDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValue();
             double selectedSeatBookingCostInFlightSearchResultsScreen = Double.parseDouble((Labels_Flights.SELECTED_SEAT_BOOKING_COST));
             double selectedSeatCostDisplayedInReviewBookingScreen = Double.parseDouble(bookingSeatCostDisplayedInReviewBookingScreen);
             Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
             if (bookingSeatCostDisplayedInReviewBookingScreen.equals(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){
                 Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
-                Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen");
+                Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen.ie.., "+bookingSeatCostDisplayedInReviewBookingScreen);
             } else if(selectedSeatBookingCostInFlightSearchResultsScreen <= selectedSeatCostDisplayedInReviewBookingScreen) {
                 Logger.logComment("Selected flight booking cost in flight search results is lesser than the booking flight cost displayed in review booking screen.., So rechecking the flight cost by disabling the security check in toggle button");
                 disableSecurityCheckInToggle();
@@ -217,12 +217,25 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
                 if (bookingSeatCostDisplayedInReviewBookingScreen.contains(Labels_Flights.SELECTED_SEAT_BOOKING_COST) || (bookingSeatCostDisplayedInReviewBookingScreen.equals(Labels_Flights.SELECTED_SEAT_BOOKING_COST))){
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
                     Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen");
-                }else{
+                }else if (selectedSeatBookingCostInFlightSearchResultsScreen <= selectedSeatCostDisplayedInReviewBookingScreen){
                     Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
-                    Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen, it got increased.. So continuing with the latest price");
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = bookingSeatCostDisplayedInReviewBookingScreen;
+                    Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen, it got increased.. So continuing with the latest price : "+bookingSeatCostDisplayedInReviewBookingScreen);
+                }else if (selectedSeatBookingCostInFlightSearchResultsScreen > selectedSeatCostDisplayedInReviewBookingScreen){
+                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
+                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = bookingSeatCostDisplayedInReviewBookingScreen;
+                    Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen, it got decreased.. So continuing with the latest price : "+bookingSeatCostDisplayedInReviewBookingScreen);
+                }else {
+                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
+                    Logger.logError("Selected set cost in SRP and review booking is neither lesser nor greater");
                 }
-            } else{
+            } else if (selectedSeatBookingCostInFlightSearchResultsScreen > selectedSeatCostDisplayedInReviewBookingScreen) {
+                disableSecurityCheckInToggle();
+                bookingSeatCostDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValue();
+                Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = String.valueOf(bookingSeatCostDisplayedInReviewBookingScreen);
+                Logger.logStep("Booking cost is reduced in review booking screen compared to the SRP Value..,So after disabling the toggle, continuing with the amount - "+bookingSeatCostDisplayedInReviewBookingScreen+"- as final fare for further price verifications in coming screens ");
+            }
+            else{
                 Logger.logError("Selected seat booking cost is not matches in review booking screen and in search results screen");
             }
         }catch (Exception exception){
@@ -247,7 +260,12 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
 //                Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);
                 if (isElementDisplayedById(REVIEW_BOOKING_PRICE)){
                     WebElement reviewBookingPriceLabel = driver.findElementById(REVIEW_BOOKING_PRICE);
-                    String reviewBookingPrice = reviewBookingPriceLabel.getText().replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
+                    String reviewBookingPrice = reviewBookingPriceLabel.getText();
+                    if (reviewBookingPrice.contains(Labels_Flights.STRING_COMMA)){
+                        String  reviewBookingPriceWithoutComma = reviewBookingPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
+                        flightCellTypeText = reviewBookingPriceWithoutComma;
+                        return flightCellTypeText;
+                    }else {
 //                if (reviewBookingPrice.contains(".")){
 //                    Logger.logComment("Displayed booking cost is: " +reviewBookingPrice);
                     flightCellTypeText = reviewBookingPrice;
@@ -255,6 +273,7 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
 //                }else{
 //                    Logger.logStep("Booking flight cost is not displayed in the current active screen");
 //                }
+                    }
                 }else {
                     Logger.logError("Review booking price element name is not displayed");
                 }

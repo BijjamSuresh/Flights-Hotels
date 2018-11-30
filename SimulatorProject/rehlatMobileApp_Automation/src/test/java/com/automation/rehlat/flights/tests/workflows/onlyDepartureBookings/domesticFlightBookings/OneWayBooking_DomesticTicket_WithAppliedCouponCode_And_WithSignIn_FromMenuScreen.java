@@ -10,8 +10,9 @@ import static com.automation.rehlat.flights.Labels_Flights.*;
 public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_FromMenuScreen extends BaseTest {
     @Test
     public void testTicketBookingWithAppliedCouponCodeAndWithSignInFromMenuScreen() throws Exception{
+        Logger.beginTest("OneWay_Domestic_Ticket booking with sign in menu screen and with applied coupon code");
+        printCurrentTestRunningInformation();
         Labels_Flights.FLIGHT_BOOKING_TYPE = DOMESTIC_FLIGHT_BOOKING;
-        Logger.beginTest("- Ticket booking with sign in menu screen and with applied coupon code");
         FlightsScreen.selectCountryNameInSelectLanguageModal(Labels_Flights.CURRENT_USER_COUNTRY_NAME); // Country name needs to changed while testing for countries other than Kuwait.
         FlightsScreen.checkFlightsTabIsDisplayed();
         FlightsScreen.tapOnMenuButton();
@@ -29,7 +30,7 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
         SignInScreen.tapOnLoginButton();
         FlightsScreen.checkFlightsTabIsDisplayed();
         FlightsScreen.tapOnMenuButton();
-        MenuScreen.checkUserIsSignedUpSignedInWithCorrectParsingCredentials(Labels_Flights.EMAIL_ID_SIGN_IN);
+        MenuScreen.checkUserIsSignedUpSignedInWithCorrectParsingCredentials(EMAIL_ID_SIGN_IN);
         MenuScreen.navigateToFlightsTab();
         FlightsScreen.tapOnFromTextField();
         FlightsScreen.checkSearchViewScreenIsDisplayed();
@@ -110,7 +111,7 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
             BookingPageScreen.checkFinalFareCalculationIsCorrect();
             BookingPageScreen.tapOnContinueButton();
             if (PaymentOptionsScreen.isTicketSoldOutPopUpIsDisplayed()) {
-                PaymentOptionsScreen.tapOnOkButtonInTicketSoldOutPopup();
+                addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Tickets Are Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                 Logger.logError("Tried booking seats for two flights, both tickets are sold out......, Please re-run the script with different dates");
             }else {
                 PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
@@ -158,5 +159,6 @@ public class OneWayBooking_DomesticTicket_WithAppliedCouponCode_And_WithSignIn_F
             }
         }
         Logger.endTest("- Ticket booking with sign in menu screen and with applied coupon code");
+        addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"true");
     }
 }

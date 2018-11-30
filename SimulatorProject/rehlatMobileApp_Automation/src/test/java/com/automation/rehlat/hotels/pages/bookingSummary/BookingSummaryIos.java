@@ -1,9 +1,12 @@
 package com.automation.rehlat.hotels.pages.bookingSummary;
 
 import com.automation.rehlat.hotels.Labels_Hotels;
+import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.text.DecimalFormat;
 
 
 public class BookingSummaryIos extends BookingSummaryBase {
@@ -12,13 +15,17 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public static final String XPATH_OF_PHONE_NUMBER_FIELD = "//XCUIElementTypeTextField[@name=\"BS_PhoneNumber\"]";
     public static final String XPATH_OF_LOGIN_FOR_KARAM_CASH_BUTTON = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[5]/XCUIElementTypeOther[3]/XCUIElementTypeOther[2]/XCUIElementTypeButton[1]";
     public static final String GUEST_ROOM_PAX_DETAILS_BUTTON = "paxDetails";
-    public static final String LOGIN_FOR_KARAM_CASH_BUTTON = "Login to use Karam Cash";
+    public static final String LOGIN_FOR_KARAM_CASH_LABEL = "Login to use Karam Cash";
+    public static final String LOGIN_BUTTON = "login";
     public static final String APPLY_COUPON_CODE_BUTTON = "Apply";
     public static final String COUPON_CODE_FAILED_LABEL = "Coupon is invalid or expired";
     public static final String XPATH_OF_CONTACT_DETAILS_VIEW =  "//XCUIElementTypeStaticText[@name=\"Contact Details\"]";
+    public static final String XPATH_OF_TERMS_AND_CONDITIONS_URL =  "//XCUIElementTypeButton[@name=\"BS_TermsAndCondition\"]";
     public static final String XPATH_OF_ADD_TRAVELLERS_DETAILS = "//XCUIElementTypeStaticText[@name=\"Add Guest Travellers\"]";
     public static final String XPATH_OF_COUPON_CODE_TEXT_VIEW = "//XCUIElementTypeTextField[@name=\"BS_ApplyCouponCode\"]";
+    public static final String XPATH_OF_LOGIN_BUTTON = "//XCUIElementTypeButton[@name=\"login\"]";
     public static final String XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW = "//XCUIElementTypeStaticText[@name=\"Offers and Discounts\"]";
+    public static final String OFFERS_AND_DISCOUNTS_VIEW_TITLE_LABEL = "Offers and Discounts";
     public static final String XPATH_OF_FINAL_FARE_PRICE = "//XCUIElementTypeStaticText[@name=\"BS_FinalAmount\"]";
     public static final String XPATH_OF_TOTAL_AMOUNT = "//XCUIElementTypeStaticText[@name=\"Total Amount\"]";
     public static final String XPATH_OF_COUPON_DISCOUNT_LABEL = "//XCUIElementTypeStaticText[@name=\"Coupon Discount\"]";
@@ -31,7 +38,7 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public static final String XPATH_OF_CONTACT_INFO_COUNTRY_NAME = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[5]/XCUIElementTypeOther[3]/XCUIElementTypeStaticText";
     public static final String CHOOSE_COUNTRY_MODAL="Choose Country";
     public static final String CONTINUE_BUTTON = "CONTINUE";
-    public static final String BOOKING_SUMMARY = "Booking Summary";
+    public static final String GUEST_DETAILS_TITLE = "Guest Details";
     public static final String COUPON_AMOUNT_PRICE_LABEL_ID = "BS_CouponAmount";
     public static final String TOTAL_AMOUNT_PRICE_LABEL_ID = "BS_TotalAmount";
     public static final String FINAL_AMOUNT_PRICE_LABEL_ID = "BS_FinalAmount";
@@ -42,12 +49,10 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public static final String XPATH_OF_HOTEL_POLICY_LABEL = "//XCUIElementTypeStaticText[@name=\"Hotel Policy\"]";
     public static final String KARAM_WALLET_MESSAGE_ID = "Your Karam wallet is empty.";
     public static final String USE_KARAM_CASH_LABEL_ID = "Use Karam Points";
-
-
-    // These are used in multiple methods, be on caution while editing these values
-//    public static Integer indexOfActualFareElementXPath = null;
-//    public static Integer indexOfFinalFareElementXPath = null;
-//    public static Integer indexOfAppliedCouponAmountElementXPath = null;
+    public static boolean HOTEL_PRICE_FARE_JUMP_STATUS = false;
+    public static String SEE_DETAILS_ID_OPTION_IN_BOOKING_SUMMARY_FOOTER_VIEW = "See Details ▲";
+    public static String FEE_AND_TAXES_VALUE_ID_IN_FARE_RULES_MODAL_VIEW = "FareRules_Taxes_And_Fees";
+    public static String CLOSE_BUTTON_ID_OF_FARE_RULES_MODAL_VIEW = "Downward Arrow";
 
     /**
      * Check booking page screen is displayed
@@ -56,7 +61,7 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public void checkBookingPageScreenIsDisplayed() {
         Logger.logAction("Checking the Booking page screen is displayed or not ?");
         try{
-            if (isElementDisplayedByAccessibilityId(BOOKING_SUMMARY)){
+            if (isElementDisplayedByAccessibilityId(GUEST_DETAILS_TITLE)){
                 Logger.logStep("Booking Page screen is displayed");
             }else{
                 Logger.logError("Booking page screen is not displayed");
@@ -75,13 +80,13 @@ public class BookingSummaryIos extends BookingSummaryBase {
         try{
 //            WebElement layoutName = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_SCROLL_VIEW);
             scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS,true);
-            if (isElementDisplayedByAccessibilityId(LOGIN_FOR_KARAM_CASH_BUTTON)){
+            if (isElementDisplayedByAccessibilityId(LOGIN_BUTTON)){
                 Logger.logStep("User is not signed in");
-                isUserSignedIn = false;
+                SIGN_IN_STATUS_IOS = false;
                 return false;
             }else{
                 Logger.logStep("User is signed in");
-                isUserSignedIn = true;
+                SIGN_IN_STATUS_IOS = true;
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the user sign in status");
@@ -97,15 +102,15 @@ public class BookingSummaryIos extends BookingSummaryBase {
         Logger.logAction("Entering the user information");
         try {
             scrollToAnElementByXPath(XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW,true);
-            if (isUserIsSignedIn()){
-                Logger.logComment("User is signed in.., so no need to parse the email string");
-                selectTheCountryCodeByCountryName(Labels_Hotels.CONTACT_INFO_COUNTRY_NAME_IOS);
-                enterTextInPhoneNumberTextField();
-            }else{
-                enterTextInEmailTextField();
-                selectTheCountryCodeByCountryName(Labels_Hotels.CONTACT_INFO_COUNTRY_NAME_IOS);
-                enterTextInPhoneNumberTextField();
-            }
+//            if (isUserIsSignedIn()){
+//                Logger.logComment("User is signed in.., so no need to parse the email string");
+            enterTextInEmailTextField();
+            selectTheCountryCodeByCountryName(Labels_Hotels.CONTACT_INFO_COUNTRY_NAME_IOS);
+            enterTextInPhoneNumberTextField();
+//            }else{
+//                selectTheCountryCodeByCountryName(Labels_Hotels.CONTACT_INFO_COUNTRY_NAME_IOS);
+//                enterTextInPhoneNumberTextField();
+//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter the user info in the respected fields");
         }
@@ -118,9 +123,13 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public void enterTextInPhoneNumberTextField() {
         Logger.logAction("Entering the text in phone number text field");
         try {
-            sendTextByXpath(XPATH_OF_PHONE_NUMBER_FIELD, Labels_Hotels.PHONE_NUMBER);
-            Logger.logComment(Labels_Hotels.PHONE_NUMBER+" :- is parsed");
-            closeTheKeyboard_iOS();
+            boolean status = sendTextByXpath(XPATH_OF_PHONE_NUMBER_FIELD, Labels_Hotels.PHONE_NUMBER,true);
+            if (status == true){
+                Logger.logComment(Labels_Hotels.PHONE_NUMBER+" :- is parsed");
+                closeTheKeyboard_iOS();
+            }else {
+                Logger.logError(Labels_Hotels.PHONE_NUMBER+" :- is not parsed");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter tje text in phone number text field");
         }
@@ -133,9 +142,16 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public void enterTextInEmailTextField() {
         Logger.logAction("Entering the text in email text field");
         try {
-            sendTextByXpath(XPATH_OF_EMAIL_FIELD, Labels_Hotels.EMAIL_ID_SIGN_IN);
-            Logger.logComment(Labels_Hotels.EMAIL_ID_SIGN_IN+" :- is parsed");
-            closeTheKeyboard_iOS();
+            String firstName = General.getTheTestDataOfField("First_Name");
+            String lastName = General.getTheTestDataOfField("Last_Name");
+            String gmailId = firstName+"."+lastName+"@gmial.cm";
+            boolean status = sendTextByXpath(XPATH_OF_EMAIL_FIELD, gmailId,true);
+            if (status == true){
+                Logger.logComment(gmailId+" :- is parsed");
+                closeTheKeyboard_iOS();
+            }else {
+                Logger.logError(gmailId+" :- is not parsed");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter tje text in phone number text field");
         }
@@ -173,8 +189,10 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public void tapOnAddGuestTravellersDetailsButton() {
         Logger.logStep("Tapping on adult add travellers details button");
         try{
-            scrollToAnElementByXPath(XPATH_OF_HOTEL_POLICY_LABEL,true);
-            compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout(); // After iOS is implemented by "Online Check In toggle button", this method needs to be removed from here and call it as a step of TC from workflows directly
+            scrollToAnElementByXPath(XPATH_OF_TERMS_AND_CONDITIONS_URL,true);
+//            compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout();
+// Todo:- 1. The above method is to be enabled when the final fare label is re implemented in hotel booking page of offers and discounts cell. 2
+// Todo:- 2 After iOS is implemented by "Online Check In toggle button", this method needs to be removed from here and call it as a step of TC from workflows directly
             if (isElementDisplayedByAccessibilityId(GUEST_ROOM_PAX_DETAILS_BUTTON)){
                 driver.findElementByAccessibilityId(GUEST_ROOM_PAX_DETAILS_BUTTON).click();
                 Logger.logComment("Tapped on adult button");
@@ -195,16 +213,16 @@ public class BookingSummaryIos extends BookingSummaryBase {
         try {
             Thread.sleep(4000);
             scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS,true);
-            if (isElementDisplayedByAccessibilityId(LOGIN_FOR_KARAM_CASH_BUTTON)){
+            if (isElementDisplayedByAccessibilityId(LOGIN_FOR_KARAM_CASH_LABEL)){
 //                driver.findElementByAccessibilityId(LOGIN_FOR_KARAM_CASH_BUTTON).click();
-                boolean status = findElementByXPathAndClick(XPATH_OF_LOGIN_FOR_KARAM_CASH_BUTTON);
+                boolean status = findElementByAccessibilityIdAndClick(LOGIN_BUTTON);
                 if (status == true){
                     Logger.logStep("Tapped on signed in for faster booking button");
                 }else {
                     Logger.logError(" Didn't tapped on sign in for faster bookings button");
                 }
             }else {
-                Logger.logError(LOGIN_FOR_KARAM_CASH_BUTTON+" - element name is not displayed in the current active screen");
+                Logger.logError(LOGIN_BUTTON+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: unable to tap on Sign in for faster bookings button");
@@ -217,7 +235,7 @@ public class BookingSummaryIos extends BookingSummaryBase {
      * @return
      */
     public Double getThePriceOf(String priceType) {
-        Logger.logAction("Getting the price of element :-"+priceType);
+        Logger.logAction("Getting the price of element :- "+priceType);
         Double priceValue = null;
         String fareWithCurrency;
         try{
@@ -241,6 +259,7 @@ public class BookingSummaryIos extends BookingSummaryBase {
                     try {
                         if(!(fareWithCurrency == null)){
                             Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Hotels.MINUS_WITH_IN_BRACKETS+Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL).trim());
+                            COUPON_CODE_APPLIED_STATUS = false;
                             return  fareWithoutCurrency;
                         }
                     }catch (Exception exception){
@@ -263,17 +282,21 @@ public class BookingSummaryIos extends BookingSummaryBase {
                 }
             }
             if (priceType.equals("finalDisplayedFare")){
+                Double finalFare = getTheBookingPriceDisplayedInFooterView(); //Todo:- As final fare is not in requirement, so making the footer view price as final fare for internal calculation purpose
+                return finalFare;
+                //Todo:- Final fare is removed from the requirement
                 //Checking and getting the final displaying fare of booking flight
-                if (isElementDisplayedByAccessibilityId(FINAL_AMOUNT_PRICE_LABEL_ID)){
-                    fareWithCurrency = driver.findElementByAccessibilityId(FINAL_AMOUNT_PRICE_LABEL_ID).getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
-                    if (fareWithCurrency.contains(Labels_Hotels.STRING_COMMA)){
-                        fareWithCurrency = fareWithCurrency.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL);
-                    }
-                    Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL).trim());
-                    return  fareWithoutCurrency;
-                }else {
-                    Logger.logError("Final amount element is not displayed");
-                }
+//                if (isElementDisplayedByAccessibilityId(FINAL_AMOUNT_PRICE_LABEL_ID)){
+//                    fareWithCurrency = driver.findElementByAccessibilityId(FINAL_AMOUNT_PRICE_LABEL_ID).getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
+//                    if (fareWithCurrency.contains(Labels_Hotels.STRING_COMMA)){
+//                        fareWithCurrency = fareWithCurrency.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL);
+//                    }
+//                    Double fareWithoutCurrency = Double.parseDouble(fareWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL).trim());
+//                    return  fareWithoutCurrency;
+//                }else {
+//                    Logger.logError("Final amount element is not displayed");
+//                }
+                //Todo:- Final fare is removed from the requirement
             }
             else {
                 Logger.logError("For the price of :- "+priceType+" - is not listed in this method");
@@ -292,25 +315,28 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public void checkFinalFareCalculationIsCorrect() {
         Logger.logStep("Checking the final fare calculation is correct or not ?");
         try {
-            Double bookingSeatCostInReviewBookingScreen = null;
+            Double bookingRoomCostInSelectRoomScreen = null;
             Double couponAmount;
             Double finalDisplayedFare;
             Double displayedActualFare;
             Double karamPoints;
-
-            scrollToAnElementByXPath(XPATH_OF_TOTAL_AMOUNT,false);
+            Double taxesAndFees;
+            DecimalFormat decimalFormat;
+            Double finalFareMathCalculation;
+            Double finalFareInternalMathCalculation;
+            scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS,false);
             // Checking and getting the booking cost displaying in review booking screen
             displayedActualFare = getThePriceOf("displayedActualFare");
-            if (Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN == null){
-                Logger.logError("Booking cost displaying in the review booking screen is :- "+Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN);
+            if (Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_SELECT_ROOM_SCREEN == null){
+                Logger.logError("Booking cost displaying in the review booking screen is :- "+Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_SELECT_ROOM_SCREEN);
             }else {
-                bookingSeatCostInReviewBookingScreen = Double.valueOf(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN);
+                bookingRoomCostInSelectRoomScreen = Double.valueOf(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_SELECT_ROOM_SCREEN);
             }
-            scrollToAnElementByXPath(XPATH_OF_COUPON_DISCOUNT_LABEL,true);
 //            scrollUp();
 //            scrollToAnElementByXPath(XPATH_OF_PHONE_NUMBER_FIELD,false);
 //            setTheXpathIndexesForPriceDetailsInOffersAndDiscountsCell();
             if (COUPON_CODE_APPLIED_STATUS == true){
+                scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS,true);
                 couponAmount = getThePriceOf("couponAmount");
             }else {
                 couponAmount = 0.00;
@@ -318,7 +344,7 @@ public class BookingSummaryIos extends BookingSummaryBase {
             }
             scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS,true);
             finalDisplayedFare = getThePriceOf("finalDisplayedFare");
-            if (isUserSignedIn == true){
+            if (SIGN_IN_STATUS_IOS == true){
                 if (isKaramPointsToggleSwitchEnabled()){
                     karamPoints = getThePriceOf("karamCash"); // Implement if condition after developer enable the karam points price element visibility
                 }else {
@@ -329,11 +355,13 @@ public class BookingSummaryIos extends BookingSummaryBase {
                 karamPoints = 0.00;
                 Logger.logComment("User is not logged in. So applied karam points are:- "+karamPoints);
             }
-            Logger.logStep("Flights booking details are :- ");
-            Logger.logComment("Actual Fare cost of booking flight :- "+displayedActualFare);
-            Logger.logComment("Applied Coupon amount of booking flight :- "+couponAmount);
-            Logger.logComment("Applied Karam points cost of booking flight :- "+karamPoints);
-            Logger.logComment("Final Fare cost of booking flight (Displaying value) :- "+finalDisplayedFare);
+            taxesAndFees = getTheTaxesAndFeesAddedToFinalPriceInFooterViewOfBookingSummary();
+            Logger.logStep("Hotel booking details are :- ");
+            Logger.logComment("Actual Fare cost of booking hotel :- "+displayedActualFare);
+            Logger.logComment("Applied Coupon amount of booking hotel :- "+couponAmount);
+            Logger.logComment("Applied Karam points cost of booking hotel :- "+karamPoints);
+            Logger.logComment("Final Fare cost of booking hotel (Displaying value) :- "+finalDisplayedFare);
+            Logger.logComment("Taxes and Fees for the booking hotel :- "+taxesAndFees);
 //            if (finalDisplayedFare.equals(0.00)){
 //                finalDisplayedFare = displayedActualFare;
 //                Logger.logComment("Final Fare cost of booking flight (For Math Calculation) :- "+finalDisplayedFare);
@@ -341,16 +369,30 @@ public class BookingSummaryIos extends BookingSummaryBase {
 //            }else {
             Logger.logAction("All the values are ready for to calculate the math");
 //            }
-            if (displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
-                Double finalFareMathCalculation = (displayedActualFare)-(couponAmount)-(karamPoints); // Internal math calculation logic
-                Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
-                if (finalFareMathCalculation.equals(finalDisplayedFare)){
+            if (HOTEL_PRICE_FARE_JUMP_STATUS == true){
+                Logger.logStep("Fare Jump happened, So no need to check the final fare in select room with the total amount displayed in Guest Details screen");
+                bookingRoomCostInSelectRoomScreen = displayedActualFare; // Todo:- This line of code is to needed to calculate the internal price calculations
+            }else {
+                Logger.logComment("No fare jump is happend. So checking with the room cost in select room w.r.t. the total cost in guest details screen");
+            }
+            if (displayedActualFare.equals(bookingRoomCostInSelectRoomScreen) || displayedActualFare == bookingRoomCostInSelectRoomScreen){
+                finalFareMathCalculation = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)+ taxesAndFees); // Internal math calculation logic
+                decimalFormat = new DecimalFormat("0.00");
+                String finalFareInternalMathCalculationAsString = decimalFormat.format(finalFareMathCalculation);
+                finalFareInternalMathCalculation = Double.parseDouble(finalFareInternalMathCalculationAsString);
+                Logger.logComment("Final fare math calculation value is :- "+finalFareInternalMathCalculation);
+                Double  difference = finalDisplayedFare - finalFareInternalMathCalculation;
+                if (finalFareInternalMathCalculation == finalDisplayedFare){
                     Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN = String.valueOf(finalFareMathCalculation);
                     Logger.logStep("Final fare calculation is correct");
-                }else if (finalFareMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
+                }else if (finalFareInternalMathCalculation.toString().equalsIgnoreCase(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
                     Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN = String.valueOf(finalFareMathCalculation);
                     Logger.logStep("Final fare calculation is correct");
-                }else {
+                }else if (difference <0.3){
+                    Logger.logStep("There is an change in the decimal places of final fare displayed in the footer view.., ie..,"+difference+" + which is minute so continuing with the final amount as in the footer view :- "+finalDisplayedFare);
+                    Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_BOOKING_SUMMARY_SCREEN = String.valueOf(finalDisplayedFare); // Code that returns the final price displaying in booking page screen
+                }
+                else {
                     Logger.logError("Final fare calculation is in-correct");
                 }
             }else {
@@ -359,6 +401,68 @@ public class BookingSummaryIos extends BookingSummaryBase {
         }catch (Exception exception){
             exception.printStackTrace();
             Logger.logError("Encountered error: Unable to check the final fare calculation");
+        }
+    }
+
+    /**
+     * Get the taxes and fees added top final price in the footer view of booking summary
+     * @return
+     */
+    public static double getTheTaxesAndFeesAddedToFinalPriceInFooterViewOfBookingSummary(){
+        Double taxesAmount = null;
+        Logger.logAction("Getting the taxes and fees in the final price in the footer view of booking summary");
+        try {
+            openTheFareRulesModalView();
+            String taxesAmountWithCurrency = findElementByAccessibilityIdAndReturnText(FEE_AND_TAXES_VALUE_ID_IN_FARE_RULES_MODAL_VIEW, Labels_Hotels.VALUE_ATTRIBUTE);
+            if (taxesAmountWithCurrency.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
+                if (taxesAmountWithCurrency.contains(Labels_Hotels.PLUS_WITH_IN_BRACKETS)) {
+                    String plusNotationAndCurrency =  Labels_Hotels.PLUS_WITH_IN_BRACKETS+Labels_Hotels.CURRENT_USER_CURRENCY_TYPE;
+                    String taxesWithoutCurrency = taxesAmountWithCurrency.replace(plusNotationAndCurrency,Labels_Hotels.STRING_NULL).trim();
+                    closeTheFareRulesModalView();
+                    return Double.valueOf(taxesWithoutCurrency);
+                }else {
+                    Logger.logError("Taxes and fees are not having an correct notation before to the currency type: "+taxesAmountWithCurrency);
+                }
+            }else {
+                Logger.logError("Taxes and fees are not having an correct currency type: "+taxesAmountWithCurrency);
+            }
+        }catch (Exception exception){
+
+        }
+        return taxesAmount;
+    }
+
+    /**
+     * Close the fare rules modal view
+     */
+    public static void openTheFareRulesModalView(){
+        Logger.logAction("Closing the fare rules in modal view");
+        try {
+            boolean status = findElementByAccessibilityIdAndClick(SEE_DETAILS_ID_OPTION_IN_BOOKING_SUMMARY_FOOTER_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on See Details option in footer view");
+            }else {
+                Logger.logError("Didn't tapped on See Details option in footer view");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to close the fare rules modal view");
+        }
+    }
+
+    /**
+     * Close the fare rules modal view
+     */
+    public static void closeTheFareRulesModalView(){
+        Logger.logAction("Closing the fare rules in modal view");
+        try {
+            boolean status = findElementByAccessibilityIdAndClick(CLOSE_BUTTON_ID_OF_FARE_RULES_MODAL_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on close the fare rules modal view");
+            }else {
+                Logger.logError("Didn't tapped on close the fare rules modal view");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to close the fare rules modal view");
         }
     }
 
@@ -443,7 +547,10 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public void applyTheCouponCode() {
         Logger.logStep("Applying the coupon code");
         try {
-            scrollToAnElementByXPath(XPATH_OF_COUPON_DISCOUNT_LABEL,true);
+//            WebElement scrollView = driver.findElementByClassName("XCUIElementTypeScrollView");
+//            scrollToAnElementByName(scrollView,"BS_ApplyCouponCode", true);
+//            scrollToAnElementByXPath(XPATH_OF_COUPON_CODE_TEXT_VIEW,true);
+//            scrollToAnElementByXPath(XPATH_OF_LOGIN_BUTTON,true);
             sendKeysToCouponCodeTextField();
             tapOnApplyCouponCodeButton();
             if (isCouponCodeApplied()){
@@ -463,6 +570,7 @@ public class BookingSummaryIos extends BookingSummaryBase {
     public void sendKeysToCouponCodeTextField() {
         Logger.logAction("Sending the keys to coupon code :- "+ Labels_Hotels.COUPON_CODE);
         try {
+//            scrollToAnElementByXPath(XPATH_OF_COUPON_CODE_TEXT_VIEW,true);
             if (isElementDisplayedByXPath(XPATH_OF_COUPON_CODE_TEXT_VIEW)){
                 driver.findElement(By.xpath(XPATH_OF_COUPON_CODE_TEXT_VIEW)).sendKeys(Labels_Hotels.COUPON_CODE);
                 Logger.logComment(Labels_Hotels.COUPON_CODE+"  :- coupon is parsed");
@@ -501,9 +609,9 @@ public class BookingSummaryIos extends BookingSummaryBase {
         Logger.logAction("Checking coupon code is applied successfully");
         try {
             scrollToAnElementByXPath(XPATH_OF_COUPON_DISCOUNT_LABEL,true);
-            if (isElementDisplayedByAccessibilityId("OffersAndDiscountsSection")){
+            if (isElementDisplayedByAccessibilityId(OFFERS_AND_DISCOUNTS_VIEW_TITLE_LABEL)){
                 try{
-                    WebElement offersAndDiscountsXpath = driver.findElementByAccessibilityId("BS_CouponAmount");
+                    WebElement offersAndDiscountsXpath = driver.findElementByAccessibilityId(COUPON_AMOUNT_PRICE_LABEL_ID);
                     boolean status = offersAndDiscountsXpath.isDisplayed();
                     if (status==true){
                         return true;
@@ -553,12 +661,12 @@ public class BookingSummaryIos extends BookingSummaryBase {
         Logger.logAction("Getting the booking price displayed in footer view");
         try{
             String hotelPriceInFooterViewWithCurrency = driver.findElementByAccessibilityId(FOOTER_VIEW_PRICE_ID).getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
-            String hotelPriceWithoutCurrency = hotelPriceInFooterViewWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
-            if (hotelPriceWithoutCurrency .contains(Labels_Hotels.STRING_COMMA)) {
-                String hotelPriceWithoutComma = hotelPriceWithoutCurrency.replace(Labels_Hotels.STRING_COMMA, Labels_Hotels.STRING_NULL).trim();
+            String hotelPriceWithoutCurrencyType = hotelPriceInFooterViewWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
+            if (hotelPriceWithoutCurrencyType.contains(Labels_Hotels.STRING_COMMA)) {
+                String hotelPriceWithoutComma = hotelPriceWithoutCurrencyType.replace(Labels_Hotels.STRING_COMMA, Labels_Hotels.STRING_NULL).trim();
                 return Double.parseDouble(hotelPriceWithoutComma);
             }else {
-                return Double.parseDouble(hotelPriceWithoutCurrency);
+                return Double.parseDouble(hotelPriceWithoutCurrencyType);
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to get the booking price displayed in footer view");
@@ -667,6 +775,7 @@ public class BookingSummaryIos extends BookingSummaryBase {
             String alertMessageName = findElementByXpathAndReturnItsAttributeName(XPATH_OF_FARE_JUMP_ALERT);
             if (alertMessageName.equalsIgnoreCase(FARE_JUMP_ALERT_ID_MESSAGE)){
                 Logger.logStep("Fare jump alert is displayed");
+                HOTEL_PRICE_FARE_JUMP_STATUS = true;
                 return true;
             }else {
                 Logger.logComment("Fare jump alert is not displayed");

@@ -269,6 +269,7 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
                     Logger.logComment(firstName+" :- element name is entered as first name");
                     closeTheKeyboard_Android();
                 }else {
+//                    driver.findElementById(TRAVELLERS_FIRST_NAME).click();
                     clearKeysByUsingKeycode(TRAVELLERS_FIRST_NAME,firstNameLabel.length());
                     driver.findElementById(TRAVELLERS_FIRST_NAME).sendKeys(firstName);
                     Logger.logComment(firstName+" :- element name is entered as first name");
@@ -279,6 +280,7 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
             }
 
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to enter the travellers first name");
         }
     }
@@ -302,6 +304,7 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
                     closeTheKeyboard_Android();
                 }
                 else {
+                    driver.findElementById(TRAVELLERS_MIDDLE_NAME).click();
                     clearKeysByUsingKeycode(TRAVELLERS_MIDDLE_NAME,middleNameLabel.length());
                     driver.findElementById(TRAVELLERS_MIDDLE_NAME).sendKeys(middleName);
                     Logger.logComment(middleName+" :- element name is already entered as middle name");
@@ -334,6 +337,7 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
                     closeTheKeyboard_Android();
                 }
                 else {
+//                    driver.findElementById(TRAVELLERS_LAST_NAME).click();
                     clearKeysByUsingKeycode(TRAVELLERS_LAST_NAME,lastNameLabel.length());
                     driver.findElementById(TRAVELLERS_LAST_NAME).sendKeys(lastName);
                     Logger.logComment(lastName+" :- element name is entered as middle name");
@@ -581,7 +585,7 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
         try{
             if (isElementDisplayedById(TRAVELLERS_PASSPORT_TEXTFIELD)){
                 String passportName = driver.findElementById(TRAVELLERS_PASSPORT_TEXTFIELD).getText();
-                String passportNumber = General.getTheTestDataOfField("Passport_No");
+                String passportNumber = General.getTheTestDataOfField("Passport_Number");
                 if (passportName.equals(Labels_Flights.STRING_NULL)){
                     driver.findElementById(TRAVELLERS_PASSPORT_TEXTFIELD).sendKeys(passportNumber);
                     Logger.logComment(passportNumber+" :- element name is parsed as passport number");

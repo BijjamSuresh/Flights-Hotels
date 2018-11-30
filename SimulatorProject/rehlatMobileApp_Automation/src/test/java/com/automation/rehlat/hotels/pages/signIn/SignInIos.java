@@ -27,7 +27,9 @@ public class SignInIos extends SignInBase {
             declineTheFaceIdAccessSetUpPopupIfDisplayed();
             declineTheTouchIdAccessSetUpPopupIfDisplayed();
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR,1);
-            scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
+//            if (Labels_Hotels.DEVICE_NAME.contains("5")){
+                scrollDown(); //Todo:- This line of code is implemented due to low screen resolution in iPhone 5S
+//            }
             if (isElementDisplayedByName(LOGIN_BUTTON) && isElementDisplayedByName(CREATE_ACCOUNT_BUTTON) && isElementDisplayedByName(NOT_REGISTERED_LABEL)){
                 Logger.logStep("Sign In screen is displayed");
             }else {

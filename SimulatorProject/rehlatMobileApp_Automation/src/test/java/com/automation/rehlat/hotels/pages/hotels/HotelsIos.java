@@ -24,6 +24,7 @@ public class HotelsIos extends HotelsBase{
     public static final String CHECK_IN_BUTTON_ACCESSIBILITY_ID_IN_HOTELS_HOME_SCREEN = "Check-In";
     public static final String CHECK_OUT_BUTTON_ACCESSIBILITY_ID_IN_HOTELS_HOME_SCREEN = "Check-Out";
     public static final String XPATH_OF_CHECK_IN_BUTTON_IN_CALENDER_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[1]";
+    public static final String XPATH_OF_CHECK_OUT_BUTTON_IN_CALENDER_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeButton";
     public static final String ADULT_COUNT_ID_IN_HOTELS_SCREEN = "com.app.rehlat:id/adultscount_txt";
     public static final String CHILD_COUNT_ID_IN_HOTELS_SCREEN = "com.app.rehlat:id/childrencount_txt";
     public static final String XPATH_OF_ROOMS_COUNT_IN_HOTELS_SCREEN = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeStaticText[3]";
@@ -43,9 +44,13 @@ public class HotelsIos extends HotelsBase{
     public static final String XPATH_OF_CLOSE_BUTTON_OF_ROOM_LAYOUT_WITHOUT_ROOM_INDEX = "(//XCUIElementTypeButton[@name=\"X\"])[";
     public static final String CHECK_AVAILABILITY_BUTTON_ID = "Check Availability";
     public static final String ROOM_LABEL_IN_ROOMS_LIST_VIEW_SCREEN = "ROOM";
+    public static final String BOOK_NOW_BUTTON_IN_PROMOTIONAL_DIALOG = "Book Now";
     public static Integer ROOMS_COUNT_IN_HOTELS_SCREEN;
     public static Integer ROOMS_COUNT_IN_ROOM_LIST_VIEW;
     public static Integer DISPLAYING_ROOM_CELL_NUMBER ;
+    public static boolean calendarViewStatus = false;
+
+
     /**
      * check is hotels screen is displayed
      */
@@ -53,6 +58,7 @@ public class HotelsIos extends HotelsBase{
     public void checkHotelScreenISDisplayed(){
         Logger.logAction("Check hotel screen is displayed");
         try {
+            closeThePromotionalDialogIfDisplayed();
             String isValueAttribute = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_HOTELS_TAB);
             if (isValueAttribute.equalsIgnoreCase(Labels_Hotels.VALUE_ONE)){
                 Logger.logStep("Hotels screen is displayed");
@@ -61,6 +67,23 @@ public class HotelsIos extends HotelsBase{
             }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to check the hotel screen is displayed or not?");
+        }
+    }
+
+    /**
+     * Close the promotional dialog
+     */
+    public static void closeThePromotionalDialogIfDisplayed(){
+        Logger.logAction("Closing the promotional dialog if displayed");
+        try {
+            boolean status = findElementByAccessibilityIdAndClick(BOOK_NOW_BUTTON_IN_PROMOTIONAL_DIALOG);
+            if (status == true){
+                Logger.logStep("Promotional dialog is displayed and closed it by tapping on book now button");
+            }else {
+                Logger.logComment("Promotional dialog is not displayed");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered Error:- Unable to close the promotional dialog");
         }
     }
 
@@ -108,8 +131,12 @@ public class HotelsIos extends HotelsBase{
     public void tapOnSearchButton(){
         Logger.logAction("Tapping on search button");
         try {
-            findElementByXPathAndClick(XPATH_OF_SEARCH_TEXT_FIELD_IN_HOTELS_TAB);
-            Logger.logStep("Tapped on search text field");
+            boolean status = findElementByXPathAndClick(XPATH_OF_SEARCH_TEXT_FIELD_IN_HOTELS_TAB);
+            if (status == true){
+                Logger.logStep("Tapped on search text field");
+            }else {
+                Logger.logError("Didn't tapped on search text field");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to tap on hotels search button");
         }
@@ -120,10 +147,31 @@ public class HotelsIos extends HotelsBase{
      */
     @Override
     public void sendKeysToSearchResultsScreen(String parsingValue){
-        Logger.logAction("Sending keys to search results screen"+parsingValue);
+        Logger.logAction("Sending keys to search results screen "+parsingValue);
         try {
-            sendTextByXpath(XPATH_OF_SEARCH_TEXT_FIELD_IN_SEARCH_PLACE_SCREEN,parsingValue);
-            Logger.logStep("Parsed the keys as :- "+parsingValue);
+            //Todo:- String1 and 2 are added because od auto search issue in iOS.ie.., Not getting results on quick typing
+            String string1 = parsingValue.substring(0,parsingValue.length()-1);
+            boolean string1ParsingStatus = sendTextByXpath(XPATH_OF_SEARCH_TEXT_FIELD_IN_SEARCH_PLACE_SCREEN,string1,false);
+            if (string1ParsingStatus == true){
+                Logger.logComment("Parsed the string 1 :- "+string1);
+            }else {
+                Logger.logError("Didn't parsed the string 1 :- "+string1);
+            }
+            String string2 = parsingValue.replace(string1,Labels_Hotels.STRING_NULL).trim();
+            boolean string2ParsingStatus = sendTextByXpath(XPATH_OF_SEARCH_TEXT_FIELD_IN_SEARCH_PLACE_SCREEN,string2,false);
+            if (string2ParsingStatus == true){
+                Logger.logStep("Parsed the string 2 as :- "+string2);
+            }else {
+                Logger.logError("Didn't parsed the string 2 :- "+string2);
+            }
+            String parsedString = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_SEARCH_TEXT_FIELD_IN_SEARCH_PLACE_SCREEN);
+            if (parsedString.equalsIgnoreCase(parsingValue)){
+                Logger.logStep("Parsed the keys as :- "+parsingValue);
+            }else {
+                Logger.logComment("Parsed keys are :- "+parsedString);
+                Logger.logComment("Actual keys to be parsed are:- "+parsingValue);
+                Logger.logError("Didn't parsed the keys :- "+parsingValue);
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to send keys to search text field");
         }
@@ -138,9 +186,13 @@ public class HotelsIos extends HotelsBase{
         try {
             closeTheKeyboard_iOS();
             waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR,1);
-            findElementByAccessibilityIdAndClick(nameOnFirstSearchResults);
-            Logger.logStep("Tapped on search text field");
-            return nameOnFirstSearchResults;
+            boolean status = findElementByAccessibilityIdAndClick(nameOnFirstSearchResults);
+            if (status == true){
+                Logger.logStep("Tapped on search text field");
+                return nameOnFirstSearchResults;
+            }else{
+                Logger.logError("Didn't tapped on search text field");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to tap on first city name in search results");
         }
@@ -174,8 +226,12 @@ public class HotelsIos extends HotelsBase{
     public void tapOnCheckInButton(){
         Logger.logAction("Tapping on check in button");
         try {
-            findElementByXPathAndClick(XPATH_OF_CHECK_IN_AND_CHECK_OUT_LAYOUT); //Todo:- Tapping on check in layout as calender view is triggered only by tapping on the layout and not on check in button
-            Logger.logStep("Tapped on check in button");
+            boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_IN_AND_CHECK_OUT_LAYOUT); //Todo:- Tapping on check in layout as calender view is triggered only by tapping on the layout and not on check in button
+            if (status == true){
+                Logger.logStep("Tapped on check in button");
+            }else {
+                Logger.logError("Didn't tapped on check in button");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on check in button");
         }
@@ -188,8 +244,12 @@ public class HotelsIos extends HotelsBase{
     public void tapOnCheckOutButton(){
         Logger.logAction("Tapping on check out button");
         try {
-            findElementByXPathAndClick(XPATH_OF_CHECK_IN_AND_CHECK_OUT_LAYOUT); //Todo:- Tapping on check in layout as calender view is triggered only by tapping on the layout and not on check out button
-            Logger.logStep("Tapped on check out button");
+            boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_IN_AND_CHECK_OUT_LAYOUT); //Todo:- Tapping on check in layout as calender view is triggered only by tapping on the layout and not on check out button
+            if (status == true){
+                Logger.logStep("Tapped on check out button");
+            }else {
+                Logger.logError("Didn't tapped on check out button");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on check out button");
         }
@@ -202,13 +262,35 @@ public class HotelsIos extends HotelsBase{
     public void tapOnCheckInOptionInCalendarView(){
         Logger.logAction("Tapping on check in option in calender view");
         try {
-            findElementByXPathAndClick(XPATH_OF_CHECK_IN_BUTTON_IN_CALENDER_VIEW);
-            Logger.logComment("Tapped on check in option calender view");
-
+            boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_IN_BUTTON_IN_CALENDER_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on check in option in the calender view");
+            }else {
+                Logger.logError("Didn't tapped on check in option in the calendar view");
+            }
         }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to tap on check in calender view");
+            Logger.logError("Encountered error: Unable to tap on check in option in the calender view");
         }
     }
+
+    /**
+     * Tap on check out option in calender view
+     */
+    @Override
+    public void tapOnCheckOutOptionInCalendarView(){
+        Logger.logAction("Tapping on check out option in calender view");
+        try {
+            boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_OUT_BUTTON_IN_CALENDER_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on check out option in the calender view");
+            }else {
+                Logger.logError(" Didn't tapped on check out option in the calender view");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to tap on check out option in the calender view");
+        }
+    }
+
 
     /**
      * Select the departure date
@@ -217,135 +299,157 @@ public class HotelsIos extends HotelsBase{
      */
     @Override
     public void selectCheckInDate(String checkInMonthAndYear, String checkInDay) {
-        Logger.logAction("Selecting the check in  date : Month & Year -" + checkInMonthAndYear + ", Day - "+checkInDay);
+        Logger.logAction("Selecting the check in  date : Month & Year - " + checkInMonthAndYear + ", Day - "+checkInDay);
         int iterations = 0;
         int[] arrayListOfStartingPointLocationXAndY;
         int[] arrayListOfEndingPointLocationXAndY;
+
         try {
-            if (isElementDisplayedByXPath(CALENDER_MODAL_VIEW_XPATH)){
-                WebElement calendarView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
-                scrollToAnElementByName(calendarView,checkInMonthAndYear,true);
-                if (isElementDisplayedByName(checkInMonthAndYear)){
+            if (calendarViewStatus == false){
+                if (isElementDisplayedByXPath(CALENDER_MODAL_VIEW_XPATH)) {
+                    calendarViewStatus = true;
+                    Logger.logComment("Calendar view is displayed");
+                }else {
+                    Logger.logError("Calendar view is not displayed in the current active screen");
+                }
+            }else {
+                Logger.logComment("Calendar view is already displayed");
+            }
+            WebElement calendarView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+            scrollToAnElementByName(calendarView, checkInMonthAndYear, true);
+            if (isElementDisplayedByName(checkInMonthAndYear)) {
+                if (isElementEnabledByName(checkInDay)) {
+                    WebElement calenderView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+                    List<WebElement> checkInDays = calenderView.findElements(By.name(checkInDay));
+                    int checkInDaysSize = checkInDays.size();
+//                    if (checkInDaysSize >= 2) {
+//                        Logger.logComment("More than one similar departure days are displayed in the calender view with same check in day: " + checkInDay + "");
+//                        if (checkInDaysSize >= 2) {
+                            Logger.logWarning("More than one similar dates are displayed in the check in calender, so tapping on nearest possible date");
+                            for (int count = 0; count <= checkInDaysSize - 1; count++) {
+                                WebElement visibleCheckInDay = checkInDays.get(count);
+                                if (visibleCheckInDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)) {
+                                    visibleCheckInDay.click();
+                                    Logger.logComment("Tapped on day:- " + checkInDay);
+                                } else {
+                                    continue;
+                                }
+                            }
+                            String departureMonthName = getTheCheckInMonthDisplayedInCalenderView();
+                            String departureDayValue = getTheCheckInDayDisplayedInCalenderView();
+                            if (departureMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)) {
+                                if (departureDayValue.equalsIgnoreCase(checkInDay)) {
+                                    Logger.logComment("Tapped on correct departure day:- " + checkInDay);
+                                } else {
+                                    Logger.logStep("Tapped on incorrect date. So re tapping on the correct check in date");
+                                }
+                            } else {
+                                Logger.logStep("Tapped on incorrect date. So re tapping on the correct check in date");
+                                if (iterations <= 3) {
+                                    iterations++;
+                                    arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
+                                    arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "center");
+                                    driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1], arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1], 1000);
+                                    //Todo:- Below 6 lines of code is to tap on check in button in the calendar view after swiping
+                                    boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_IN_BUTTON_IN_CALENDER_VIEW);
+                                    if (status == true){
+                                        Logger.logComment("Tapped on check in option in the calender view");
+                                    }else {
+                                        Logger.logError("Didn't tapped on check in option in the calendar view");
+                                    }
+                                    //Todo:- Above 6 lines of code is to tap on check in button in the calendar view after swiping
+                                    selectCheckInDate(checkInMonthAndYear, checkInDay);
+                                } else {
+                                    Logger.logError("Tried " + iterations + " times didn't find the exact date");
+                                }
+                            }
+//                        } else {
+//                            driver.findElementByName(checkInDay).click();
+//                            Logger.logComment("Tapped on day:- " + checkInDay);
+//                        }
+//                    } else {
+//                        Logger.logComment("One check in day is displayed in the calender: " + checkInDay + "");
+//                        driver.findElementByName(checkInDay).click();
+//                        Logger.logComment("Tapped on day:- " + checkInDay);
+//                    }
+                } else {
+                    Logger.logError("Accurate Date is not displayed in the check in calendar date view");
+                }
+            } else {
+                scrollToAnElementByName(calendarView, checkInMonthAndYear, false);
+                if (isElementDisplayedByName(checkInMonthAndYear)) {
                     if (isElementEnabledByName(checkInDay)) {
                         WebElement calenderView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
                         List<WebElement> checkInDays = calenderView.findElements(By.name(checkInDay));
-                        int checkInDaysSize = checkInDays.size();
-                        if (checkInDaysSize >= 2){
-                            Logger.logComment("More than one similar departure days are displayed in the calender view with same check in day: "+checkInDay+"");
-                            if (checkInDaysSize >= 2){
-                                Logger.logWarning("More than one similar dates are displayed in the check in calender, so tapping on nearest possible date");
-                                for (int count =0;count<=checkInDays.size()-1;count++){
-                                    WebElement visibleCheckInDay = checkInDays.get(count);
-                                    if (visibleCheckInDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
-                                        visibleCheckInDay.click();
-                                        Logger.logComment("Tapped on day:- "+checkInDay);
-                                    }else
-                                    {
+                        int departureDaysSize = checkInDays.size();
+//                        if (departureDaysSize >= 2) {
+//                            Logger.logComment("More than one similar check in days are displayed in the calender view with same check in day: " + checkInDay + "");
+//                            if (departureDaysSize >= 2) {
+                                Logger.logWarning("More than one similar check in dates are displayed in the check in calender view, so tapping on nearest possible date");
+                                for (int count = 0; count <= departureDaysSize - 1; count++) {
+                                    WebElement visibleDepartureDay = checkInDays.get(count);
+                                    if (visibleDepartureDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)) {
+                                        visibleDepartureDay.click();
+                                        Logger.logComment("Tapped on day:- " + checkInDay);
+                                    } else {
                                         continue;
                                     }
                                 }
-                                String departureMonthName = getTheCheckInMonthDisplayedInCalenderView();
-                                String departureDayValue = getTheCheckInDayDisplayedInCalenderView();
-                                if (departureMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                    if (departureDayValue.equalsIgnoreCase(checkInDay)){
-                                        Logger.logComment("Tapped on correct departure day:- "+checkInDay);
-                                    }else {
-                                        Logger.logStep("Tapped on incorrect date. So re tapping on the correct check in date");
+                                String checkInMonthName = getTheCheckInMonthDisplayedInCalenderView();
+                                String checkInDayValue = getTheCheckInDayDisplayedInCalenderView();
+                                if (checkInMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)) {
+                                    if (checkInDayValue.equalsIgnoreCase(checkInDay)) {
+                                        Logger.logComment("Tapped on correct check in day:- " + checkInDay);
+                                    } else {
+                                        Logger.logStep("Tapped on incorrect date. So re tapping on the check in date");
                                     }
-                                }else {
-                                    Logger.logStep("Tapped on incorrect date. So re tapping on the correct check in date");
-                                    if (iterations <= 3){
+                                } else {
+                                    if (iterations <= 3) {
                                         iterations++;
                                         arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                        arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                        driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
+                                        arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "center");
+                                        driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1], arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1], 1000);
+                                        //Todo:- Below 6 lines of code is to tap on check in button in the calendar view after swiping
+                                        boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_IN_BUTTON_IN_CALENDER_VIEW);
+                                        if (status == true){
+                                            Logger.logComment("Tapped on check in option in the calender view");
+                                        }else {
+                                            Logger.logError("Didn't tapped on check in option in the calendar view");
+                                        }
+                                        //Todo:- Above 6 lines of code is to tap on check in button in the calendar view after swiping
                                         selectCheckInDate(checkInMonthAndYear, checkInDay);
-                                    }else {
-                                        Logger.logError("Tried "+iterations+" times didn't find the exact date");
+                                    } else {
+                                        Logger.logError("Tried " + iterations + " times didn't find the exact date");
                                     }
                                 }
-                            }else {
-                                driver.findElementByName(checkInDay).click();
-                                Logger.logComment("Tapped on day:- "+checkInDay);
-                            }
-                        }else {
-                            Logger.logComment("One check in day is displayed in the calender: "+checkInDay+"");
-                            driver.findElementByName(checkInDay).click();
-                            Logger.logComment("Tapped on day:- "+checkInDay);
-                        }
-                    }else {
-                        Logger.logError("Accurate Date is not displayed in the check in calendar date view");
+//                            } else {
+//                                driver.findElementByName(checkInDay).click();
+//                                Logger.logComment("Tapped on day:- " + checkInDay);
+//                            }
+//                        } else {
+//                            Logger.logComment("One check in day is displayed in the calender: " + checkInDay + "");
+//                            driver.findElementByName(checkInDay).click();
+//                            Logger.logComment("Tapped on day:- " + checkInDay);
+//                        }
+                    } else {
+                        Logger.logError("Accurate Date is not displayed in the check in calender view");
                     }
-                }else{
-                    scrollToAnElementByName(calendarView,checkInMonthAndYear,false);
-                    if (isElementDisplayedByName(checkInMonthAndYear)){
-                        if (isElementEnabledByName(checkInDay)) {
-                            WebElement  calenderView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
-                            List<WebElement> checkInDays = calenderView.findElements(By.name(checkInDay));
-                            int departureDaysSize = checkInDays.size();
-                            if (departureDaysSize >= 2){
-                                Logger.logComment("More than one similar check in days are displayed in the calender view with same check in day: "+checkInDay+"");
-                                if (departureDaysSize >= 2){
-                                    Logger.logWarning("More than one similar check in dates are displayed in the check in calender view, so tapping on nearest possible date");
-                                    for (int count =0;count<=checkInDays.size()-1;count++){
-                                        WebElement visibleDepartureDay = checkInDays.get(count);
-                                        if (visibleDepartureDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
-                                            visibleDepartureDay.click();
-                                            Logger.logComment("Tapped on day:- "+checkInDay);
-                                        }else
-                                        {
-                                            continue;
-                                        }
-                                    }
-                                    String checkInMonthName = getTheCheckInMonthDisplayedInCalenderView();
-                                    String checkInDayValue = getTheCheckInDayDisplayedInCalenderView();
-                                    if (checkInMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                        if (checkInDayValue.equalsIgnoreCase(checkInDay)){
-                                            Logger.logComment("Tapped on correct check in day:- "+checkInDay);
-                                        }else {
-                                            Logger.logStep("Tapped on incorrect date. So re tapping on the check in date");
-                                        }
-                                    }else {
-                                        if (iterations <= 3){
-                                            iterations++;
-                                            arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                            arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
-                                            selectCheckInDate(checkInMonthAndYear, checkInDay);
-                                        }else {
-                                            Logger.logError("Tried "+iterations+" times didn't find the exact date");
-                                        }
-                                    }
-                                }else {
-                                    driver.findElementByName(checkInDay).click();
-                                    Logger.logComment("Tapped on day:- "+checkInDay);
-                                }
-                            }else {
-                                Logger.logComment("One check in day is displayed in the calender: "+checkInDay+"");
-                                driver.findElementByName(checkInDay).click();
-                                Logger.logComment("Tapped on day:- "+checkInDay);
-                            }
-                        }else {
-                            Logger.logError("Accurate Date is not displayed in the check in calender view");
+                } else {
+                    if (iterations > 2) {
+                        iterations++;
+                        Logger.logWarning("Two accurate dates are displayed in the check in calender view , so tapping on nearest possible date");
+                        scrollToAnElementByName(calendarView, checkInMonthAndYear, true);
+                        if (isElementDisplayedByName(checkInDay)) {
+                            driver.findElementByName(checkInDay).click();
+                        } else {
+                            Logger.logError("Accurate check in date is not displayed in the check in calender view");
                         }
-                    }else{
-                        if (iterations >2){
-                            iterations++;
-                            Logger.logWarning("Two accurate dates are displayed in the check in calender view , so tapping on nearest possible date");
-                            scrollToAnElementByName(calendarView,checkInMonthAndYear,true);
-                            if (isElementDisplayedByName(checkInDay)) {
-                                driver.findElementByName(checkInDay).click();
-                            }else {
-                                Logger.logError("Accurate check in date is not displayed in the check in calender view");
-                            }
-                        }else {
-                            Logger.logError("unable to tap on the selected check in date..,tried - " +iterations+" times scrolling");
-                        }
+                    } else {
+                        Logger.logError("unable to tap on the selected check in date..,tried - " + iterations + " times scrolling");
                     }
                 }
-            }else{
-                Logger.logError("Calendar view is not displayed in the current active screen");
             }
+            calendarViewStatus = false;
         }catch (Exception exception){
             Logger.logError("Encountered Error: Unable to select the date in the date modal");
         }
@@ -358,132 +462,156 @@ public class HotelsIos extends HotelsBase{
      */
     @Override
     public void selectCheckOutDate(String checkOutMonthAndYear, String checkOutDay) {
-        Logger.logAction("Selecting the check out date : Month & Year -" + checkOutMonthAndYear + ", Day - "+checkOutDay);
+        Logger.logAction("Selecting the check out date : Month & Year - " + checkOutMonthAndYear + ", Day - "+checkOutDay);
         int iterations = 0;
         int[] arrayListOfStartingPointLocationXAndY;
         int[] arrayListOfEndingPointLocationXAndY;
         try {
-            if (isElementDisplayedByXPath(CALENDER_MODAL_VIEW_XPATH)){
-                WebElement calendarView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
-                scrollToAnElementByName(calendarView,checkOutMonthAndYear,true);
-                if (isElementDisplayedByName(checkOutMonthAndYear)){
+            if (calendarViewStatus == false){
+                if (isElementDisplayedByXPath(CALENDER_MODAL_VIEW_XPATH)) {
+                    calendarViewStatus = true;
+                    Logger.logComment("Calendar view is displayed");
+                }else {
+                    Logger.logError("Calendar view is not displayed in the current active screen");
+                }
+            }else {
+                Logger.logComment("Calendar view is already displayed");
+            }
+            if (calendarViewStatus == true){
+                Logger.logComment("Calendar view is already displayed");
+            }
+            tapOnCheckOutOptionInCalendarView();
+            WebElement calendarView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+            scrollToAnElementByName(calendarView, checkOutMonthAndYear, true);
+            if (isElementDisplayedByName(checkOutMonthAndYear)) {
+                if (isElementEnabledByName(checkOutDay)) {
+                    WebElement calenderView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+                    List<WebElement> checkOutDays = calenderView.findElements(By.name(checkOutDay));
+                    int checkOutDaysSize = checkOutDays.size();
+//                    if (checkOutDaysSize >= 2) {
+//                        Logger.logComment("Two departure days are displayed in the calender view with same check out day: " + checkOutDay + "");
+//                        if (checkOutDaysSize >= 2) {
+                            Logger.logWarning("Two accurate dates are displayed in the check out calender view, so tapping on nearest possible check out date");
+                            for (int count = 0; count <= checkOutDaysSize - 1; count++) {
+                                WebElement visibleCheckOutDay = checkOutDays.get(count);
+                                if (visibleCheckOutDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)) {
+                                    visibleCheckOutDay.click();
+                                    Logger.logComment("Tapped on day:- " + visibleCheckOutDay);
+                                } else {
+                                    continue;
+                                }
+                            }
+                            String checkOutMonthName = getTheCheckOutMonthDisplayedInCalenderView();
+                            String checkOutDayValue = getTheCheckOutDayDisplayedInCalenderView();
+                            if (checkOutMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)) {
+                                if (checkOutDayValue.equalsIgnoreCase(checkOutDay)) {
+                                    Logger.logComment("Tapped on correct check out day:- " + checkOutDay);
+                                } else {
+                                    Logger.logStep("Tapped on incorrect check out date. So re tapping on the correct check out date");
+                                }
+                            } else {
+                                if (iterations <= 3) {
+                                    iterations++;
+                                    arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
+                                    arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "center");
+                                    driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1], arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1], 1000);
+                                    //Todo:- Below 6 lines of code is to tap on check in button in the calendar view after swiping
+                                    boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_OUT_BUTTON_IN_CALENDER_VIEW);
+                                    if (status == true){
+                                        Logger.logComment("Tapped on check in option in the calender view");
+                                    }else {
+                                        Logger.logError("Didn't tapped on check in option in the calendar view");
+                                    }
+                                    //Todo:- Above 6 lines of code is to tap on check in button in the calendar view after swiping
+                                    selectCheckOutDate(checkOutMonthAndYear, checkOutDay);
+                                } else {
+                                    Logger.logError("Tried " + iterations + " times didn't find the exact check out date");
+                                }
+                            }
+//                        } else {
+//                            driver.findElementByName(checkOutDay).click();
+//                            Logger.logComment("Tapped on day:- " + checkOutDay);
+//                        }
+//                    } else {
+//                        Logger.logComment("One check out day is displayed in the return calender: " + checkOutDay + "");
+//                        driver.findElementByName(checkOutDay).click();
+//                    }
+                } else {
+                    Logger.logError("Accurate Date is not displayed in the check out calender view");
+                }
+            } else {
+                scrollToAnElementByName(calendarView, checkOutMonthAndYear, false);
+                if (isElementDisplayedByName(checkOutMonthAndYear)) {
                     if (isElementEnabledByName(checkOutDay)) {
-                        WebElement  calenderView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
+                        WebElement calenderView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
                         List<WebElement> checkOutDays = calenderView.findElements(By.name(checkOutDay));
                         int checkOutDaysSize = checkOutDays.size();
-                        if (checkOutDaysSize >= 2){
-                            Logger.logComment("Two departure days are displayed in the calender view with same check out day: "+checkOutDay+"");
-                            if (checkOutDaysSize >= 2){
-                                Logger.logWarning("Two accurate dates are displayed in the check out calender view, so tapping on nearest possible check out date");
-                                for (int count =0;count<=checkOutDays.size()-1;count++){
-                                    WebElement visibleCheckOutDay = checkOutDays.get(count);
-                                    if (visibleCheckOutDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
-                                        visibleCheckOutDay.click();
-                                        Logger.logComment("Tapped on day:- "+visibleCheckOutDay);
-                                    }else
-                                    {
+//                        if (checkOutDaysSize >= 2) {
+                            Logger.logComment("Two check out days are displayed in the calender view with same return day: " + checkOutDay + "");
+//                            if (checkOutDaysSize >= 2) {
+                                Logger.logWarning("Two accurate dates are displayed in the check out calender view, so tapping on nearest possible date");
+                                for (int count = 0; count <= checkOutDaysSize - 1; count++) {
+                                    WebElement visibleReturnDay = checkOutDays.get(count);
+                                    if (visibleReturnDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)) {
+                                        visibleReturnDay.click();
+                                        Logger.logComment("Tapped on day:- " + visibleReturnDay);
+                                    } else {
                                         continue;
                                     }
                                 }
                                 String checkOutMonthName = getTheCheckOutMonthDisplayedInCalenderView();
                                 String checkOutDayValue = getTheCheckOutDayDisplayedInCalenderView();
-                                if (checkOutMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                    if (checkOutDayValue.equalsIgnoreCase(checkOutDay)){
-                                        Logger.logComment("Tapped on correct check out day:- "+checkOutDay);
-                                    }else {
-                                        Logger.logStep("Tapped on incorrect check out date. So re tapping on the correct check out date");
+                                if (checkOutMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)) {
+                                    if (checkOutDayValue.equalsIgnoreCase(checkOutDay)) {
+                                        Logger.logComment("Tapped on correct departure day:- " + checkOutDay);
+                                    } else {
+                                        Logger.logStep("Tapped on incorrect date. So re tapping on the check out date");
                                     }
-                                }else {
-                                    if (iterations <= 3){
+                                } else {
+                                    if (iterations <= 3) {
                                         iterations++;
                                         arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                        arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                        driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
+                                        arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "center");
+                                        driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1], arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1], 1000);
+                                        //Todo:- Below 6 lines of code is to tap on check in button in the calendar view after swiping
+                                        boolean status = findElementByXPathAndClick(XPATH_OF_CHECK_OUT_BUTTON_IN_CALENDER_VIEW);
+                                        if (status == true){
+                                            Logger.logComment("Tapped on check in option in the calender view");
+                                        }else {
+                                            Logger.logError("Didn't tapped on check in option in the calendar view");
+                                        }
+                                        //Todo:- Above 6 lines of code is to tap on check in button in the calendar view after swiping
                                         selectCheckOutDate(checkOutMonthAndYear, checkOutDay);
-                                    }else {
-                                        Logger.logError("Tried "+iterations+" times didn't find the exact check out date");
+                                    } else {
+                                        Logger.logError("Tried " + iterations + " times didn't find the exact date");
                                     }
                                 }
-                            }else {
-                                driver.findElementByName(checkOutDay).click();
-                                Logger.logComment("Tapped on day:- "+checkOutDay);
-                            }
-                        }else {
-                            Logger.logComment("One check out day is displayed in the return calender: "+checkOutDay+"");
-                            driver.findElementByName(checkOutDay).click();
-                        }
-                    }else {
+//                            } else {
+//                                driver.findElementByName(checkOutDay).click();
+//                                Logger.logComment("Tapped on day:- " + checkOutDay);
+//                            }
+//                        } else {
+//                            Logger.logComment("One check out day is displayed in the return calender: " + checkOutDay + "");
+//                            driver.findElementByName(checkOutDay).click();
+//                        }
+                    } else {
                         Logger.logError("Accurate Date is not displayed in the check out calender view");
                     }
-                }else{
-                    scrollToAnElementByName(calendarView,checkOutMonthAndYear,false);
-                    if (isElementDisplayedByName(checkOutMonthAndYear)){
-                        if (isElementEnabledByName(checkOutDay)) {
-                            WebElement  calenderView = driver.findElementByClassName(Labels_Hotels.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
-                            List<WebElement> checkOutDays = calenderView.findElements(By.name(checkOutDay));
-                            int checkOutDaysSize = checkOutDays.size();
-                            if (checkOutDaysSize >= 2){
-                                Logger.logComment("Two check out days are displayed in the calender view with same return day: "+checkOutDay+"");
-                                if (checkOutDaysSize >= 2){
-                                    Logger.logWarning("Two accurate dates are displayed in the check out calender view, so tapping on nearest possible date");
-                                    for (int count =0;count<=checkOutDays.size()-1;count++){
-                                        WebElement visibleReturnDay = checkOutDays.get(count);
-                                        if (visibleReturnDay.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
-                                            visibleReturnDay.click();
-                                            Logger.logComment("Tapped on day:- "+visibleReturnDay);
-                                        }else
-                                        {
-                                            continue;
-                                        }
-                                    }
-                                    String checkOutMonthName = getTheCheckOutMonthDisplayedInCalenderView();
-                                    String checkOutDayValue = getTheCheckOutDayDisplayedInCalenderView();
-                                    if (checkOutMonthName.equalsIgnoreCase(Labels_Hotels.DEPARTURE_MONTH_IN_CALENDAR_VIEW)){
-                                        if (checkOutDayValue.equalsIgnoreCase(checkOutDay)){
-                                            Logger.logComment("Tapped on correct departure day:- "+checkOutDay);
-                                        }else {
-                                            Logger.logStep("Tapped on incorrect date. So re tapping on the check out date");
-                                        }
-                                    }else {
-                                        if (iterations <= 3){
-                                            iterations++;
-                                            arrayListOfStartingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView, "centerRight");
-                                            arrayListOfEndingPointLocationXAndY = getCoOrdinatesForPreciseTapOnElement(calenderView,"center");
-                                            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],1000);
-                                            selectCheckOutDate(checkOutMonthAndYear, checkOutDay);
-                                        }else {
-                                            Logger.logError("Tried "+iterations+" times didn't find the exact date");
-                                        }
-                                    }
-                                }else {
-                                    driver.findElementByName(checkOutDay).click();
-                                    Logger.logComment("Tapped on day:- "+checkOutDay);
-                                }
-                            }else {
-                                Logger.logComment("One check out day is displayed in the return calender: "+checkOutDay+"");
-                                driver.findElementByName(checkOutDay).click();
-                            }
-                        }else {
+                } else {
+                    if (iterations != 1) {
+                        Logger.logWarning("Two accurate dates are displayed in the check out calender view, so tapping on nearest possible date");
+                        scrollToAnElementByName(calendarView, checkOutMonthAndYear, true);
+                        if (isElementDisplayedByName(checkOutDay)) {
+                            driver.findElementByName(checkOutDay).click();
+                        } else {
                             Logger.logError("Accurate Date is not displayed in the check out calender view");
                         }
-                    }
-                    else{
-                        if (iterations !=1){
-                            Logger.logWarning("Two accurate dates are displayed in the check out calender view, so tapping on nearest possible date");
-                            scrollToAnElementByName(calendarView,checkOutMonthAndYear,true);
-                            if (isElementDisplayedByName(checkOutDay)) {
-                                driver.findElementByName(checkOutDay).click();
-                            }else {
-                                Logger.logError("Accurate Date is not displayed in the check out calender view");
-                            }
-                        }else {
-                            Logger.logError("unable to tap on the selected check out date..,tried - " +iterations);
-                        }
+                    } else {
+                        Logger.logError("unable to tap on the selected check out date..,tried - " + iterations);
                     }
                 }
-            }else{
-                Logger.logError("Calendar view is not displayed in the current active screen");
             }
+            calendarViewStatus = false;
         }catch (Exception exception){
             Logger.logError("Encountered Error: Unable to select the date in the date modal");
         }
@@ -702,7 +830,7 @@ public class HotelsIos extends HotelsBase{
         try {
             if (isRoomsListViewIsDisplayed()){
                 Integer roomsCountInRoomsListView = getTheRoomsCountInRoomsListView();
-                if (roomNumber == roomsCountInRoomsListView){
+                if (roomNumber <= roomsCountInRoomsListView){
                     setTheAdultCountTo(roomNumber, adultCount);
                     setTheChildCountTo(roomNumber,childCount);
                     setTheChildAge(roomNumber,childCount); // Todo:- In this method child age is an random number

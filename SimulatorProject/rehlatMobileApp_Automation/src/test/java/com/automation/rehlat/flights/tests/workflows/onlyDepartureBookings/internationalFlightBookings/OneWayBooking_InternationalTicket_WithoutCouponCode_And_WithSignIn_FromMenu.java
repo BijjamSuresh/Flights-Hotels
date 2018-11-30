@@ -10,8 +10,9 @@ import static com.automation.rehlat.flights.Labels_Flights.*;
 public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_FromMenu extends BaseTest {
     @Test
     public void testTicketBookingWithoutCouponCodeAndWithSignInFromMenu() throws Exception{
+        Logger.beginTest("OneWay_International_Ticket booking without coupon code and with sign in from menu");
+        printCurrentTestRunningInformation();
         Labels_Flights.FLIGHT_BOOKING_TYPE = INTERNATIONAL_FLIGHT_BOOKING;
-        Logger.beginTest("- Ticket booking without coupon code and with sign in from menu");
         FlightsScreen.selectCountryNameInSelectLanguageModal(Labels_Flights.CURRENT_USER_COUNTRY_NAME); // Country name needs to changed while testing for countries other than Kuwait.
         FlightsScreen.checkFlightsTabIsDisplayed();
         FlightsScreen.tapOnMenuButton();
@@ -100,7 +101,7 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
             BookingPageScreen.checkFinalFareCalculationIsCorrect();
             BookingPageScreen.tapOnContinueButton();
             if (PaymentOptionsScreen.isTicketSoldOutPopUpIsDisplayed()) {
-                PaymentOptionsScreen.tapOnOkButtonInTicketSoldOutPopup();
+                addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Tickets Are Sold Out In Two Attempts");// Todo:- By Default setting the test case execution status as false
                 Logger.logError("Tried booking seats for two flights, both tickets are sold out......, Please re-run the script with different dates");
             }else {
                 PaymentOptionsScreen.checkPaymentOptionsScreenIsDisplayed();
@@ -148,5 +149,6 @@ public class OneWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
             }
         }
         Logger.endTest("- Ticket booking without coupon code and with sign in from menu");
+        addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"true");
     }
 }
