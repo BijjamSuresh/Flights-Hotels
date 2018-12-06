@@ -24,20 +24,20 @@ public class Labels_Flights extends Base{
     //////  Important Capabilities//////////
     //Todo:- Please recheck on editing the below labels
     public static String DEFAULT_PLATFORM = ANDROID;
-    public static final String CURRENT_RUNNING_DOMAIN = "KWI";
+    public static final String CURRENT_RUNNING_DOMAIN = "SA";
     public static final String CURRENT_RUNNING_APP_ENVIRONMENTAL_CONFIGURATION = "Stage";
-    public static String DEVICE_NAME = "Pixel2";
+    public static String DEVICE_NAME = "Nexus6";
     public static String DEVICE_OS = "12.1"; //Todo:- Device OS needs to be changed only for iOS, for android automatically it will pick up OS while test script running.
-    public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "5"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
+    public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "3"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
     public static Integer EMAIL_ID_NUMBER_FOR_SIGN_UP_WRT_PORT_NUMBER; // This is for port two connected device [Either iOS or Android]
-    public static String WDA_LOCAL_PORT_DEFAULT = "9010";
+    public static String WDA_LOCAL_PORT_DEFAULT = "9020";
     public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_debug.apk";
     //    public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_release.apk";
     public static final String ANDROID_CAPABILITIES_DEVICE_TYPE = "Emulator";
     public static String DEVICE_UDID ;
     public static String ANDROID_DEVICE_OS;
     public static final String APPIUM_DEVICE_ID_DEFAULT = "emulator-5556"; // MI id
-    public static final String ReportFileName = "Execution_Results_"+DEVICE_NAME+"_KWI_Domain.json"; //Todo:- Before running the scripts make sure this json is created in the project location
+    public static final String ReportFileName = "Execution_Results_"+DEVICE_NAME+"_"+CURRENT_RUNNING_DOMAIN+"_Domain.json"; //Todo:- Before running the scripts make sure this json is created in the project location
 
     /**
      * Assigning the device UDUD that needs to be run w.r.t the device name

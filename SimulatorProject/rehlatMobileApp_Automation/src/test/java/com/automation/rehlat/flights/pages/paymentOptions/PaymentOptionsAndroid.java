@@ -161,6 +161,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                     Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
                     if (FARE_JUMP_STATUS == true){
                         Logger.logStep("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen);
+                        FARE_JUMP_STATUS =false;// Todo:- Resetting the fare jump status to false.
                     }else {
                         if (Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN.equalsIgnoreCase(finalAmountPayablePriceInPaymentCheckOutScreen) || Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN) == (finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen)){
                             Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");

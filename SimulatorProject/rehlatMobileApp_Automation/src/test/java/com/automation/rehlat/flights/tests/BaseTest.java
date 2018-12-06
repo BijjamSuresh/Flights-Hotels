@@ -33,6 +33,7 @@ import org.openqa.selenium.OutputType;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
@@ -186,8 +187,17 @@ public class BaseTest extends Base {
         Logger.logAction("Adding the test result status to execution results json file");
         try {
             try {
+                String jsonParameters = "[{}]";
+                FileReader fileReader;
                 JSONParser jsonParser = new JSONParser();
-                FileReader fileReader = new FileReader(ReportFileName);
+                try {
+                    fileReader = new FileReader(ReportFileName);
+                }catch (FileNotFoundException fileNotfoundException){
+                    FileWriter fileWriter = new FileWriter(ReportFileName);
+                    fileWriter.write(jsonParameters);
+                    fileWriter.flush();
+                    fileReader = new FileReader(ReportFileName);
+                }
                 JSONArray jsonArray = (JSONArray) jsonParser.parse(fileReader);
                 JSONObject jsonObject = (JSONObject) jsonArray.get(0);
                 jsonObject.put(testCaseName,executionStatus);
@@ -258,13 +268,14 @@ public class BaseTest extends Base {
             htmlStringBuilder.append("<tr>");
             if (tcName.contains("Total")){
                 if (tcName.equalsIgnoreCase("Total Passed Test Cases Count")){
-                    htmlStringBuilder.append("<td>"+tcName+Labels_Flights.ONE_CHARACTER_SPACE+"("+"<font color=\"green\">&#10004;<font color=\"black\">)</td>");
+                    htmlStringBuilder.append("<td width=\"700\";>"+tcName+Labels_Flights.ONE_CHARACTER_SPACE+"("+"<font color=\"green\">&#10004;<font color=\"black\">)</td>");
                 }else if (tcName.equalsIgnoreCase("Total Failed Cases Count")){
-                    htmlStringBuilder.append("<td>"+tcName+Labels_Flights.ONE_CHARACTER_SPACE+"("+"<font color=\"red\">&#10006;<font color=\"black\">)</td>");
+                    htmlStringBuilder.append("<td width=\"700\";>"+tcName+Labels_Flights.ONE_CHARACTER_SPACE+"("+"<font color=\"red\">&#10006;<font color=\"black\">)</td>");
                 }else {
-                    htmlStringBuilder.append("<td>"+tcName+"</td>");
+                    htmlStringBuilder.append("<td width=\"700\";>"+tcName+"</td>");
                 }
                 htmlStringBuilder.append("<td align=\"center\"><font color=\"black\">"+tcReport+"</td>");
+                htmlStringBuilder.append("<td></td>");
             }else {
                 htmlStringBuilder.append("<td>"+tcName+"</td>");
                 if (tcReport.equalsIgnoreCase("true")){
@@ -275,7 +286,13 @@ public class BaseTest extends Base {
                     htmlStringBuilder.append("<td align=\"center\"><font color=\"red\">&#10006;</td>");
                     if (failureReason.equalsIgnoreCase("Tickets Are Sold Out In Two Attempts")){
                         htmlStringBuilder.append("<td>For 2 Attempts - Sold Outs</td>");
-                    }else {
+                    }else if (failureReason.contains("Knet Payment Failed")){
+                        htmlStringBuilder.append("<td>Payment Failed</td>");
+                    }
+                    else if (failureReason.contains("Chekout Payment Failed")){
+                        htmlStringBuilder.append("<td>Payment Failed</td>");
+                    }
+                    else {
                         htmlStringBuilder.append("<td>Issue</td>");
                     }
                 }else {
@@ -297,12 +314,12 @@ public class BaseTest extends Base {
     public static String headerHtmlWithoutClosingBodyAndTableHtmlStrings(){
         try {
             StringBuilder htmlStringBuilder = new StringBuilder();
-            htmlStringBuilder.append("<table style=\"height: 59px; border-color: 330000; background-color:#FFCC99;\" border=\"3\" width=\"585\"");
+            htmlStringBuilder.append("<table style=\"height: 59px; border-color: 330000; background-color:#FFCC99;\" border=\"3\" width=\"1100\"");
             htmlStringBuilder.append("<thead>");
             htmlStringBuilder.append("<tr>");
-            htmlStringBuilder.append("<th>TC'S NAMES</th>");
-            htmlStringBuilder.append("<th>EXECUTION STATUS</th>");
-            htmlStringBuilder.append("<th>FAILURE REASON</th>");
+            htmlStringBuilder.append("<th width=\"700\">TC'S NAMES</th>");
+            htmlStringBuilder.append("<th width=\"200\">EXECUTION STATUS</th>");
+            htmlStringBuilder.append("<th width=\"200\">FAILURE REASON</th>");
             htmlStringBuilder.append("</tr>");
             htmlStringBuilder.append("</thead>");
             htmlStringBuilder.append("<tfoot>");

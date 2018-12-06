@@ -111,7 +111,7 @@ public class ReviewBookingIos extends ReviewBookingBase {
         Double bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen;
         try {
 //            waitTillInProgressIndicatorIsInvisible();
-            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,2);
+            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
              bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen = getTheBookingPriceDisplayedInFooterView();
              Logger.logComment("Selecting flight cost is :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
             if (bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen == Double.parseDouble(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){

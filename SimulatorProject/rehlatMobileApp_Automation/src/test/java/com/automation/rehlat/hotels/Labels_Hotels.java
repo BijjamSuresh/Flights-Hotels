@@ -23,10 +23,10 @@ public class Labels_Hotels extends Base {
 
     //////  Important Capabilities//////////
     //Todo:- Please recheck on editing the below labels
-    public static String DEFAULT_PLATFORM = IOS;
+    public static String DEFAULT_PLATFORM = ANDROID;
     public static final String CURRENT_RUNNING_DOMAIN = "KWI";
     public static final String CURRENT_RUNNING_APP_ENVIRONMENTAL_CONFIGURATION = "Live";
-    public static String DEVICE_NAME = "iPhoneXSMax";
+    public static String DEVICE_NAME = "Pixel2";
     public static String DEVICE_OS = "12.1"; //Todo:- Device OS needs to be changed only for iOS, for android automatically it will pick up OS while test script running.
     public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "8"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
     public static Integer EMAIL_ID_NUMBER_FOR_SIGN_UP_WRT_PORT_NUMBER; // This is for port two connected device [Either iOS or Android]
@@ -37,6 +37,8 @@ public class Labels_Hotels extends Base {
     public static final String APPIUM_DEVICE_ID_DEFAULT = "BH901M4F4C"; // Sony device id //Todo:- Before running the script check the UDID w.r.t. devices is listed/added in the android devices list json file.
     //    public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_debug.apk";
     public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_release.apk";
+    public static final String ReportFileName = "Execution_Results_"+DEVICE_NAME+"_"+CURRENT_RUNNING_DOMAIN+"_Domain.json"; //Todo:- Before running the scripts make sure this json is created in the project location
+
 
     /**
      * Assigning the device UDUD that needs to be run w.r.t the device name

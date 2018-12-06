@@ -13,7 +13,7 @@ public class TwoWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
         Logger.beginTest("TwoWay_International_Ticket booking without couponCode and without sign up or sign in ");
         printCurrentTestRunningInformation();
         Labels_Flights.FLIGHT_BOOKING_TYPE = INTERNATIONAL_FLIGHT_BOOKING;
-        Logger.beginTest("- Ticket booking without coupon code and with sign in from bookings page");
+        Logger.beginTest("TwoWay_International_Ticket booking without coupon code and with sign in from bookings page");
         FlightsScreen.selectCountryNameInSelectLanguageModal(Labels_Flights.CURRENT_USER_COUNTRY_NAME); // Country name needs to changed while testing for countries other than Kuwait.
         FlightsScreen.checkFlightsTabIsDisplayed();
         FlightsScreen.tapOnMenuButton();
@@ -147,7 +147,7 @@ public class TwoWayBooking_InternationalTicket_WithoutCouponCode_And_WithSignIn_
             PaymentOptionsScreen.checkTheCreditOrDebitCardBookingProcessIsSuccess();
             }
         }
-        Logger.endTest("- Ticket booking without coupon code and with sign in from bookings page");
+        Logger.endTest("TwoWay_International_Ticket booking without coupon code and with sign in from bookings page");
         addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"true");
 
     }

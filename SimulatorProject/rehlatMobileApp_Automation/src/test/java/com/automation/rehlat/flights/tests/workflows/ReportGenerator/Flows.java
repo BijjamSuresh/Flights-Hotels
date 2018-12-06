@@ -6,7 +6,8 @@ import org.junit.Test;
 public class Flows extends BaseTest {
     @Test
     public void testFlows() throws Exception{
-        String htmlReport = createHtmlStringOfExecutionResults("Execution_Results_Pixel2_KWI_Domain.json");
+//        addTestResultStatusToExecutionResultsJsonFile("testCase1","false");
+        String htmlReport = createHtmlStringOfExecutionResults("Execution_Results_Pixel2_EG_Domain.json");
         sendEmail(htmlReport);
     }
 }

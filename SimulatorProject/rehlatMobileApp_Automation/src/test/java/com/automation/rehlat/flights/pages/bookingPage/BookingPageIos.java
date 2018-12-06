@@ -13,29 +13,42 @@ import static com.automation.rehlat.flights.tests.BaseTest.isUserSignedIn;
 
 public class BookingPageIos extends BookingPageBase {
 
-    public static final String XPATH_OF_EMAIL_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeTextField[1]";
-    public static final String XPATH_OF_PHONE_NUMBER_FIELD = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeTextField[2]";
-    public static final String OFFERS_AND_DISCOUNTS_LAYOUT_ID = "OffersAndDiscountsSection";
-    public static final String ADULT_TRAVELLERS_BUTTON = "Adult";
+    public static final String XPATH_OF_EMAIL_FIELD = "//XCUIElementTypeTextField[@name=\"emailTextfield\"]";
+    public static final String XPATH_OF_PHONE_NUMBER_FIELD = "//XCUIElementTypeTextField[@name=\"mobileTextfield\"]";
+    public static final String OFFERS_AND_DISCOUNTS_LAYOUT_ID = "Offers and Discounts";
+    public static final String ADULT_TRAVELLERS_BUTTON = "travellerName";
     public static final String CONTACT_DETAILS_VIEW ="Contact Details";
-    public static final String ADD_TRAVELLERS_DETAILS = "Add Travellers Details";
-    public static final String SIGNED_IN_FOR_FAST_BOOKINGS_BUTTON = "Sign in for faster bookings";
-    public static final String CONTINUE_BUTTON_IN_BOOKING_PAGE = "Continue";
-    public static final String XPATH_OF_COUPON_CODE_TEXT_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[2]/XCUIElementTypeTextField";
-    public static final String APPLY_COUPON_CODE_BUTTON = "Apply";
+    public static final String ADD_TRAVELLERS_DETAILS = "Add Traveller Details";
+    public static final String SIGNED_IN_FOR_FAST_BOOKINGS_BUTTON = "loginAction";
+    public static final String CONTINUE_BUTTON_IN_BOOKING_PAGE = "payNow";
+    public static final String XPATH_OF_COUPON_CODE_TEXT_VIEW = "//XCUIElementTypeTextField[@name=\"couponTextField\"]";
+    public static final String APPLY_COUPON_CODE_BUTTON = "couponApply";
     public static final String COUPON_CODE_FAILED_LABEL = "Coupon is invalid or expired";
-    public static final String XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[2]";
+    public static final String XPATH_OF_OFFERS_AND_DISCOUNTS_VIEW = "//XCUIElementTypeOther[@name=\"Offers and Discounts\"]";
     public static final String KARAM_POINTS_TOGGLE_BUTTON = "XCUIElementTypeSwitch";
-    public static final String XPATH_OF_CONTACT_INFO_COUNTRY_CELL = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeButton";
+    public static final String XPATH_OF_CONTACT_INFO_COUNTRY_CELL = "//XCUIElementTypeButton[@name=\"countrySelection\"]";
     public static final String XPATH_OF_CONTACT_INFO_COUNTRY_NAME = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeStaticText";
     public static final String CHOOSE_COUNTRY_MODAL="Choose Country";
-    public static final String COUPON_CODE_CLOSE_BUTTON = "X";
-    public static final String XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL = "//XCUIElementTypeStaticText[@name=\"Add Travellers Details\"]";
-    public static final String KARAM_WALLET_MESSAGE_ID = "Your Karam wallet is empty.";
+    public static final String COUPON_CODE_CLOSE_BUTTON = "couponEdit";
+    public static final String XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL = "//XCUIElementTypeOther[@name=\"Add Traveller Details\"]";
+    public static final String KARAM_WALLET_MESSAGE_ID = "karamBalanceLabel";
     public static final String USE_KARAM_CASH_LABEL_ID = "Use Karam Points";
-    public static final String FOOTER_VIEW_PRICE_ID = "price";
-    public static final String XPATH_OF_FOOTER_VIEW_PRICE_ID = "//XCUIElementTypeStaticText[@name=\"price\"]";
+    public static final String FOOTER_VIEW_PRICE_ID = "totalFare";
+    public static final String SHOW_DETAILS_OPTION_ID_IN_FOOTER_VIEW = "showDetails";
+    public static final String XPATH_OF_FOOTER_VIEW_PRICE_ID = "//XCUIElementTypeStaticText[@name=\"totalFare\"]";
     public static final String TERMS_AND_CONDITIONS_URL_ID = "By clicking on Continue you agree to our Terms & Conditions";
+    public static final String XPATH_OF_KARAM_BALANCE_MESSAGE = "//XCUIElementTypeStaticText[@name=\"karamBalanceLabel\"]";
+    public static final String KARAM_TOGGLE_SWITCH = "walletSwitch";
+    public static final String XPATH_OF_TERMS_AND_CONDITIONS_LABEL = "//XCUIElementTypeStaticText[@name=\"By clicking on Pay Now you agree to our Terms & Conditions\"]";
+    public static final String SELECT_SEAT_ID_IN_ONLINE_CHECK_IN_LAYOUT = "selectSeat";
+    public static final String WINDOW_SEAT_SELECTION_BUTTON_ID_IN_ONLINE_CHECK_IN_POPUP = "windowSelection";
+    public static final String SUBMIT_SEAT_PREFERENCE_BUTTON_ID_IN_ONLINE_CHECK_IN_POPUP = "Submit Seat Preference";
+    public static final String DONE_BUTTON_ID_IN_FARE_RULES_VIEW = "Done";
+    public static final String ONLINE_CHECK_IN_PRICE_IN_FARE_RULES_VIEW = "onlineCheckinPrice";
+    public static final String FARE_RULES_TITLE = "Fare Rules";
+    public static final String SHOW_DETAILS_BUTTON_IN_FOOTER_VIEW = "showDetails";
+    public static final String ONLINE_CHECK_IN_TOGGLE_IN = "Online Check In";
+
 
 
     /**
@@ -170,9 +183,11 @@ public class BookingPageIos extends BookingPageBase {
     public void tapOnAdultAddTravellersDetailsButton() {
         Logger.logStep("Tapping on adult add travellers details button");
         try{
-            scrollToAnElementByAccessibiltiyId_IOS(TERMS_AND_CONDITIONS_URL_ID,true);
-            if (isElementDisplayedByName(ADULT_TRAVELLERS_BUTTON)){
-                driver.findElementByName(ADULT_TRAVELLERS_BUTTON).click();
+//            scrollToAnElementByAccessibiltiyId_IOS(TERMS_AND_CONDITIONS_URL_ID,true);//Todo:- This line of code needs to be enabled after implementing the 'Terms And Conditions' label
+//            scrollTheScreenDownwards();
+//            scrollTheScreenDownwards();
+            boolean status = findElementByAccessibilityIdAndClick(ADULT_TRAVELLERS_BUTTON);
+            if (status == true){
                 Logger.logComment("Tapped on adult button");
             }else{
                 Logger.logError("Unable to tap on add travellers details button");
@@ -212,8 +227,8 @@ public class BookingPageIos extends BookingPageBase {
         try{
             switch (priceType){
                 case "displayedActualFare":
-                        if (isElementDisplayedByAccessibilityId("actualFare")){
-                            fareWithCurrency = driver.findElementByAccessibilityId("actualFare").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                        if (isElementDisplayedByAccessibilityId("actualAmount")){
+                            fareWithCurrency = driver.findElementByAccessibilityId("actualAmount").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
                             if (fareWithCurrency.contains(Labels_Flights.STRING_COMMA)){
                                 fareWithCurrency = fareWithCurrency.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
                             }
@@ -240,8 +255,8 @@ public class BookingPageIos extends BookingPageBase {
                             Logger.logError("Coupon amount element is not displayed");
                         }
                 case "karamCash":
-                        if (isElementDisplayedByAccessibilityId("karamCash")){
-                            fareWithCurrency = driver.findElementByAccessibilityId("karamCash").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                        if (isElementDisplayedByAccessibilityId("karamAmount")){
+                            fareWithCurrency = driver.findElementByAccessibilityId("karamAmount").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
                             Double fareWithoutCurrency = Double.valueOf(fareWithCurrency.replace(Labels_Flights.MINUS_WITH_IN_BRACKETS+Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL).trim());
                             Logger.logComment("Karam cash is :- "+fareWithoutCurrency);
                             return  fareWithoutCurrency;
@@ -278,15 +293,15 @@ public class BookingPageIos extends BookingPageBase {
     public void checkFinalFareCalculationIsCorrect() {
         Logger.logStep("Checking the final fare calculation is correct or not ?");
         try {
-            Double reviewBookingPriceInFooterView = Double.valueOf(getTheBookingPriceDisplayedInFooterView());
-            Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(reviewBookingPriceInFooterView);
-            Logger.logComment("Cost of ticket in Booking page is :- "+reviewBookingPriceInFooterView);
+            Double bookingPagePriceInFooterView = Double.valueOf(getTheBookingPriceDisplayedInFooterView());
+            Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(bookingPagePriceInFooterView);
+            Logger.logComment("Cost of ticket in Booking page is :- "+bookingPagePriceInFooterView);
 
-            ////// Below code is to check the values of math calculation done in offers and discounts layout /////
+                ////// Below code is to check the values of math calculation done in offers and discounts layout /////
             Double bookingSeatCostInReviewBookingScreen = null;
             Double couponAmount;
-            Double finalDisplayedFare;
-            Double displayedActualFare;
+            Double finalDisplayedFare = 0.0;
+            Double displayedActualFare = 0.0;
             Double karamPoints;
 
             // Checking and getting the booking cost displaying in review booking screen
@@ -302,8 +317,24 @@ public class BookingPageIos extends BookingPageBase {
                 couponAmount = 0.00;
                 Logger.logComment("Coupon is not applied. So for internal math calculation coupon amount is :- "+couponAmount);
             }
-            finalDisplayedFare = getThePriceOf("finalDisplayedFare");
-            displayedActualFare = getThePriceOf("displayedActualFare");
+            if (COUPON_CODE_APPLIED_STATUS == true){
+                scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true);
+                finalDisplayedFare = getThePriceOf("finalDisplayedFare");
+                displayedActualFare = getThePriceOf("displayedActualFare");
+            }else {
+                if (isUserSignedIn == true){
+                    boolean status = isKaramPointsToggleSwitchEnabled();
+                    if (status == true){
+                        finalDisplayedFare = getThePriceOf("finalDisplayedFare"); // Implement if condition after developer enable the karam points price element visibility
+                        displayedActualFare = getThePriceOf("displayedActualFare");
+                    }else {
+                        Double priceDisplayedInFooterView = getTheBookingPriceDisplayedInFooterView();
+                        finalDisplayedFare = priceDisplayedInFooterView;
+                        displayedActualFare = priceDisplayedInFooterView;
+                        Logger.logComment("User is logged in, but not applied the coupon nor karam. So applied final fare is equal to the fare displaying in the footer view:- "+priceDisplayedInFooterView);
+                    }
+                }
+            }
             if (isUserSignedIn == true){
                 boolean status = isKaramPointsToggleSwitchEnabled();
                 if (status == true){
@@ -322,10 +353,10 @@ public class BookingPageIos extends BookingPageBase {
             Logger.logComment("Applied Karam points cost of booking flight :- "+karamPoints);
             Logger.logComment("Final Fare cost of booking flight (Displaying value) :- "+finalDisplayedFare);
             Logger.logAction("All the values are ready for to calculate the math");
-            if (displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
+            if (displayedActualFare == bookingSeatCostInReviewBookingScreen || displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
                 Double finalFareMathCalculation = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)); // Internal math calculation logic
                 Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
-                if (finalFareMathCalculation.equals(finalDisplayedFare)){
+                if (finalFareMathCalculation.equals(finalDisplayedFare)|| finalFareMathCalculation == finalDisplayedFare){
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
                     Logger.logStep("Final fare calculation is correct");
                 }else if (finalFareMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
@@ -335,7 +366,23 @@ public class BookingPageIos extends BookingPageBase {
                     Logger.logError("Final fare calculation is in-correct");
                 }
             }else {
-                Logger.logError("Booking seat cost in review booking screen is not matching with the cost displaying in booking page..,i.e.., Booking seat cost in Booking page screen & Review Booking screen is:- "+displayedActualFare+" & "+Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
+                Double onlineAmount = getTheOnlineCheckInAmount();
+                bookingSeatCostInReviewBookingScreen = Double.valueOf(bookingSeatCostInReviewBookingScreen + onlineAmount);
+                if (displayedActualFare == bookingSeatCostInReviewBookingScreen || displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
+                    Double finalFareMathCalculation = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)); // Internal math calculation logic
+                    Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
+                    if (finalFareMathCalculation.equals(finalDisplayedFare) || finalFareMathCalculation == finalDisplayedFare){
+                        Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                        Logger.logStep("Final fare calculation is correct");
+                    }else if (finalFareMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
+                        Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                        Logger.logStep("Final fare calculation is correct");
+                    }else {
+                        Logger.logError("Final fare calculation is in-correct");
+                    }
+                }else {
+                    Logger.logError("Booking seat cost in review booking screen is not matching with the cost displaying in booking page..,i.e.., Booking seat cost in Booking page screen & Review Booking screen is:- "+displayedActualFare+" & "+Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN);
+                }
             }
         }catch (Exception exception){
             exception.printStackTrace();
@@ -352,21 +399,27 @@ public class BookingPageIos extends BookingPageBase {
         try
         {
             scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true); // This logic is to for different iPhones with different sizes
-            if ((!(isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID))) || (isElementDisplayedByAccessibilityId(USE_KARAM_CASH_LABEL_ID))){
-            if (isElementEnabledByClassName(TOGGLE_SWITCH)){
-                String karamPointsToggleStatus = driver.findElement(By.className(KARAM_POINTS_TOGGLE_BUTTON)).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-               if (karamPointsToggleStatus.equals(Labels_Flights.VALUE_ONE)){
-                   return true;
-               }else {
-                   return false;
-               }
-            }else {
-                Logger.logWarning(TOGGLE_SWITCH+" - element name is not displayed in the current active screen");
-                return false;
-            }
+            if ((!(isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID))) || (isElementDisplayedByAccessibilityId(SIGNED_IN_FOR_FAST_BOOKINGS_BUTTON))){
+                String walletMessage = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_KARAM_BALANCE_MESSAGE);
+                if (walletMessage.contains("Your Karam Wallet is empty")){
+                    Logger.logStep("Karam wallet is empty.., So no need to enable it..,");
+                    return false;
+                }else {
+                    if (isElementDisplayedByAccessibilityId(KARAM_TOGGLE_SWITCH)){
+                        String karamPointsToggleStatus = driver.findElementByAccessibilityId(KARAM_TOGGLE_SWITCH).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                        if (karamPointsToggleStatus.equals(Labels_Flights.VALUE_ONE)){
+                            return true;
+                        }else {
+                            return false;
+                        }
+                    }else {
+                        Logger.logWarning(KARAM_TOGGLE_SWITCH+" - element accessibility id is not displayed in the current active screen");
+                        return false;
+                    }
+                }
             }else
             {
-                Logger.logStep("Karam wallet is empty.., So no need to enable it..,");
+                Logger.logStep("User might not be signed in nor didn't enabled the karam toggle switch. So not possible to get the karam points.");
                 return false;
             }
         }catch (Exception exception){
@@ -385,18 +438,27 @@ public class BookingPageIos extends BookingPageBase {
         try
         {
             scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true); // This logic is to for different iPhones with different sizes
-            if ((!isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID)) || isElementDisplayedByAccessibilityId(USE_KARAM_CASH_LABEL_ID) ) {
-                boolean status = isKaramPointsToggleSwitchEnabled();
-                if (status == true) {
-                    Logger.logComment("karam points toggle button is already enabled");
-                } else {
-                    WebElement karamPointsToggleSwitch = driver.findElement(By.className(KARAM_POINTS_TOGGLE_BUTTON));
-                    karamPointsToggleSwitch.click();
-                    Logger.logComment("Karam points toggle button is enabled");
+            boolean status = isKaramPointsToggleSwitchEnabled();
+            if (status == true) {
+                Logger.logComment("karam points toggle button is already enabled");
+            } else {
+                if (isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID)){
+                    boolean status1 = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_KARAM_BALANCE_MESSAGE).contains("Your Karam Wallet is empty");
+                    if (status1 == false){
+                        boolean status2 = findElementByAccessibilityIdAndClick(KARAM_TOGGLE_SWITCH);
+                        if (status2 == true){
+                            Logger.logComment("Karam points toggle button is enabled");
+                        }else {
+                            Logger.logError("Didn't tapped on karam points toggle button");
+                        }
+                    }else {
+                        Logger.logStep("Karam wallet is empty.So, no need to enable the karam points toggle switch");
+                    }
+                }else if (isUserSignedIn == false){
+                    Logger.logStep("User is not logged in so, no need to enable the karam points toggle switch");
+                }else {
+                    Logger.logError("Karam Wallet Message label is not displaying in the current active screen");
                 }
-            }else
-            {
-                Logger.logStep("Karam wallet is empty.., So no need to enable it..,");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enable the karam points toggle button");
@@ -643,4 +705,178 @@ public class BookingPageIos extends BookingPageBase {
             Logger.logError("Encountered error: Unable to choose the country name");
         }
     }
+
+    /**
+     * Disable the online check in toggle button
+     */
+    public static void disableOnlineCheckInToggleButton(){
+        Logger.logAction("Disabling the online check in toggle button");
+        try{
+//            scrollToAnElementById_ANDROID(TERMS_AND_CONDITIONS_URL_LABLE,true); //Todo:-  This method needs to be recheck such that it should scroll to exactly to the online check in button
+            scrollTheScreenDownwards(); //Todo:- The below two lines of code needs to be enabled when the above logic is not working
+            scrollTheScreenDownwards();
+            if(isElementDisplayedByAccessibilityId("Online Check In")){
+//                WebElement locationOfDay = driver.findElementById(ONLINE_CHECKIN_TOGGLE_BUTTON);
+//                Point table = locationOfDay.getLocation();
+//                int elementYAxisValue = table.getY();
+//                if (Labels_Flights.SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_20_PERCENT <= elementYAxisValue){
+//                    scrollTheCalenderPageUpByDaysGap_Android(); // scrolling values inside are hardcoded by screen basis
+//                }
+                WebElement onlineCheckInToggleButton = driver.findElementByAccessibilityId(ONLINE_CHECK_IN_TOGGLE_IN);
+                String checkedAttribute = onlineCheckInToggleButton.getAttribute(Labels_Flights.CHECKED_ATTRIBUTE);
+                if (checkedAttribute.equals(Labels_Flights.STATUS_TRUE)){
+                    Logger.logComment("Online check in toggle button is enabled.., Going to disable by tapping on it");
+                    onlineCheckInToggleButton.click();
+                    scrollTheScreenUpwards();
+                    scrollTheScreenUpwards();
+                }else {
+                    Logger.logComment("Online check in toggle button is already disabled");
+                }
+            } else {
+                Logger.logWarning("Online check in button is not visible in the current active screen");
+            }
+        }catch(Exception exception){
+            Logger.logError("Encountered error: Unable to disable the online check in toggle button");
+        }
+    }
+
+    /**
+     * Get the online check in amount
+     */
+    public static double getTheOnlineCheckInAmount(){
+        Logger.logAction("Get the online check in amount");
+        try {
+            scrollToAnElementByXPath(XPATH_OF_TERMS_AND_CONDITIONS_LABEL,true); //Todo:- Find a solution to check the online check in feature without scrolling to many times
+            if(isElementDisplayedByAccessibilityId(ONLINE_CHECK_IN_TOGGLE_IN)){
+                tapOnShowDetailsButtonInFooterView();
+                boolean status = checkFareRulesScreenIsDisplayed();
+                if (status == true){
+                    String onlineAmount = getTheOnlineCheckInAmountInFareRules();
+                    tapOnDoneButtonInFareRules();
+                    if(isElementDisplayedByAccessibilityId(ONLINE_CHECK_IN_TOGGLE_IN)){
+                        Logger.logComment("Online check in amount is :- "+onlineAmount);
+                        selectTheFlightSeatByOnlineCheckInButton();
+                        return Double.parseDouble(onlineAmount);
+                    }else {
+                        Logger.logError("Online check in amount is :- "+onlineAmount+" , but booking summary page is not displaying on navigating from fare rules");
+                    }
+                    }
+                    else {
+                        Logger.logError("Fare rules screen is not displayed");
+                }
+            }else {
+                Logger.logWarning("Online check in button is not visible in the current active screen");
+            }
+            }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the online check in amount");
+        }
+        return 0.00;
+    }
+    /**
+     * Tap on show details button in the footer view
+     */
+    public static void tapOnShowDetailsButtonInFooterView() {
+        Logger.logAction("Tapping on show details button in the footer view");
+        try {
+            boolean status = findElementByNameAndClick(SHOW_DETAILS_BUTTON_IN_FOOTER_VIEW);
+            if (status == true){
+                Logger.logComment("Tapped on show details button in the footer view");
+            }else {
+                Logger.logError("Didn't tapped on show details button in the footer view");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to tap on show details button in the footer view");
+        }
+    }
+
+    /**
+     * Check the fare rules screen is displayed
+     */
+    public static boolean checkFareRulesScreenIsDisplayed() {
+        Logger.logAction("Checking the fare rules is displayed");
+        try {
+            boolean status = isElementDisplayedByName(FARE_RULES_TITLE);
+            if (status == true){
+                return true;
+            }else {
+            return false;
+             }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to check the current active screen name");
+        }
+        return false;
+    }
+
+
+    /**
+     * Get the online check in amount displayed in the fare rules
+     */
+    public static String getTheOnlineCheckInAmountInFareRules() {
+        Logger.logAction("Getting the online check in amount displayed in the fare rules");
+        try {
+            String amountWithCurrency = findElementByAccessibilityIdAndReturnText(ONLINE_CHECK_IN_PRICE_IN_FARE_RULES_VIEW,Labels_Flights.VALUE_ATTRIBUTE);
+            if (amountWithCurrency.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
+                String amountWithoutCurrency = amountWithCurrency.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE,Labels_Flights.STRING_NULL);
+                return amountWithoutCurrency;
+            }else {
+                return amountWithCurrency;
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the online check in amount in fare rules popup");
+        }
+        return null;
+    }
+
+    /**
+     * Tap on done in fare rules
+     */
+    public static String tapOnDoneButtonInFareRules() {
+        Logger.logAction("Tapping on done button in fare rules");
+        try {
+            boolean status = findElementByIdAndClick(DONE_BUTTON_ID_IN_FARE_RULES_VIEW);
+            if (status ==  true){
+                Logger.logComment("Tapping on done button");
+            }else {
+                Logger.logError("Didn't taped on done button");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the online check in amount in fare rules popup");
+        }
+        return null;
+    }
+
+    /**
+     * Select the seat if online check in is enabled
+     */
+    public static void selectTheFlightSeatByOnlineCheckInButton(){
+        Logger.logAction("Selecting the flight seat by online check in button");
+        try {
+            boolean status = findElementByAccessibilityIdAndClick(SELECT_SEAT_ID_IN_ONLINE_CHECK_IN_LAYOUT);
+            if (status == true){
+                List<WebElement> seatsList = driver.findElements(By.name("middleSelection"));
+                for (int count =0; count <= seatsList.size()-1;count++){
+                    seatsList.get(count).click();
+                }
+                //Todo:- The below condition needs to be enabled or updated once the default seat selection is implemented
+//                boolean status1 = findElementByAccessibilityIdAndClick(WINDOW_SEAT_SELECTION_BUTTON_ID_IN_ONLINE_CHECK_IN_POPUP);
+//                if (status1 == true){
+                    boolean status2 = findElementByAccessibilityIdAndClick(SUBMIT_SEAT_PREFERENCE_BUTTON_ID_IN_ONLINE_CHECK_IN_POPUP);
+                    if (status2 == true){
+                        Logger.logComment("Tapped on submit seat preference button");
+                    }else {
+                        Logger.logError("Didn't tapped on Submit set preference button");
+                    }
+//                }else {
+//                    Logger.logError("Didn't select the Aisle seat type");
+//                }
+            }else {
+                Logger.logError("Didn't tap on select seat option in online check in section");
+            }
+
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to select the flight seat by online check in button");
+        }
+    }
+
+
 }

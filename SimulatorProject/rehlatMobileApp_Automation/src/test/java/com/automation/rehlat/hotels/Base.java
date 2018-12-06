@@ -1,7 +1,6 @@
 package com.automation.rehlat.hotels;
 
 
-import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.hotels.libCommon.General;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import com.automation.rehlat.hotels.pages.BasePage;
@@ -37,7 +36,6 @@ import java.util.regex.Pattern;
 import static com.automation.rehlat.hotels.Labels_Hotels.*;
 import static com.automation.rehlat.hotels.libCommon.General.installApp;
 import static com.automation.rehlat.hotels.libCommon.General.unInstallApp;
-import static com.automation.rehlat.hotels.tests.BaseTest.addTestResultStatusToExecutionResultsJsonFile;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -45,7 +43,6 @@ public class Base {
     public static DesiredCapabilities capabilities;
     public static AppiumDriver<WebElement> driver;
     public static WebDriverWait driverWait;
-
     /**
      * Reference: <a href="http://appium.io/slate/en/master/?ruby#appium-server-capabilities">http://appium.io/slate/en/master/?ruby#appium-server-capabilities</a>
      * This method sets required appium capabilities using the object of DesiredCapabilities class
@@ -99,7 +96,6 @@ public class Base {
         } else {
             Logger.logError("The platform mentioned for the test script is neither iOS or Android");
         }
-
         driverWait = new WebDriverWait(driver, Labels_Hotels.DEFAULT_WAITING_TIME);
     }
 

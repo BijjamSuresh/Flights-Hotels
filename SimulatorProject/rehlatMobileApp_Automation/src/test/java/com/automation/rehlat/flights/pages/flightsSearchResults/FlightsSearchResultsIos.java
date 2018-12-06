@@ -37,24 +37,25 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
         try {
             if (TRIP_TYPE.equalsIgnoreCase(Labels_Flights.STRING_NULL)) {
                 waitTillFlightsSearchResultsScreenIsDisplayed();
+                runAppInBackground(3);
             }else {
-                runAppInBackground(2);
+                runAppInBackground(5);
             }
-                if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_ONE_WAY_VIEW))
-                {
-                    TRIP_TYPE = SRP_ONE_WAY_VIEW;
-                    XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
-                    XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
-                    Logger.logStep(" SRP One Way Flights search results screen is displayed and the results are loaded");
-                } else if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_TWO_WAY_VIEW)){
-                    TRIP_TYPE = SRP_TWO_WAY_VIEW;
-                    XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
-                    XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
-                    Logger.logStep("SRP Two Way Flights search results screen is displayed");
-                }
-                else {
-                    Logger.logError("Flights search screen is not displayed and the results are loaded");
-                }
+            if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_ONE_WAY_VIEW))
+            {
+                TRIP_TYPE = SRP_ONE_WAY_VIEW;
+                XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
+                XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ONE_WAY_LOADED_SEARCH_RESULTS;
+                Logger.logStep(" SRP One Way Flights search results screen is displayed and the results are loaded");
+            } else if (isElementEnabledByName(PRICE_LABEL) && isElementDisplayedByAccessibilityId(SRP_TWO_WAY_VIEW)){
+                TRIP_TYPE = SRP_TWO_WAY_VIEW;
+                XPATH_OF_PRICE_FLIGHT_CARD_VIEW = XPATH_OF_FIRST_FLIGHT_CELL_PRICE_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
+                XPATH_OF_FLIGHT_CARD_VIEW_WITHOUT_INDEX = XPATH_OF_FLIGHT_CELL_IN_ROUND_TRIP_LOADED_SEARCH_RESULTS;
+                Logger.logStep("SRP Two Way Flights search results screen is displayed");
+            }
+            else {
+                Logger.logError("Flights search screen is not displayed and the results are loaded");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: unable to check the current active screen name");
         }
@@ -175,38 +176,25 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
             if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
                 bookingFlightCell = driver.findElementByXPath(xPathOfBookingFlightCellType);
                 Logger.logComment("Flight cell number - "+selectedFlightCellTypeNumber+" is displayed");
-            }else {
-                Logger.logError("SRP results are not loaded with all the elements");
-            }
-            String flightCellTypeText = bookingFlightCell.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-            if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
-                String bookingCostExcludingCurrencyName = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                if (bookingCostExcludingCurrencyName.contains(Labels_Flights.STRING_COMMA)){
-                    String actualAmountWithoutComma = bookingCostExcludingCurrencyName.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
-                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = actualAmountWithoutComma;
-                    Logger.logComment("Booking cost of the flight cell number - " +selectedFlightCellTypeNumber + " and with complete index " + flightCellTypeText + " is :- " + Labels_Flights.SELECTED_SEAT_BOOKING_COST);
-                    if(TRIP_TYPE == SRP_ONE_WAY_VIEW){
-                        bookingFlightCell.click();
-                        Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
-                    }else if (TRIP_TYPE == SRP_TWO_WAY_VIEW){
-                        bookingFlightCell.click();
-                        Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
+                String flightCellTypeText = bookingFlightCell.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
+                    String bookingCostExcludingCurrencyName = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+                    if (bookingCostExcludingCurrencyName.contains(Labels_Flights.STRING_COMMA)){
+                        String actualAmountWithoutComma = bookingCostExcludingCurrencyName.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
+                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = actualAmountWithoutComma;
+                    }else {
+                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingCostExcludingCurrencyName;
+                        Logger.logComment("Booking cost of the flight cell number - " +selectedFlightCellTypeNumber + " and with complete index " + flightCellTypeText + " is :- " + Labels_Flights.SELECTED_SEAT_BOOKING_COST);
                     }
+                    bookingFlightCell.click();
+                    Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
                     return  Labels_Flights.SELECTED_SEAT_BOOKING_COST;
-                }else {
-                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingCostExcludingCurrencyName;
-                    Logger.logComment("Booking cost of the flight cell number - " +selectedFlightCellTypeNumber + " and with complete index " + flightCellTypeText + " is :- " + Labels_Flights.SELECTED_SEAT_BOOKING_COST);
-                    if(TRIP_TYPE == SRP_ONE_WAY_VIEW){
-                        bookingFlightCell.click();
-                        Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
-                    }else if (TRIP_TYPE == SRP_TWO_WAY_VIEW){
-                        bookingFlightCell.click();
-                        Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
-                    }
-                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+                }else{
+                    Logger.logError("Flight currency type is incorrectly displaying .ie.., Instead of "+Labels_Flights.CURRENT_USER_CURRENCY_TYPE+" showing as :- "+flightCellTypeText);
                 }
-            }else{
-                Logger.logError("Flight currency type is incorrectly displaying .ie.., Instead of "+Labels_Flights.CURRENT_USER_CURRENCY_TYPE+" showing as :- "+flightCellTypeText);
+            }
+            else {
+                Logger.logError("SRP results are not loaded with all the elements");
             }
         }catch (Exception exception){
             exception.printStackTrace();

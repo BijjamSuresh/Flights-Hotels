@@ -151,7 +151,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 Double finalAmountPayablePriceInPaymentCheckOutScreen = Double.parseDouble(finalPayment);
                 Double ticketAmountDisplayedInBookingPageScreen = Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
                 Logger.logComment("Final Amount displayed in the payment check out screen is :- "+finalAmountPayablePriceInPaymentCheckOutScreen);
-                Logger.logComment("Booking cost displayed in review booking screen is :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
+                Logger.logComment("Booking cost displayed in review booking screen is :- "+ticketAmountDisplayedInBookingPageScreen);
                 if (FARE_JUMP_STATUS == false){
                 if (finalAmountPayablePriceInPaymentCheckOutScreen.equals(ticketAmountDisplayedInBookingPageScreen)) {
                     Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
@@ -171,6 +171,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 }
                 }else {
                     Logger.logStep("Fare jump was happened.,So fare displaying in the payment check out screen is the final one .ie.., final payment is : " +finalAmountPayablePriceInPaymentCheckOutScreen);
+                    FARE_JUMP_STATUS =false;// Todo:- Resetting the fare jump status to false.
                 }
             }else {
                 Logger.logError("Total amount payable cell is not displaying in payment checkout screen");
@@ -233,9 +234,15 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     @Override
     public void tapOnKnetPaymentGateWay() {
         Logger.logAction("Tapping on KNET payment gateway");
+        String knetPaymentGateWayLabel = KNET_PAYMENT_GATEWAY_OPTION;
         try{
-            if (isElementDisplayedByAccessibilityId(KNET_PAYMENT_GATEWAY_OPTION)){
-                boolean status = findElementByAccessibilityIdAndClick(KNET_PAYMENT_GATEWAY_OPTION);
+            if (Labels_Flights.CURRENT_RUNNING_DOMAIN.equalsIgnoreCase("EG")){
+                knetPaymentGateWayLabel = "Knet";
+            }else {
+                knetPaymentGateWayLabel = KNET_PAYMENT_GATEWAY_OPTION;
+            }
+            if (isElementDisplayedByAccessibilityId(knetPaymentGateWayLabel)){
+                boolean status = findElementByAccessibilityIdAndClick(knetPaymentGateWayLabel);
                 if (status ==true){
                     Logger.logComment("Tapped on kent payment option");
                 }else {
@@ -250,7 +257,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 Logger.logError("KNET Payment gateway option is not displayed");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to check the element name - " + KNET_PAYMENT_GATEWAY_OPTION);
+            Logger.logError("Encountered error: Unable to check the element name - " + knetPaymentGateWayLabel);
         }
     }
 
@@ -269,6 +276,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
                         "//////////////////////////////////////////  "+PAYMENT_FAILED+"////////////////////////////////////////////////////\n"+
                         "        ////////////////////////////////////////////////////////////////////////////////////");
+                BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Payment Failed");
+                printPNRDetails();
                 Logger.logError("Payment Failed screen is displayed");
             }else if (isElementDisplayedByName(KNET_PAYMENT_GATEWAY_TITLE)){
                 Logger.logStep("KNET Payment gateway screen is displayed and moving to next step");
@@ -463,6 +472,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                            printPNRDetails();
                             Logger.logError("Booking process is failed");
                         }
                     }else {
@@ -472,7 +483,9 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
-                            Logger.logError("Booking process is unsuccessful");
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                            printPNRDetails();
+                            Logger.logError("Booking process is failed");
                         }
                     }
                 }else {
@@ -485,6 +498,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                            printPNRDetails();
                             Logger.logError("Booking process is failed");
                         }
                     }else {
@@ -493,7 +508,9 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
-                            Logger.logError("Booking process is unsuccessful");
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                            printPNRDetails();
+                            Logger.logError("Booking process is failed");
                         }
                     }
                 }
@@ -509,6 +526,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                            printPNRDetails();
                             Logger.logError("Booking process is failed");
                         }
                     }else {
@@ -517,7 +536,9 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
-                            Logger.logError("Booking process is unsuccessful");
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                            printPNRDetails();
+                            Logger.logError("Booking process is failed");
                         }
                     }
                 }else if (isElementDisplayedByName(PAYMENT_SUCCESS)) {
@@ -530,6 +551,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                 "        ////////////////////////////////////////////////////////////////////////////////////");
                     }
                     else {
+                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                        printPNRDetails();
                         Logger.logError("Booking process is failed");
                     }
                 }
@@ -539,9 +562,12 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                 }else {
-                    Logger.logError("Booking process is unsuccessful");
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+                    printPNRDetails();
+                    Logger.logError("Booking process is failed");
                 }
             }
+            printPNRDetails();
 //            if (isElementDisplayedByClassName(IOS_ACTIVITY_INDICATOR)){
 //                Logger.logComment("Booking process is started");
 //                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(IOS_ACTIVITY_INDICATOR)));
@@ -696,7 +722,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 return true;
             }
         } catch (Exception exception) {
-            Logger.logError("Unable to check the current screen status");
+            Logger.logWarning("Unable to check the current screen status");
         }
         return false;
     }
@@ -721,6 +747,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                     System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
                             "//////////////////////////////////////////  "+PAYMENT_FAILED+"////////////////////////////////////////////////////\n"+
                             "        ////////////////////////////////////////////////////////////////////////////////////");
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Payment Failed");
                     Logger.logError("Payment Failed screen is displayed");
                 }else{
                     Logger.logWarning("Element name is not displayed in the current active screen:- "+XPATH_OF_PASSWORD_FIELD_IN_3D_SECURE_DEBIT_OR_CREDIT_PAYMENT_SCREEN);
@@ -772,6 +799,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                            printPNRDetails();
                             Logger.logError("Booking process is failed or stuck");
                         }
                     }else {
@@ -780,6 +809,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                            printPNRDetails();
                             Logger.logError("Booking process is unsuccessful");
                         }
                     }
@@ -793,6 +824,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                            printPNRDetails();
                             Logger.logError("Booking process is failed or stuck");
                         }
                     }else {
@@ -801,6 +834,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                            printPNRDetails();
                             Logger.logError("Booking process is unsuccessful");
                         }
                     }
@@ -816,6 +851,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                 "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                 "        ////////////////////////////////////////////////////////////////////////////////////\n");
                     }else {
+                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                        printPNRDetails();
                         Logger.logError("Booking process is failed or stuck");
                     }
                 }else {
@@ -824,6 +861,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                 "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                 "        ////////////////////////////////////////////////////////////////////////////////////\n");
                     }else {
+                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                        printPNRDetails();
                         Logger.logError("Booking process is unsuccessful");
                     }
                 }
@@ -836,6 +875,8 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                             "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                             "        ////////////////////////////////////////////////////////////////////////////////////\n");
                 }else {
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                    printPNRDetails();
                     Logger.logError("Booking process is failed or stuck");
                 }
             }else {
@@ -844,9 +885,12 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                             "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                             "        ////////////////////////////////////////////////////////////////////////////////////\n");
                 }else {
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
+                    printPNRDetails();
                     Logger.logError("Booking process is unsuccessful");
                 }
             }
+            printPNRDetails();
 //            if (isElementDisplayedByClassName(IOS_ACTIVITY_INDICATOR)){
 //                Logger.logComment("Booking process is started");
 //                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(IOS_ACTIVITY_INDICATOR)));
@@ -866,4 +910,86 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
         }
     }
 
+
+    /**
+     * Print the pnr details
+     */
+    public static void printPNRDetails(){
+        Logger.logAction("Printing the pnr details");
+        try {
+            closeTheRateUsInAppStoreAlert();
+            String bookingID = getTheBookingIdInBookingSuccessPage();
+            String airlinePNR = getTheAirlinePNRInBookingSuccessPage();
+            String totalPrice = getTheTotalPriceInBookingSuccessPage();
+            Logger.logComment("Booking Id in success page :- "+bookingID);
+            Logger.logComment("Airline PNR in success page :- "+airlinePNR);
+            Logger.logComment("Total Price in success page :- "+totalPrice);
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to print the pnr details");
+        }
+    }
+
+    /**
+     * Get the booking id booking success page
+     */
+    public static String getTheBookingIdInBookingSuccessPage(){
+        Logger.logAction("Getting the booking id in booking success page");
+        try {
+            String bookingId = driver.findElementByAccessibilityId("bookingID").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            return bookingId;
+        }catch (Exception exception){
+            Logger.logWarning("Encountered error:- Unable to get the booking id in booking success page");
+        }
+        return null;
+    }
+
+    /**
+     * Get the airline pnr id booking success page
+     */
+    public static String getTheAirlinePNRInBookingSuccessPage(){
+        Logger.logAction("Getting the airline pnr id in booking success page");
+        try {
+            String airlinePNRId = driver.findElementByAccessibilityId("airlinePNR").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            return airlinePNRId;
+        }catch (Exception exception){
+            Logger.logWarning("Encountered error:- Unable to get the airline pnr id in booking success page");
+        }
+        return null;
+    }
+
+    /**
+     * Get the total price id booking success page
+     */
+    public static String  getTheTotalPriceInBookingSuccessPage(){
+        Logger.logAction("Getting the total price id in booking success page");
+        try {
+            String totalPrice = driver.findElementByAccessibilityId("totalPrice").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            return totalPrice;
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the total price id in booking success page");
+        }
+        return null;
+    }
+
+    /**
+     * Closing the rate us in App Store alert
+     */
+    public static void closeTheRateUsInAppStoreAlert(){
+        Logger.logAction("Closing the rate us in App Store alert if displayed");
+        try {
+            boolean status = isElementDisplayedByAccessibilityId("Rating");
+            if (status == true){
+                boolean status1 = findElementByAccessibilityIdAndClick("Not Now");
+                if (status1 == true){
+                    Logger.logComment("Closed the Rate us in App Store popup");
+                }else {
+                    Logger.logError("Rate us in App Store pop up is not closed");
+                }
+            }else {
+                Logger.logComment("Rate us in the App Store option is not displayed");
+            }
+        }catch (Exception exception){
+
+        }
+    }
 }

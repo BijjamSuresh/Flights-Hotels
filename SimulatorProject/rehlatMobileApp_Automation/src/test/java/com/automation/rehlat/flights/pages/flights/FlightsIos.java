@@ -408,11 +408,12 @@ public class FlightsIos extends FlightsBase {
                                 driver.findElementByName(departureDay).click();
                                 Logger.logComment("Tapped on day:- "+departureDay);
                             }
-                        }else {
-                            Logger.logComment("One departure day is displayed in the calender: "+departureDay+"");
-                            driver.findElementByName(departureDay).click();
-                            Logger.logComment("Tapped on day:- "+departureDay);
                         }
+//                        else {//Todo:- This condition is commented because even if one element is displayed also need to check the selected date is correct or not
+//                            Logger.logComment("One departure day is displayed in the calender: "+departureDay+"");
+//                            driver.findElementByName(departureDay).click();
+//                            Logger.logComment("Tapped on day:- "+departureDay);
+//                        }
                         if (iterations == 10){
                             break;
                         }
@@ -463,15 +464,17 @@ public class FlightsIos extends FlightsBase {
                                         }
                                     }
 
-                                }else {
+                                }
+                                else {
                                     driver.findElementByName(departureDay).click();
                                     Logger.logComment("Tapped on day:- "+departureDay);
                                 }
-                            }else {
-                                Logger.logComment("One departure day is displayed in the calender: "+departureDay+"");
-                                driver.findElementByName(departureDay).click();
-                                Logger.logComment("Tapped on day:- "+departureDay);
                             }
+//                            else {//Todo:- This condition is commented because even if one element is displayed also need to check the selected date is correct or not
+//                                Logger.logComment("One departure day is displayed in the calender: "+departureDay+"");
+//                                driver.findElementByName(departureDay).click();
+//                                Logger.logComment("Tapped on day:- "+departureDay);
+//                            }
                             if (iterations == 10){
                                 break;
                             }
@@ -541,9 +544,9 @@ public class FlightsIos extends FlightsBase {
                             WebElement calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
                             List<WebElement> returnDays = calenderView.findElements(By.name(returnDay));
                             int returnDaysSize = returnDays.size();
-                            if (returnDaysSize >= 2) {
+                            if (returnDaysSize >= 1) {
                                 Logger.logComment("Two departure days are displayed in the calender view with same return day: " + returnDay + "");
-                                if (returnDaysSize >= 2) {
+                                if (returnDaysSize >= 1) {
                                     Logger.logWarning("Two accurate dates are displayed in the return calender, so tapping on nearest possible date");
                                     for (int count = 0; count <= returnDays.size() - 1; count++) {
                                         WebElement visibleReturnDay = returnDays.get(count);
@@ -574,14 +577,17 @@ public class FlightsIos extends FlightsBase {
                                             continue;
                                         }
                                     }
-                                } else {
+                                }
+                                else {
                                     driver.findElementByName(returnDay).click();
                                     Logger.logComment("Tapped on day:- " + returnDay);
                                 }
-                            } else {
-                                Logger.logComment("One return day is displayed in the return calender: " + returnDay + "");
-                                driver.findElementByName(returnDay).click();
                             }
+//                            else {//Todo:- This condition is commented because even if one element is displayed also need to check the selected date is correct or not
+//                                Logger.logComment("One return day is displayed in the return calender: " + returnDay + "");
+//                                driver.findElementByName(returnDay).click();
+//                                break;
+//                            }
                             if (iterations == 10){
                                 break;
                             }
@@ -597,9 +603,9 @@ public class FlightsIos extends FlightsBase {
                                 WebElement  calenderView = driver.findElementByClassName(Labels_Flights.IOS_XCUI_ELEMENT_TYPE_COLLECTION_VIEW);
                             List<WebElement> returnDays = calenderView.findElements(By.name(returnDay));
                             int returnDaysSize = returnDays.size();
-                            if (returnDaysSize >= 2){
+                            if (returnDaysSize >= 1){
                                 Logger.logComment("Two departure days are displayed in the calender view with same return day: "+returnDay+"");
-                                if (returnDaysSize >= 2){
+                                if (returnDaysSize >= 1){
                                     Logger.logWarning("Two accurate dates are displayed in the return calender, so tapping on nearest possible date");
                                     for (int count =0;count<=returnDays.size()-1;count++){
                                         WebElement visibleReturnDay = returnDays.get(count);
@@ -631,14 +637,16 @@ public class FlightsIos extends FlightsBase {
                                             continue;
                                         }
                                     }
-                                }else {
+                                }
+                                else {
                                     driver.findElementByName(returnDay).click();
                                     Logger.logComment("Tapped on day:- "+returnDay);
                                 }
-                            }else {
-                                Logger.logComment("One return day is displayed in the return calender: "+returnDay+"");
-                                driver.findElementByName(returnDay).click();
                             }
+//                            else {//Todo:- This condition is commented because even if one element is displayed also need to check the selected date is correct or not
+//                                Logger.logComment("One return day is displayed in the return calender: "+returnDay+"");
+//                                driver.findElementByName(returnDay).click();
+//                            }
                             if (iterations == 10){
                                 break;
                             }

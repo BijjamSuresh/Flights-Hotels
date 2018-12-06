@@ -2,6 +2,8 @@ package com.automation.rehlat.flights;
 
 import com.automation.rehlat.flights.libCommon.General;
 import com.automation.rehlat.flights.libCommon.Logger;
+import com.automation.rehlat.flights.pages.BasePage;
+import com.automation.rehlat.flights.tests.BaseTest;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
@@ -106,6 +108,9 @@ public class Base {
     @AfterClass
     public static void tearDown() {
         Logger.logComment("Sign Up email id used till yet :- "+ Labels_Flights.EMAIL_ID_SIGN_UP);
+        BaseTest.isUserSignedIn = false;
+        BaseTest.COUPON_CODE_APPLIED_STATUS = false;
+        BasePage.TRIP_TYPE = Labels_Flights.STRING_NULL;
         driver.quit();
     }
 
@@ -136,7 +141,7 @@ public class Base {
             email.setAuthenticator(new DefaultAuthenticator("suresh.bijjam@rehlat.com","L>88G97dd"));
             email.setSSLOnConnect(true);
             email.setFrom("suresh.bijjam@rehlat.com");
-            email.setSubject(Labels_Flights.DEFAULT_PLATFORM+": "+Labels_Flights.DEVICE_NAME+":"+Labels_Flights.DEVICE_OS+" Execution Results");
+            email.setSubject(Labels_Flights.DEFAULT_PLATFORM+": "+Labels_Flights.DEVICE_NAME+"_"+Labels_Flights.DEVICE_OS+"_Execution Results");
             email.setMsg("Please find the below html report for in-details");
             email.addTo("suresh.bijjam@rehlat.com");
             email.setHtmlMsg(reportInHtml);
@@ -1804,7 +1809,7 @@ public class Base {
         while (counter < Labels_Flights.MIN_ATTEMPTS) {
             try {
                 element = driver.findElementById(elementId);
-                if (element.isEnabled() || element.isEnabled()){
+                if (element.isEnabled() || element.isDisplayed()){
                     element.click();
                     return true;
                 }
@@ -1829,7 +1834,7 @@ public class Base {
         while (counter < Labels_Flights.MIN_ATTEMPTS) {
             try {
                 element = driver.findElementByAccessibilityId(elementAccessibility);
-                if (element.isEnabled()){
+                if (element.isEnabled() || element.isDisplayed()){
                     element.click();
                     return true;
                 }

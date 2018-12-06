@@ -161,7 +161,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                     else {
                         Double priceDifference = finalAmountPayablePriceInPaymentCheckOutScreen-ticketAmountDisplayedInBookingPageScreen;
                         if (priceDifference <= 0.2){ // Todo:- This condition is due to showing the final price in 3 decimal points where as in other screens it is 2 decimal points
-                            Logger.logStep("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen. Have the "+priceDifference +" , which is very less. So continuing with the final price as : "+finalAmountPayablePriceInPaymentCheckOutScreen);
+                            Logger.logStep("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen. Have the "+priceDifference.toString()+" , which is very less. So continuing with the final price as : "+finalAmountPayablePriceInPaymentCheckOutScreen);
                         }else {
                             Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
                         }
@@ -270,6 +270,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
             }else if (isElementDisplayedByName(KNET_PAYMENT_GATEWAY_TITLE)){
                 Logger.logStep("KNET Payment gateway screen is displayed and moving to next step");
             }else {
+                BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                 Logger.logError("KNET Payment screen is not displayed");
             }
         }catch (Exception exception){
@@ -459,6 +460,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is failed");
                         }
                     }else {
@@ -468,6 +470,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is unsuccessful");
                         }
                     }
@@ -481,6 +484,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is failed");
                         }
                     }else {
@@ -489,6 +493,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                     "        ////////////////////////////////////////////////////////////////////////////////////");
                         }else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is unsuccessful");
                         }
                     }
@@ -505,6 +510,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                 "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                 "        ////////////////////////////////////////////////////////////////////////////////////");
                     }else {
+                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                         Logger.logError("Booking process is failed");
                     }
                 }else {
@@ -513,6 +519,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                 "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                                 "        ////////////////////////////////////////////////////////////////////////////////////");
                     }else {
+                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                         Logger.logError("Booking process is unsuccessful");
                     }
                 }
@@ -526,6 +533,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                             "        ////////////////////////////////////////////////////////////////////////////////////");
                 }
                 else {
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                     Logger.logError("Booking process is failed");
                 }
             }
@@ -535,6 +543,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                             "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
                             "        ////////////////////////////////////////////////////////////////////////////////////");
                 }else {
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                     Logger.logError("Booking process is unsuccessful");
                 }
             }
@@ -714,6 +723,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
                         "//////////////////////////////////////////  "+PAYMENT_FAILED+"////////////////////////////////////////////////////\n"+
                         "        ////////////////////////////////////////////////////////////////////////////////////");
+                BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                 Logger.logError("Payment Failed screen is displayed");
             }else{
                 Logger.logWarning("Element name is not displayed in the current active screen:- "+XPATH_OF_PASSWORD_FIELD_IN_3D_SECURE_DEBIT_OR_CREDIT_PAYMENT_SCREEN);
@@ -734,6 +744,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 driver.findElement(By.id(CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN)).click();
                 Logger.logComment("Tapped on continue button in  3D pay securely payment button");
             }else {
+                BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                 Logger.logError("Element name is not displayed in the current active screen:- "+CONTINUE_BUTTON_IN_3D_SECURE_CREDIT_OR_DEBIT_CHECK_OUT_PAYMENT_SCREEN);
             }
         } catch (Exception exception) {
@@ -763,6 +774,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         } else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is failed or stuck");
                         }
                     } else {
@@ -771,6 +783,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         } else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is unsuccessful");
                         }
                     }
@@ -784,6 +797,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         } else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is failed or stuck");
                         }
                     } else {
@@ -792,6 +806,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                     "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                                     "        ////////////////////////////////////////////////////////////////////////////////////\n");
                         } else {
+                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                             Logger.logError("Booking process is unsuccessful");
                         }
                     }
@@ -807,6 +822,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                 "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                                 "        ////////////////////////////////////////////////////////////////////////////////////\n");
                     } else {
+                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                         Logger.logError("Booking process is failed or stuck");
                     }
                 } else {
@@ -815,6 +831,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                                 "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                                 "        ////////////////////////////////////////////////////////////////////////////////////\n");
                     } else {
+                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                         Logger.logError("Booking process is unsuccessful");
                     }
                 }
@@ -827,6 +844,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                             "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                             "        ////////////////////////////////////////////////////////////////////////////////////\n");
                 } else {
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                     Logger.logError("Booking process is failed or stuck");
                 }
             } else {
@@ -835,6 +853,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                             "//////////////////////////////////////////  " + BOOKING_SUCCESS + "////////////////////////////////////////////////////\n" +
                             "        ////////////////////////////////////////////////////////////////////////////////////\n");
                 } else {
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Hotels.testCaseName,"false Payment Failed");
                     Logger.logError("Booking process is unsuccessful");
                 }
             }

@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.openqa.selenium.OutputType;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -238,12 +239,21 @@ public class BaseTest extends Base {
         Logger.logAction("Adding the test result status to execution results json file");
         try {
             try {
+                String jsonParameters = "[{}]";
+                FileReader fileReader;
                 JSONParser jsonParser = new JSONParser();
-                FileReader fileReader = new FileReader("Execution_Results.json");
+                try {
+                    fileReader = new FileReader(ReportFileName);
+                }catch (FileNotFoundException fileNotfoundException){
+                    FileWriter fileWriter = new FileWriter(ReportFileName);
+                    fileWriter.write(jsonParameters);
+                    fileWriter.flush();
+                    fileReader = new FileReader(ReportFileName);
+                }
                 JSONArray jsonArray = (JSONArray) jsonParser.parse(fileReader);
                 JSONObject jsonObject = (JSONObject) jsonArray.get(0);
                 jsonObject.put(testCaseName,executionStatus);
-                FileWriter fileWriter = new FileWriter("Execution_Results.json");
+                FileWriter fileWriter = new FileWriter(ReportFileName);
                 fileWriter.write(jsonArray.toString());
                 fileWriter.flush();
                 Logger.logComment("Added the test result status to execution results json file");
@@ -328,7 +338,10 @@ public class BaseTest extends Base {
                     htmlStringBuilder.append("<td align=\"center\"><font color=\"red\">&#10006;</td>");
                     if (failureReason.equalsIgnoreCase("Tickets Are Sold Out In Two Attempts")){
                         htmlStringBuilder.append("<td>For 2 Attempts - Sold Outs</td>");
-                    }else {
+                    }else if (failureReason.equalsIgnoreCase("false Payment Failed")){
+                        htmlStringBuilder.append("<td>Payment Failed</td>");
+                    }
+                    else {
                         htmlStringBuilder.append("<td>Issue</td>");
                     }
                 }else {
