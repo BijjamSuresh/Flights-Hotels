@@ -3,7 +3,10 @@ package com.automation.rehlat.hotels.pages.hotelsSearchResults;
 import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.util.List;
 
 public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
 
@@ -40,30 +43,71 @@ public class HotelsSearchResultsIos extends HotelsSearchResultsBase{
 
     /**
      * Get the price of an hotel and tap on its card view
-     * @param parsingCardNumber
+     * @param isRefundableHotel
      */
     @Override
-    public void getThePriceOfHotelAndTapOnItsCardView(Integer parsingCardNumber){
+    public void getThePriceOfHotelAndTapOnItsCardView(boolean isRefundableHotel,boolean selectFirstHotel){
         Logger.logAction("Getting the price of hotel and tap on its card view");
         try {
             if (isElementDisplayedByAccessibilityId(EMPTY_LIST_ID)){
                 Logger.logError("SRP list is empty");
             }
-//            waitTillTheHotelsAreLoadedWithPrice(); //Todo:- Appium will wait till the hotels srp page is loaded with the prices because of Xcode interaction with app is blocked until the 'price loading' indicator is visible
-            String xpathOfParsingCellNumber = XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH+parsingCardNumber+"]";
-            String priceOfParsingCellNumber = findElementByXpathAndReturnItsAttributeValue(xpathOfParsingCellNumber);
-            if (priceOfParsingCellNumber.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
-                findElementByXPathAndClick(xpathOfParsingCellNumber);
-                String selectedHotelPriceWithoutCurrencyType = priceOfParsingCellNumber.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL).trim();
-                if (selectedHotelPriceWithoutCurrencyType.contains(Labels_Hotels.STRING_COMMA)){
-                    String selectedHotelPriceWithoutComma = selectedHotelPriceWithoutCurrencyType.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL).trim();
-                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutComma;
+            List<WebElement> listOfHotels = driver.findElements(By.name("HotelList"));
+            for (int count=0;listOfHotels.size()-1>count;count++){
+                WebElement currentHotelVisibility = listOfHotels.get(count);
+                scrollToAnElementByXPath(XPATH_OF_HOTEL_CARD_VIEW_LAYOUT_WITHOUT_INDEX+(count+1)+"]",true);
+                if (currentHotelVisibility.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE).equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
+                    String freeCancellationStatus = currentHotelVisibility.getAttribute(Labels_Hotels.VISIBLE_ATTRIBUTE);
+                    if (isRefundableHotel == false){
+                        if (freeCancellationStatus.equalsIgnoreCase(Labels_Hotels.STATUS_FALSE)){
+                            Logger.logComment((count+1)+" - Hotel is having no free cancellation, so selecting it");
+                            String priceOfSelectingHotel = currentHotelVisibility.findElement(By.name("SRPFinalPrice")).getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
+                            if (priceOfSelectingHotel.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
+                                if (priceOfSelectingHotel.contains(Labels_Hotels.STRING_COMMA)){
+                                    String selectedHotelPriceWithoutComma = priceOfSelectingHotel.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL).trim();
+                                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutComma;
+                                }
+                                else {
+                                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = priceOfSelectingHotel;
+                                }
+                            }else {
+                                Logger.logError("Parsing currency is not an :- "+ Labels_Hotels.CURRENT_USER_CURRENCY_TYPE+", it is showing as :- "+priceOfSelectingHotel);
+                            }
+                            currentHotelVisibility.click();
+                        }else {
+                            if (count==listOfHotels.size()-1){
+                                Logger.logError("All Hotels are having free cancellation");
+                            }else {
+                                Logger.logComment((count+1)+" - Hotel is having having free cancellation");
+                            }
+                        }
+                    }else{
+                        if (freeCancellationStatus.equalsIgnoreCase(Labels_Hotels.STATUS_TRUE)){
+                            Logger.logComment((count+1)+" - Hotel is having free cancellation, so selecting it");
+                            String priceOfSelectingHotel = currentHotelVisibility.findElement(By.name("SRPFinalPrice")).getAttribute(Labels_Hotels.VALUE_ATTRIBUTE);
+                            if (priceOfSelectingHotel.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
+                                if (priceOfSelectingHotel.contains(Labels_Hotels.STRING_COMMA)){
+                                    String selectedHotelPriceWithoutComma = priceOfSelectingHotel.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL).trim();
+                                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutComma;
+                                }
+                                else {
+                                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = priceOfSelectingHotel;
+                                }
+                            }else {
+                                Logger.logError("Parsing currency is not an :- "+ Labels_Hotels.CURRENT_USER_CURRENCY_TYPE+", it is showing as :- "+priceOfSelectingHotel);
+                            }
+                            currentHotelVisibility.click();
+                        }else {
+                            if (count==listOfHotels.size()-1){
+                                Logger.logError("All Hotels are having non free cancellation");
+                            }else {
+                                Logger.logComment((count+1)+" - Hotel is having having non free cancellation");
+                            }
+                        }
+                    }
+                }else {
+                    Logger.logError("Hotel number "+(count+1)+"is non visible even after scrolling the page upwards");
                 }
-                else {
-                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = selectedHotelPriceWithoutCurrencyType;
-                }
-            }else {
-                Logger.logError("Parsing currency is not an :- "+ Labels_Hotels.CURRENT_USER_CURRENCY_TYPE+", it is showing as :- "+priceOfParsingCellNumber);
             }
         }catch (Exception exception){
             exception.printStackTrace();

@@ -146,8 +146,12 @@ public class FlightsAndroid extends FlightsBase{
         Logger.logAction("Tapping on menu button");
         try {
             if (isElementDisplayedById(MENU_BUTTON)){
-                driver.findElement(By.id(MENU_BUTTON)).click();
-                Logger.logStep("Menu button is tapped");
+                boolean status = findElementByIdAndClick(MENU_BUTTON);
+                if (status==true){
+                    Logger.logStep("Menu button is tapped");
+                }else {
+                    Logger.logError("Menu button is not tapped");
+                }
             }else{
                 Logger.logError("Menu button is not displayed in the current active screen");
             }
@@ -200,6 +204,7 @@ public class FlightsAndroid extends FlightsBase{
                 Logger.logError(DOMAIN_LIST_VIEW+" - element name is not displayed in the current active screen");
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Error in selecting the user country from select country modal");
         }
     }
@@ -839,7 +844,7 @@ public class FlightsAndroid extends FlightsBase{
      * Get the From airport name
      */
     @Override
-    public String  getTheFromAirportName() {
+    public String getTheFromAirportName() {
         Logger.logAction("Getting the from airport name");
         try {
             String fromAirportName = findElementByIdAndReturnText(FROM_AIRPORT_NAME);
@@ -921,6 +926,9 @@ public class FlightsAndroid extends FlightsBase{
             return passengersCountNeedToBeDisplayed;
         }else if (parsingAdultsCount !=0 && parsingChildrenCount !=0 && parsingInfantsCount ==0){
             String passengersCountNeedToBeDisplayed = ""+parsingAdultsCount+" Adult, "+parsingChildrenCount+" Child";
+            return passengersCountNeedToBeDisplayed;
+        }else if (parsingAdultsCount !=0 && parsingChildrenCount ==0 && parsingInfantsCount ==0){
+            String passengersCountNeedToBeDisplayed = ""+parsingAdultsCount+" Adult";
             return passengersCountNeedToBeDisplayed;
         }
         return null;

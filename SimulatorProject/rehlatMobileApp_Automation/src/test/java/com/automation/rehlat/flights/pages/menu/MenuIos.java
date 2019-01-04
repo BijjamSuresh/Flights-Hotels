@@ -40,6 +40,7 @@ public class MenuIos extends MenuBase {
     public static final String NO_MAIL_ACCOUNTS_ID_IN_EMAIL = "No Mail Accounts";
     public static final String CANCEL_BUTTON_ID_IN_EMAIL = "Cancel";
     public static final String DELETE_DRAFT_ID_IN_EMAIL = "Delete Draft";
+    public static final String XPATH_OF_MENU_SCROLL_VIEW = "//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable";
 
 
     /**
@@ -164,11 +165,19 @@ public class MenuIos extends MenuBase {
     public void tapOnLogoutButton() {
         Logger.logAction("Tapping on logout button");
         try {
-            if (isElementDisplayedByAccessibilityId(LOGOUT_BUTTON)){
+            String logoutButtonVisibleStatus = driver.findElementByAccessibilityId(LOGOUT_BUTTON).getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE);
+            if (logoutButtonVisibleStatus.equalsIgnoreCase("true")){
                 driver.findElementByAccessibilityId(LOGOUT_BUTTON).click();
                 Logger.logComment("Tapped on logout button");
             }else {
-                Logger.logError("Logout button is not displayed in the current active screen");
+                scrollDown();
+                String logoutButtonVisibleStatusAfterScrollingDown = driver.findElementByAccessibilityId(LOGOUT_BUTTON).getAttribute(Labels_Flights.VISIBLE_ATTRIBUTE);
+                if (logoutButtonVisibleStatusAfterScrollingDown.equalsIgnoreCase("true")){
+                    driver.findElementByAccessibilityId(LOGOUT_BUTTON).click();
+                    Logger.logComment("Tapped on logout button");
+                }else {
+                    Logger.logError("Logout button is not displayed in the current active screen");
+                }
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: unable to tap on the logout button");

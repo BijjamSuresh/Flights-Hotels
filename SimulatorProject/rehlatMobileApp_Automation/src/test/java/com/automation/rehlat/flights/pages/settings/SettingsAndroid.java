@@ -47,8 +47,12 @@ public class SettingsAndroid extends SettingsBase {
     public void tapOnChangeCountryOption() {
         Logger.logAction("Tapping on change country option");
         try {
-            findElementByIdAndClick(SELECTED_COUNTRY_LAYOUT);
-            Logger.logStep("Tapped on change country icon");
+            boolean status = findElementByIdAndClick(SELECTED_COUNTRY_LAYOUT);
+            if (status == true){
+                Logger.logStep("Tapped on change country icon");
+            }else {
+                Logger.logError("Didn't tapped on change country icon");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on change the country");
         }
@@ -61,8 +65,12 @@ public class SettingsAndroid extends SettingsBase {
     public void tapOnChangeCurrencyOption() {
         Logger.logAction("Tapping on change currency option");
         try {
-            findElementByIdAndClick(SELECTED_CURRENCY_LAYOUT);
-            Logger.logStep("Tapped on change currency icon");
+            boolean status = findElementByIdAndClick(SELECTED_CURRENCY_LAYOUT);
+            if (status == true){
+                Logger.logStep("Tapped on change currency icon");
+            }else {
+                Logger.logError("Didn't tapped on change currency icon");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on change the currency");
         }
@@ -160,8 +168,12 @@ public class SettingsAndroid extends SettingsBase {
     public void tapOnContinueButton() {
         Logger.logAction("Tapping on continue button");
         try {
-            findElementByIdAndClick(CONTINUE_BUTTON);
-            Logger.logStep("Tapped on continue button");
+            boolean status = findElementByIdAndClick(CONTINUE_BUTTON);
+            if (status == true){
+                Logger.logStep("Tapped on continue button");
+            }else {
+                Logger.logError("Didn't tapped on continue button");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on change the domain");
         }

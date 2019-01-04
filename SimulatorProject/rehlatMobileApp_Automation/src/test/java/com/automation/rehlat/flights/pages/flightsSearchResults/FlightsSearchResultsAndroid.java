@@ -142,12 +142,12 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
                 if (bookingFlightPrice.contains(Labels_Flights.STRING_COMMA)){
                     String bookingFlightPriceWithoutComma = bookingFlightPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
                     Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPriceWithoutComma);
-                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPriceWithoutComma;
-                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID = bookingFlightPriceWithoutComma;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID ;
                 }else {
                     Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID = bookingFlightPrice;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID ;
                 }
             }catch (Exception exception){
                 scrollTheFlightSearchResultsScreenDownByACardGap_Android();
@@ -156,7 +156,7 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to get the booking cost of first flight in search results");
         }
-        return Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+        return Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID;
     }
 
     /**
@@ -177,12 +177,12 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
                 if (bookingFlightPrice.contains(Labels_Flights.STRING_COMMA)){
                     String bookingFlightWithoutComma = bookingFlightPrice.replace(Labels_Flights.STRING_COMMA,Labels_Flights.STRING_NULL);
                     Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightWithoutComma);
-                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightWithoutComma;
-                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID = bookingFlightWithoutComma;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID ;
                 }else {
                     Logger.logComment("Booking seat cost of flight cell number "+parsingFlightCellTypeNumber+" :- " +bookingFlightPrice);
-                    Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingFlightPrice;
-                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST ;
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID = bookingFlightPrice;
+                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID ;
                 }
             }catch (Exception exception){
                 scrollTheFlightSearchResultsScreenDownByACardGap_Android();
@@ -192,7 +192,7 @@ public class FlightsSearchResultsAndroid extends FlightsSearchResultsBase {
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to get the booking cost of first flight in search results");
         }
-        return Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+        return Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID;
     }
 
     /**

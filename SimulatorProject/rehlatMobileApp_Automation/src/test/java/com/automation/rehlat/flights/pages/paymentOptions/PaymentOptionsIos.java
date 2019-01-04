@@ -17,7 +17,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     public static final String KNET_PAYMENT_GATEWAY_TITLE = "Knet Payment Gateway";
     public static final String PIN_TEXTFIELD = "XCUIElementTypeSecureTextField";
     public static final String SELECT_YOUR_BANK = "Select Your Bank";
-    public static final String PAYMENT_FAILED = "Payment Failed";
+    public static final String PAYMENT_FAILED = "Due to payment failure";
     public static final String SUBMIT_BUTTON = "Submit";
     public static final String CONFIRM_BUTTON = "Confirm";
     public static final String SELECT_YOUR_BANK_PICKER_WHEEL ="XCUIElementTypePickerWheel";
@@ -236,11 +236,6 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
         Logger.logAction("Tapping on KNET payment gateway");
         String knetPaymentGateWayLabel = KNET_PAYMENT_GATEWAY_OPTION;
         try{
-            if (Labels_Flights.CURRENT_RUNNING_DOMAIN.equalsIgnoreCase("EG")){
-                knetPaymentGateWayLabel = "Knet";
-            }else {
-                knetPaymentGateWayLabel = KNET_PAYMENT_GATEWAY_OPTION;
-            }
             if (isElementDisplayedByAccessibilityId(knetPaymentGateWayLabel)){
                 boolean status = findElementByAccessibilityIdAndClick(knetPaymentGateWayLabel);
                 if (status ==true){
@@ -272,19 +267,31 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
 //            if (isElementDisplayedByClassName(Labels_Hotels.IOS_ACTIVITY_INDICATOR)){
 //                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(Labels_Hotels.IOS_ACTIVITY_INDICATOR)));
 //            }
-            if (isElementDisplayedById(PAYMENT_FAILED)){
-                System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                        "//////////////////////////////////////////  "+PAYMENT_FAILED+"////////////////////////////////////////////////////\n"+
-                        "        ////////////////////////////////////////////////////////////////////////////////////");
-                BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Payment Failed");
-                printPNRDetails();
-                Logger.logError("Payment Failed screen is displayed");
-            }else if (isElementDisplayedByName(KNET_PAYMENT_GATEWAY_TITLE)){
+            if (isElementDisplayedByName(KNET_PAYMENT_GATEWAY_TITLE)){
                 Logger.logStep("KNET Payment gateway screen is displayed and moving to next step");
-            }else {
+            } else if (isElementDisplayedByAccessibilityId("failIcon")){
+                System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
+                        "//////////////////////////////////////////  "+"PAYMENT FAILED"+"////////////////////////////////////////////////////\n"+
+                        "        ////////////////////////////////////////////////////////////////////////////////////");
+                BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+//                printPNRDetails("Failed");// Todo:- This line of code needs to be enabled when the PNR id and Pnr is added in failed ticketing page
+                Logger.logError("Payment Failed screen is displayed");
+            } else if (isElementDisplayedByAccessibilityId("amountString")){
+                String ticketingStatus = findElementByXpathAndReturnItsAttributeValue("amountString");
+                if (ticketingStatus.equalsIgnoreCase(PAYMENT_FAILED)){
+                    System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
+                            "//////////////////////////////////////////  "+"PAYMENT FAILED"+"////////////////////////////////////////////////////\n"+
+                            "        ////////////////////////////////////////////////////////////////////////////////////");
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
+//                printPNRDetails("Failed");// Todo:- This line of code needs to be enabled when the PNR id and Pnr is added in failed ticketing page
+                    Logger.logError("Payment Failed screen is displayed");
+                }
+            }
+            else {
                 Logger.logError("KNET Payment screen is not displayed");
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to check the screen name - " + KNET_PAYMENT_GATEWAY_TITLE);
         }
     }
@@ -458,7 +465,6 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
         try {
             if (isElementDisplayedByClassName(Labels_Flights.IOS_ACTIVITY_INDICATOR)){
                 waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,2);
-//                waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR);
                 Logger.logComment("Booking process is started");
                 if (isElementDisplayedByName(TRANSACTION_IN_PROGRESS)){
                     Logger.logComment(TRANSACTION_IN_PROGRESS);
@@ -467,51 +473,21 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                         waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed");
-                        }
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
                     }else {
                         waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed");
-                        }
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
                     }
                 }else {
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                         waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed");
-                        }
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
                     }else {
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed");
-                        }
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
                     }
                 }
             }else if (isElementDisplayedByName(TRANSACTION_IN_PROGRESS)){
@@ -521,67 +497,20 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                         waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed");
-                        }
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
                     }else {
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed");
-                        }
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
                     }
                 }else if (isElementDisplayedByName(PAYMENT_SUCCESS)) {
                     Logger.logComment(PAYMENT_SUCCESS);
                     Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                     waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                    if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                        System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                "        ////////////////////////////////////////////////////////////////////////////////////");
-                    }
-                    else {
-                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                        printPNRDetails();
-                        Logger.logError("Booking process is failed");
-                    }
-                }
-                else {
-                if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////");
-                }else {
-                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Knet Payment Failed");
-                    printPNRDetails();
-                    Logger.logError("Booking process is failed");
-                }
+                    printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
+            }else {
+                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                printTheStatusOfTicketBookingInPaymentSummaryScreen("Knet");
             }
-            printPNRDetails();
-//            if (isElementDisplayedByClassName(IOS_ACTIVITY_INDICATOR)){
-//                Logger.logComment("Booking process is started");
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(IOS_ACTIVITY_INDICATOR)));
-////                driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(TRANSACTION_IN_PROGRESS)));
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.name(TRANSACTION_IN_PROGRESS)));
-//                Logger.logComment(TRANSACTION_IN_PROGRESS);
-////                driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(PAYMENT_SUCCESS)));
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.name(PAYMENT_SUCCESS)));
-//                Logger.logComment(PAYMENT_SUCCESS);
-//                driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(BOOKING_SUCCESS)));
-//                Logger.logComment(PAYMENT_SUCCESS);
-//            }else {
-//                Logger.logError("Activity indicator is not displayed, looks like booking process is not started");
-//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the booking status");
         }
@@ -640,6 +569,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                 driver.findElement(By.xpath(XPATH_OF_CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_TEXT_FIELD)).sendKeys(Labels_Flights.CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_AND_CVV_NUMBER);
                 Logger.logComment(Labels_Flights.CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_AND_CVV_NUMBER+" :- is parsed");
                 Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
+                closeTheKeyboard_iOS();
             }else {
                 Logger.logError("Element name is not displayed in the current active screen:- "+XPATH_OF_CREDIT_OR_DEBIT_CARD_EXPIRY_MONTH_AND_YEAR_TEXT_FIELD);
             }
@@ -745,7 +675,7 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                     Thread.sleep(Labels_Flights.WAIT_TIME_MIN);
                 }else if (isElementDisplayedById(PAYMENT_FAILED)){
                     System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                            "//////////////////////////////////////////  "+PAYMENT_FAILED+"////////////////////////////////////////////////////\n"+
+                            "//////////////////////////////////////////  "+"PAYMENT FAILED"+"////////////////////////////////////////////////////\n"+
                             "        ////////////////////////////////////////////////////////////////////////////////////");
                     BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false Payment Failed");
                     Logger.logError("Payment Failed screen is displayed");
@@ -785,8 +715,6 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
             if (isElementDisplayedByClassName(Labels_Flights.IOS_ACTIVITY_INDICATOR)){
                 Logger.logComment("Booking process is started");
                 waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,5);
-//                waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR);
-//                waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR);
                 if (isElementDisplayedByName(TRANSACTION_IN_PROGRESS)){
                     Logger.logComment(TRANSACTION_IN_PROGRESS + " is displayed");
                     waitForAnElementToDisappear_ByName(TRANSACTION_IN_PROGRESS);
@@ -794,50 +722,20 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                         waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed or stuck");
-                        }
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
                     }else {
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is unsuccessful");
-                        }
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
                     }
                 }else {
                     if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                         Logger.logComment(PAYMENT_SUCCESS);
                         Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                         waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is failed or stuck");
-                        }
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
                     }else {
-                        if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                            System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                    "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                    "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                        }else {
-                            BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                            printPNRDetails();
-                            Logger.logError("Booking process is unsuccessful");
-                        }
+                        waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                        printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
                     }
                 }
             }else if (isElementDisplayedByName(TRANSACTION_IN_PROGRESS)){
@@ -846,65 +744,20 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
                     Logger.logComment(PAYMENT_SUCCESS);
                     Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                     waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                    if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                        System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                    }else {
-                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                        printPNRDetails();
-                        Logger.logError("Booking process is failed or stuck");
-                    }
+                    printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
                 }else {
-                    if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                        System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                                "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                                "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                    }else {
-                        BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                        printPNRDetails();
-                        Logger.logError("Booking process is unsuccessful");
-                    }
+                    waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                    printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
                 }
             }else if (isElementDisplayedByName(PAYMENT_SUCCESS)){
                 Logger.logComment(PAYMENT_SUCCESS);
                 Logger.logStep("Payment success screen is displayed, waiting till the screen is invisible");
                 waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
-                if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                    System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                            "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                            "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                }else {
-                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                    printPNRDetails();
-                    Logger.logError("Booking process is failed or stuck");
-                }
+                printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
             }else {
-                if (isElementDisplayedByName(BOOKING_SUCCESS)){
-                    System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
-                            "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
-                            "        ////////////////////////////////////////////////////////////////////////////////////\n");
-                }else {
-                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false checkout Payment Failed");
-                    printPNRDetails();
-                    Logger.logError("Booking process is unsuccessful");
-                }
+                waitForAnElementToDisappear_ByName(PAYMENT_SUCCESS);
+                printTheStatusOfTicketBookingInPaymentSummaryScreen("Credit/Debit Card");
             }
-            printPNRDetails();
-//            if (isElementDisplayedByClassName(IOS_ACTIVITY_INDICATOR)){
-//                Logger.logComment("Booking process is started");
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(IOS_ACTIVITY_INDICATOR)));
-////                driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(TRANSACTION_IN_PROGRESS)));
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.name(TRANSACTION_IN_PROGRESS)));
-//                Logger.logComment(TRANSACTION_IN_PROGRESS);
-////                driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(PAYMENT_SUCCESS)));
-//                driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.name(PAYMENT_SUCCESS)));
-//                Logger.logComment(PAYMENT_SUCCESS);
-//                driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.name(BOOKING_SUCCESS)));
-//                Logger.logComment(PAYMENT_SUCCESS);
-//            }else {
-//                Logger.logError("Activity indicator is not displayed, looks like booking process is not started");
-//            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the booking status");
         }
@@ -914,16 +767,16 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     /**
      * Print the pnr details
      */
-    public static void printPNRDetails(){
+    public static void printPNRDetails(String ticketStatus){
         Logger.logAction("Printing the pnr details");
         try {
             closeTheRateUsInAppStoreAlert();
-            String bookingID = getTheBookingIdInBookingSuccessPage();
-            String airlinePNR = getTheAirlinePNRInBookingSuccessPage();
-            String totalPrice = getTheTotalPriceInBookingSuccessPage();
-            Logger.logComment("Booking Id in success page :- "+bookingID);
-            Logger.logComment("Airline PNR in success page :- "+airlinePNR);
-            Logger.logComment("Total Price in success page :- "+totalPrice);
+            String bookingID = getTheBookingIdInTicketingPage();
+            String airlinePNR = getTheAirlinePNRInTicketingPage();
+            String totalPrice = getTheTotalPriceInTicketingPage(ticketStatus);
+            Logger.logComment("Booking Id in "+ticketStatus+" page :- "+bookingID);
+            Logger.logComment("Airline PNR in "+ticketStatus+" page :- "+airlinePNR);
+            Logger.logComment("Total Price in "+ticketStatus+" page :- "+totalPrice);
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to print the pnr details");
         }
@@ -932,10 +785,10 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     /**
      * Get the booking id booking success page
      */
-    public static String getTheBookingIdInBookingSuccessPage(){
+    public static String getTheBookingIdInTicketingPage(){
         Logger.logAction("Getting the booking id in booking success page");
         try {
-            String bookingId = driver.findElementByAccessibilityId("bookingID").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            String bookingId = driver.findElementByAccessibilityId("rehlatID").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             return bookingId;
         }catch (Exception exception){
             Logger.logWarning("Encountered error:- Unable to get the booking id in booking success page");
@@ -946,11 +799,15 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     /**
      * Get the airline pnr id booking success page
      */
-    public static String getTheAirlinePNRInBookingSuccessPage(){
+    public static String getTheAirlinePNRInTicketingPage(){
         Logger.logAction("Getting the airline pnr id in booking success page");
         try {
-            String airlinePNRId = driver.findElementByAccessibilityId("airlinePNR").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-            return airlinePNRId;
+            if (isElementDisplayedByAccessibilityId("pnrID")){
+                String airlinePNRId = driver.findElementByAccessibilityId("pnrID").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                return airlinePNRId;
+            }else {
+                return "";
+            }
         }catch (Exception exception){
             Logger.logWarning("Encountered error:- Unable to get the airline pnr id in booking success page");
         }
@@ -960,11 +817,27 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
     /**
      * Get the total price id booking success page
      */
-    public static String  getTheTotalPriceInBookingSuccessPage(){
+    public static String getTheTotalPriceInTicketingPage(String ticketStatus){
         Logger.logAction("Getting the total price id in booking success page");
         try {
-            String totalPrice = driver.findElementByAccessibilityId("totalPrice").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-            return totalPrice;
+            if (ticketStatus.equalsIgnoreCase("Success")){
+                if (isElementDisplayedByAccessibilityId("amountString")){
+                    String totalPriceWithTagLine = driver.findElementByAccessibilityId("amountString").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                    String totalPriceWithoutTagLine = totalPriceWithTagLine.replace("You made a payment of ",Labels_Flights.STRING_NULL).trim();
+                    return totalPriceWithoutTagLine;
+                }else {
+                    Logger.logError("Unable to get the total price in ticket success page");
+                }
+            } else if (ticketStatus.equalsIgnoreCase("Pending")){
+                if (isElementDisplayedByAccessibilityId("greetingsString")){
+                    String totalPriceWithTagLine = driver.findElementByAccessibilityId("greetingsString").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                    return totalPriceWithTagLine;
+                }else {
+                    Logger.logError("Unable to get the total price in ticket pending page");
+                }
+            }else if (ticketStatus.equalsIgnoreCase("Failed")){
+                return "When ticket failed, payment option won't be displaying in the ticketing page";
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error:- Unable to get the total price id in booking success page");
         }
@@ -990,6 +863,46 @@ public class PaymentOptionsIos extends PaymentOptionsBase {
             }
         }catch (Exception exception){
 
+        }
+    }
+
+    /**
+     * Get the status of ticket booking in payment summary screen
+     * @return
+     */
+    public static void printTheStatusOfTicketBookingInPaymentSummaryScreen(String paymentGatewayType){
+        Logger.logAction("Getting the status of ticket booking in payment summary screen");
+        try {
+            if (isElementDisplayedByName("amountString")) {
+                String ticketingStatus = driver.findElementByAccessibilityId("amountString").getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+                if (ticketingStatus.contains("You made a payment of")) {
+                    System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
+                                        "//////////////////////////////////////////  "+BOOKING_SUCCESS+"////////////////////////////////////////////////////\n"+
+                                        "        ////////////////////////////////////////////////////////////////////////////////////\n");
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"true");
+                    printPNRDetails("Success");
+                }else if (ticketingStatus.contains("Due to payment failure")){
+                    System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
+                            "//////////////////////////////////////////  "+"BOOKING FAILED"+"////////////////////////////////////////////////////\n"+
+                            "        ////////////////////////////////////////////////////////////////////////////////////\n");
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false "+paymentGatewayType+" Payment Failed");
+//                    printPNRDetails("Failed"); // Todo:- This line of code needs to be enabled when the PNR id and Pnr is added in failed ticketing page
+                    Logger.logError(paymentGatewayType+" - Payment Failed");
+                }else if (ticketingStatus.contains("Booking is pending")){
+                    System.out.println( "        ////////////////////////////////////////////////////////////////////////////////////\n" +
+                            "//////////////////////////////////////////  "+"BOOKING PENDING"+"////////////////////////////////////////////////////\n"+
+                            "        ////////////////////////////////////////////////////////////////////////////////////\n");
+                    BaseTest.addTestResultStatusToExecutionResultsJsonFile(Labels_Flights.testCaseName,"false "+paymentGatewayType+" Ticket pending but payment done");
+                    printPNRDetails("Pending");
+                    Logger.logError(paymentGatewayType+" - Payment done but ticket pending");
+                }else {
+                    Logger.logError("Payment screen is neither failed nor pending nor success");
+                }
+            }else {
+                Logger.logError("Ticketing page is not displayed");
+            }
+            }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the status of ticket booking in the payment summary screen");
         }
     }
 }

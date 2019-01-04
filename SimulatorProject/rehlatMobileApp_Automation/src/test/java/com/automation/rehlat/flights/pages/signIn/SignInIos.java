@@ -49,7 +49,7 @@ public class SignInIos extends SignInBase {
     public void declineTheTouchIdAccessSetUpPopupIfDisplayed() {
         Logger.logAction("Declining the touch id access popup if displayed");
         try {
-            Thread.sleep(2000);
+//            Thread.sleep(2000);
             if (isElementDisplayedByName(TOUCH_ID_ACCESS_MODAL_TITLE)){
                 Logger.logComment("Touch id access popup is displayed and going to decline it by tapping on no button");
                 driver.findElementByName(NO_BUTTON_ON_TOUCH_ID_ACCESS_MODAL).click();

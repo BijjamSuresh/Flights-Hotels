@@ -11,6 +11,7 @@ import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.AndroidKeyCode;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.HtmlEmail;
@@ -22,6 +23,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -94,7 +96,7 @@ public class Base {
             capabilities.setCapability("appWaitActivity", "com.app.rehlat.SplashActivity");
             capabilities.setCapability("noReset", true);
             capabilities.setCapability("newCommandTimeout", "8000");
-            driver = new AndroidDriver(new URL(Labels_Flights.ANDROID_CAPABILITIES_URL), capabilities);
+            driver = new AndroidDriver<>(new URL(Labels_Flights.ANDROID_CAPABILITIES_URL), capabilities);
         } else {
             Logger.logWarning("The platform mentioned for the test script is neither iOS or Android");
         }
@@ -141,7 +143,7 @@ public class Base {
             email.setAuthenticator(new DefaultAuthenticator("suresh.bijjam@rehlat.com","L>88G97dd"));
             email.setSSLOnConnect(true);
             email.setFrom("suresh.bijjam@rehlat.com");
-            email.setSubject(Labels_Flights.DEFAULT_PLATFORM+": "+Labels_Flights.DEVICE_NAME+"_"+Labels_Flights.DEVICE_OS+"_Execution Results");
+            email.setSubject(Labels_Flights.DEFAULT_PLATFORM+": "+Labels_Flights.DEVICE_NAME+"_"+Labels_Flights.DEVICE_OS+"_"+Labels_Flights.CURRENT_RUNNING_DOMAIN+"_Execution Results");
             email.setMsg("Please find the below html report for in-details");
             email.addTo("suresh.bijjam@rehlat.com");
             email.setHtmlMsg(reportInHtml);
@@ -1011,6 +1013,13 @@ public class Base {
             if (down) {
                 while (!withOutIterationCheckIsElementDisplayedByName(elementName)) {
                     Logger.logComment(counter + "  time trying to find the element name - " + elementName +" - by scrolling down ");
+//                    if (Labels_Flights.DEVICE_NAME.contains("s")){ //Todo:- This method is for to slow down the execution speed of scrolling method in iPhone 5S resolution devices
+//                        try {
+//                            Thread.sleep(6000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                     swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
 //                    scrollDown();
                     counter++;
@@ -1023,6 +1032,13 @@ public class Base {
                         Logger.logComment(counter + "  time trying to find the element name - " + elementName +" - by scrolling up ");
                         swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
 //                        scrollUp();
+//                        if (Labels_Flights.DEVICE_NAME.contains("s")){//Todo:- This method is for to slow down the execution speed of scrolling method in iPhone 5S resolution devices
+//                            try {
+//                                Thread.sleep(4000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
                         counter++;
                         if (counter > 30) {
                             break;
@@ -1033,6 +1049,13 @@ public class Base {
                 while (!withOutIterationCheckIsElementDisplayedByName(elementName)) {
                     Logger.logComment(counter + "  time trying to find the element name - " + elementName +" - by scrolling up ");
 //                    scrollUp();
+//                    if (Labels_Flights.DEVICE_NAME.contains("s")){//Todo:- This method is for to slow down the execution speed of scrolling method in iPhone 5S resolution devices
+//                        try {
+//                            Thread.sleep(4000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                     swipeOnElementBasedOnLocation(layoutName,"bottomCenter","bottomLeft");
                     counter++;
                     if (counter > 5) {
@@ -1043,6 +1066,13 @@ public class Base {
                     Logger.logComment(counter + "  time trying to find the element name - " + elementName +" - by scrolling up ");
                     while (!withOutIterationCheckIsElementDisplayedByName(elementName)) {
 //                        scrollDown();
+//                        if (Labels_Flights.DEVICE_NAME.contains("s")){//Todo:- This method is for to slow down the execution speed of scrolling method in iPhone 5S resolution devices
+//                            try {
+//                                Thread.sleep(4000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
                         swipeOnElementBasedOnLocation(layoutName,"centerRight","center");
                         counter++;
                         if (counter > 30) {
@@ -1057,7 +1087,7 @@ public class Base {
     // TODO: Try to see if the logic can be improved
     // TODO: Check if the element is enabled  in the screen before scrolling
     // Scroll to element by name and direction and verify the element through out the screen
-    public static void scrollToAnElementByXPath(String xPath,boolean down) {
+    public static void scrollToAnElementByXPath(String xPath,boolean down,Integer maxScrollAttempts) {
         Logger.logAction("Scrolling to the xpath :- " +xPath);
 //        scrollToAnElement(xPath,down);
         if(!withOutIterationCheckIsElementVisibleByXpath(xPath)) {
@@ -1067,7 +1097,7 @@ public class Base {
                     Logger.logComment(counter + "  time trying to find the XPath - " + xPath +" - by scrolling down ");
                     scrollDown();
                     counter++;
-                    if (counter > 5) {
+                    if (counter > maxScrollAttempts-(maxScrollAttempts/2)) {
                         break;
                     }
                 }
@@ -1076,7 +1106,7 @@ public class Base {
                         Logger.logComment(counter + "  time trying to find the XPath - " + xPath +" - by scrolling up ");
                         scrollUp();
                         counter++;
-                        if (counter > 10) {
+                        if (counter > maxScrollAttempts) {
                             break;
                         }
                     }
@@ -1086,7 +1116,7 @@ public class Base {
                     Logger.logComment(counter + "  time trying to find the XPath - " + xPath +" - by scrolling up ");
                     scrollUp();
                     counter++;
-                    if (counter > 5) {
+                    if (counter > maxScrollAttempts-(maxScrollAttempts/2)) {
                         break;
                     }
                 }
@@ -1095,7 +1125,7 @@ public class Base {
                     while (!withOutIterationCheckIsElementVisibleByXpath(xPath)) {
                         scrollDown();
                         counter++;
-                        if (counter > 10) {
+                        if (counter > maxScrollAttempts) {
                             break;
                         }
                     }
@@ -1191,11 +1221,14 @@ public class Base {
 //            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],600);
 //            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],700);
 //            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],800);
-            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1], Labels_Flights.CALENDAR_SWIPE_DURATION); // fine in iPhone 5S
+            if (Labels_Flights.DEVICE_NAME.contains("5")){
+                            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],900);
+            }else {
+                driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1], Labels_Flights.CALENDAR_SWIPE_DURATION); // fine in iPhone 5S
+            }
 //            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],300); // fine in iPhone 7
 //            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],200); // fine in iPhone X
 //            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],100);
-//            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],900);
 
 //            driver.swipe(arrayListOfStartingPointLocationXAndY[0], arrayListOfStartingPointLocationXAndY[1],arrayListOfEndingPointLocationXAndY[0], arrayListOfEndingPointLocationXAndY[1],Labels_Hotels.TAP_DURATION_MIN);
 

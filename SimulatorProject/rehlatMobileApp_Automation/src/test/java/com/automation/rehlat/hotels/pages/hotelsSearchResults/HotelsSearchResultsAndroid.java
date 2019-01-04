@@ -37,30 +37,128 @@ public class HotelsSearchResultsAndroid extends HotelsSearchResultsBase {
 
     /**
      * Get the price of an hotel and tap on its card view
-     * @param parsingCardNumber
+     * @param isRefundableHotel
      */
     @Override
-    public void getThePriceOfHotelAndTapOnItsCardView(Integer parsingCardNumber){
+    public void getThePriceOfHotelAndTapOnItsCardView(boolean isRefundableHotel,boolean selectFirstHotel){
         Logger.logAction("Getting the price of hotel and tap on its card view");
+        Integer hotelsCardsCount = 0;
+        boolean firstAttemptCheck = true;
+        Integer pageScrollAttempts = 0;
         try {
+            //Todo:- Change this logic such that it should select the refundable or non refundable hotels in SRP itself based on the parsing boolean type
             waitForAnElementToDisappear_ById(LOADING_INDICATOR_OF_EACH_HOTEL_PRICE_ID);
-            List<WebElement> listOfPrices = driver.findElements(By.id(HOTEL_PRICE_ID));
-            WebElement hotelNumberToSelect =  listOfPrices.get(parsingCardNumber-1);
-            String hotelNumberValue =hotelNumberToSelect.getText();
-            // The below line of code is commented as per new UI implemented in 7.1.2 build
-//            String xpathOfParsingCellNumber = XPATH_OF_HOTEL_CARD_VIEW_LAYOUT_WITHOUT_INDEX+parsingCardNumber+XPATH_HOTEL_PRICE_WITHOUT_CARD_VIEW_XPATH;
-//            String priceOfParsingCellNumber = findElementByXpathAndReturnItsAttributeText(xpathOfParsingCellNumber);
-            if (hotelNumberValue.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
-                String priceOfSelectingHotel = hotelNumberValue.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
-                Logger.logStep("Selected hotel price is :- "+priceOfSelectingHotel);
-                hotelNumberToSelect.click();
-                Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = priceOfSelectingHotel;
-            }else {
-                Logger.logError("Parsing currency is not an :- "+ Labels_Hotels.CURRENT_USER_CURRENCY_TYPE+", it is showing as :- "+hotelNumberValue);
+            String hotelsCountLabel = driver.findElement(By.id("com.app.rehlat:id/avaliable_hotels_count")).getText();
+            Integer hotelsCount = getTheCountOfTheHotels(hotelsCountLabel);
+            while (pageScrollAttempts<hotelsCount) {
+                WebElement hotelsListView = driver.findElement(By.id("com.app.rehlat:id/hotels_listview"));
+                if (isRefundableHotel == true){
+                    List<WebElement> listOfHotels = hotelsListView.findElements(By.id("com.app.rehlat:id/item_layout"));
+                    for (int count = 0; listOfHotels.size() > count; count++) {
+                        WebElement cardView = listOfHotels.get(count);
+                        try {
+                            cardView.findElement(By.id("com.app.rehlat:id/hotelSRPcancellationpolicy"));
+                            if (selectFirstHotel == true) {
+                                WebElement priceOfCardViewToTap = cardView.findElement(By.id(HOTEL_PRICE_ID));
+                                String hotelPriceWithCurrencyCodeAndSpecialCharacters = priceOfCardViewToTap.getText();
+                                String hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters = convertTheCurrencyWithoutCountryCodeAndSpecialCharacters(hotelPriceWithCurrencyCodeAndSpecialCharacters);
+                                Logger.logStep("Selected hotel price is :- " + hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters);
+                                Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters;
+                                priceOfCardViewToTap.click();
+                                pageScrollAttempts = hotelsCount;
+                                break;
+                            } else {
+                                if (firstAttemptCheck == true) {
+                                    scrollTheCalenderPageUpByAMonthGap_Android();
+                                    firstAttemptCheck = false;
+                                } else {
+                                    WebElement priceOfCardViewToTap = cardView.findElement(By.id(HOTEL_PRICE_ID));
+                                    String hotelPriceWithCurrencyCodeAndSpecialCharacters = priceOfCardViewToTap.getText();
+                                    String hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters = convertTheCurrencyWithoutCountryCodeAndSpecialCharacters(hotelPriceWithCurrencyCodeAndSpecialCharacters);
+                                    Logger.logStep("Selected hotel price is :- " + hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters);
+                                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters;
+                                    priceOfCardViewToTap.click();
+                                    pageScrollAttempts = hotelsCount;
+                                    break;
+                                }
+                            }
+                        } catch (Exception exception) {
+                            continue;
+                        }
+                    }
+                    if (pageScrollAttempts >= hotelsCount){
+                        break;
+                    }else {
+                        hotelsCardsCount = hotelsCardsCount + 1;
+                        Logger.logComment("Free cancellation is not applicable for hotel number :- " + hotelsCardsCount);
+                        scrollTheCalenderPageUpByAMonthGap_Android();
+                        pageScrollAttempts = pageScrollAttempts+1;
+                    }
+                }else {
+                    List<WebElement> listOfHotels = hotelsListView.findElements(By.id("com.app.rehlat:id/item_layout"));
+                    for (int count=0; listOfHotels.size()>count;count++){
+                        WebElement cardView = listOfHotels.get(count);
+                        try
+                        {
+                            cardView.findElement(By.id("com.app.rehlat:id/hotelSRPcancellationpolicy"));
+                        }catch (Exception exception){
+                            if (selectFirstHotel == true){
+                                WebElement priceOfCardViewToTap = cardView.findElement(By.id(HOTEL_PRICE_ID));
+                                String hotelPriceWithCurrencyCodeAndSpecialCharacters = priceOfCardViewToTap.getText();
+                                String hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters = convertTheCurrencyWithoutCountryCodeAndSpecialCharacters(hotelPriceWithCurrencyCodeAndSpecialCharacters);
+                                Logger.logStep("Selected hotel price is :- " + hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters);
+                                Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters;
+                                pageScrollAttempts =hotelsCount;
+                                priceOfCardViewToTap.click();
+                                break;
+                            }else {
+                                if (firstAttemptCheck == true){
+                                    scrollTheCalenderPageUpByAMonthGap_Android();
+                                    firstAttemptCheck = false;
+                                    pageScrollAttempts = pageScrollAttempts+1;
+                                }else {
+                                    WebElement priceOfCardViewToTap = cardView.findElement(By.id(HOTEL_PRICE_ID));
+                                    String hotelPriceWithCurrencyCodeAndSpecialCharacters = priceOfCardViewToTap.getText();
+                                    String hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters = convertTheCurrencyWithoutCountryCodeAndSpecialCharacters(hotelPriceWithCurrencyCodeAndSpecialCharacters);
+                                    Logger.logStep("Selected hotel price is :- " + hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters);
+                                    Labels_Hotels.SELECTED_HOTEL_BOOKING_COST_IN_SRP = hotelPriceWithoutCurrencyCodeAndWithoutSpecialCharacters;
+                                    priceOfCardViewToTap.click();
+                                    pageScrollAttempts =hotelsCount;
+                                    break;
+                                }
+                            }
+                        }
+                        if (pageScrollAttempts >= hotelsCount){
+                            break;
+                        }else {
+                            hotelsCardsCount = hotelsCardsCount+1;
+                            Logger.logComment("Free cancellation is applicable for hotel number :- "+hotelsCardsCount);
+                            scrollTheCalenderPageUpByAMonthGap_Android();
+                            pageScrollAttempts = pageScrollAttempts+1;
+                        }
+                    }
+                }
             }
         }catch (Exception exception){
             Logger.logError("Encountered error :- Unable to get the price of hotel and tap on its card view");
         }
+    }
+
+    /**
+     * Getting the hotels count in SRP results page
+     * @param availableHotelsCountWithCityAndStaticText
+     * @return
+     */
+    public static Integer getTheCountOfTheHotels(String availableHotelsCountWithCityAndStaticText){
+        Logger.logAction("Getting the count of the hotels in SRP results page");
+        try {
+            String subStringsOfHotelsCount[] = availableHotelsCountWithCityAndStaticText.split(Labels_Hotels.ONE_CHARACTER_SPACE,3);
+            String countOfHotels = subStringsOfHotelsCount[1];
+            return Integer.parseInt(countOfHotels);
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to Get the count of the hotels in SRP results page");
+        }
+        return null;
     }
 
     /**

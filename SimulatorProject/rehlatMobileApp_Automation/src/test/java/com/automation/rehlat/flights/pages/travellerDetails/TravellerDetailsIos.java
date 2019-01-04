@@ -192,17 +192,14 @@ public class TravellerDetailsIos extends TravellerDetailsBase {
                 }
                 if (isElementDisplayedByName(TRAVELLERS_PASSPORT_NUMBER)){
                     enterTravellersPassportNumber();
-                }
-                if (isElementDisplayedByName(TRAVELLERS_PASSPORT_EXPIRY_NUMBER)){
                     enterTravellersPassportExpiryDate();
-                }
-                if (isElementDisplayedByName(TRAVELLERS_PASSPORT_ISSUING_COUNTRY)){
+                    enterTravellersPassportExpiryDate();
                     selectPassportIssuingCountry(travellersCountry);
                     TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-                }
-                if (isElementDisplayedByName(TRAVELLERS_NATIONALITY)){
                     selectTravellersNationality(travellersCountry);
                     TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
+                }else {
+                    Logger.logStep("Airlines doesn't need the passport expiry details, passport issuing country, travellers nationality. So not checking these details");
                 }
             }
         }catch (Exception Exception){

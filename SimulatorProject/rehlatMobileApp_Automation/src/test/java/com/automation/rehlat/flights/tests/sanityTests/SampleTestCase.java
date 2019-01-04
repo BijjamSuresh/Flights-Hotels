@@ -6,6 +6,8 @@ import com.automation.rehlat.flights.libCommon.Logger;
 import com.automation.rehlat.flights.pages.BasePage;
 import com.automation.rehlat.flights.tests.BaseTest;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class SampleTestCase extends BaseTest {
     @Test

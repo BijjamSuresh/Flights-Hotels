@@ -172,35 +172,123 @@ public class FlightsSearchResultsIos extends FlightsSearchResultsBase {
         String xPathOfBookingFlightCellType = XPATH_OF_PRICE_FLIGHT_CARD_VIEW+ selectedFlightCellTypeNumber + "]";
         WebElement bookingFlightCell = null;
         try{
-            Logger.logComment("Selecting flights cell is displayed in the current search results and moving forward to get the booking seat cost of selected flight");
-            if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
-                bookingFlightCell = driver.findElementByXPath(xPathOfBookingFlightCellType);
-                Logger.logComment("Flight cell number - "+selectedFlightCellTypeNumber+" is displayed");
-                String flightCellTypeText = bookingFlightCell.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
-                if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
-                    String bookingCostExcludingCurrencyName = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
-                    if (bookingCostExcludingCurrencyName.contains(Labels_Flights.STRING_COMMA)){
-                        String actualAmountWithoutComma = bookingCostExcludingCurrencyName.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
-                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = actualAmountWithoutComma;
-                    }else {
-                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingCostExcludingCurrencyName;
-                        Logger.logComment("Booking cost of the flight cell number - " +selectedFlightCellTypeNumber + " and with complete index " + flightCellTypeText + " is :- " + Labels_Flights.SELECTED_SEAT_BOOKING_COST);
-                    }
-                    bookingFlightCell.click();
-                    Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
-                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST;
-                }else{
-                    Logger.logError("Flight currency type is incorrectly displaying .ie.., Instead of "+Labels_Flights.CURRENT_USER_CURRENCY_TYPE+" showing as :- "+flightCellTypeText);
+            String tripType = null;
+            if (TRIP_TYPE == SRP_ONE_WAY_VIEW){
+                tripType = "SRPOnewayPriceLabel";
+                String airlineName = getTheOneWayAirlinesNamesOfFlightCardNumber(Integer.parseInt(selectedFlightCellTypeNumber)-1);
+                Logger.logComment("Selected flight number "+selectedFlightCellTypeNumber+" airlines names are :- "+airlineName);
+            }else if (TRIP_TYPE == SRP_TWO_WAY_VIEW){
+                tripType = "SRPRoundTripPriceLabel";
+                String departureTwoWayAirlinesName = getTheDepartureTwoWayAirlinesNamesOfFlightCardNumber(Integer.parseInt(selectedFlightCellTypeNumber)-1);
+                String returnTwoWayAirlinesName = getTheReturnTwoWayAirlinesNamesOfFlightCardNumber(Integer.parseInt(selectedFlightCellTypeNumber)-1);
+                Logger.logComment("Selected flight number "+selectedFlightCellTypeNumber+" airlines names are :- "+departureTwoWayAirlinesName +", "+returnTwoWayAirlinesName);
+            }else {
+                Logger.logError("Encountered error:- Trip type is neither One way nor Two way");
+            }
+            List<WebElement> listOfPrices = driver.findElements(By.name(tripType));
+//            for (int count =0; count<=listOfPrices.size()-1;count++){
+            WebElement priceNumber = listOfPrices.get(Integer.parseInt(selectedFlightCellTypeNumber)-1);
+            String flightCellTypeText = priceNumber.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
+                String bookingCostExcludingCurrencyName = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+                if (bookingCostExcludingCurrencyName.contains(Labels_Flights.STRING_COMMA)){
+                    String actualAmountWithoutComma = bookingCostExcludingCurrencyName.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS = actualAmountWithoutComma;
+                }else {
+                    Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS = bookingCostExcludingCurrencyName;
+                    Logger.logComment("Booking cost of the flight cell number - " +selectedFlightCellTypeNumber + " and with complete index " + flightCellTypeText + " is :- " + Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS);
                 }
+                priceNumber.click();
+                Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
+                return  Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS;
+            }else{
+                Logger.logError("Flight currency type is incorrectly displaying .ie.., Instead of "+Labels_Flights.CURRENT_USER_CURRENCY_TYPE+" showing as :- "+flightCellTypeText);
             }
-            else {
-                Logger.logError("SRP results are not loaded with all the elements");
-            }
+//            }
+
+//            Logger.logComment("Selecting flights cell is displayed in the current search results and moving forward to get the booking seat cost of selected flight");
+//            if (isElementDisplayedByXPath(xPathOfBookingFlightCellType)){
+//                bookingFlightCell = driver.findElementByXPath(xPathOfBookingFlightCellType);
+//                Logger.logComment("Flight cell number - "+selectedFlightCellTypeNumber+" is displayed");
+//                String flightCellTypeText = bookingFlightCell.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+//                if (flightCellTypeText.contains(Labels_Flights.CURRENT_USER_CURRENCY_TYPE)){
+//                    String bookingCostExcludingCurrencyName = flightCellTypeText.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE+ Labels_Flights.ONE_CHARACTER_SPACE, Labels_Flights.STRING_NULL).trim();
+//                    if (bookingCostExcludingCurrencyName.contains(Labels_Flights.STRING_COMMA)){
+//                        String actualAmountWithoutComma = bookingCostExcludingCurrencyName.replace(Labels_Flights.STRING_COMMA, Labels_Flights.STRING_NULL);
+//                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = actualAmountWithoutComma;
+//                    }else {
+//                        Labels_Flights.SELECTED_SEAT_BOOKING_COST = bookingCostExcludingCurrencyName;
+//                        Logger.logComment("Booking cost of the flight cell number - " +selectedFlightCellTypeNumber + " and with complete index " + flightCellTypeText + " is :- " + Labels_Flights.SELECTED_SEAT_BOOKING_COST);
+//                    }
+//                    bookingFlightCell.click();
+//                    Logger.logStep("Tapped on flight cell number :- "+selectedFlightCellTypeNumber);
+//                    return  Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+//                }else{
+//                    Logger.logError("Flight currency type is incorrectly displaying .ie.., Instead of "+Labels_Flights.CURRENT_USER_CURRENCY_TYPE+" showing as :- "+flightCellTypeText);
+//                }
+//            }
+//            else {
+//                Logger.logError("SRP results are not loaded with all the elements");
+//            }
         }catch (Exception exception){
             exception.printStackTrace();
             Logger.logError("Encountered error: Unable to get the booking cost of first flight in search results");
         }
-        return Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+        return Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS;
+    }
+
+    /**
+     * Get the one way airline name w.r.t. to the parsing flight card number
+     * @param flightCardNumber
+     * @return
+     */
+    public static final String getTheOneWayAirlinesNamesOfFlightCardNumber(Integer flightCardNumber){
+        Logger.logAction("Getting the one way airlines names of flight card numbers");
+        try {
+            List<WebElement> listOfAirlineNames = driver.findElements(By.name("airlinesName"));
+            WebElement priceNumber = listOfAirlineNames.get(flightCardNumber);
+            String flightCellTypeText = priceNumber.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            return flightCellTypeText;
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the one way airlines names of flight card number :-"+flightCardNumber);
+        }
+        return null;
+    }
+
+    /**
+     * Get the departure two way airline name w.r.t. to the parsing flight card number
+     * @param flightCardNumber
+     * @return
+     */
+    public static final String getTheDepartureTwoWayAirlinesNamesOfFlightCardNumber(Integer flightCardNumber){
+        Logger.logAction("Getting the departure two way airlines names of flight card numbers");
+        try {
+            List<WebElement> listOfDepartAirlinesNames = driver.findElements(By.name("departAirlinesName"));
+            WebElement priceNumber = listOfDepartAirlinesNames.get(flightCardNumber);
+            String flightCellTypeText = priceNumber.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            return flightCellTypeText;
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the departure two way airlines names of flight card number :-"+flightCardNumber);
+        }
+        return null;
+    }
+
+    /**
+     * Get the return two way airline name w.r.t. to the parsing flight card number
+     * @param flightCardNumber
+     * @return
+     */
+    public static final String getTheReturnTwoWayAirlinesNamesOfFlightCardNumber(Integer flightCardNumber){
+        Logger.logAction("Getting the return two way airlines names of flight card numbers");
+        try {
+            List<WebElement> listOfReturnAirlinesNames = driver.findElements(By.name("returnAirlinesName"));
+            WebElement priceNumber = listOfReturnAirlinesNames.get(flightCardNumber);
+            String flightCellTypeText = priceNumber.getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
+            return flightCellTypeText;
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the return two way airlines names of flight card number :-"+flightCardNumber);
+        }
+        return null;
     }
 
 }

@@ -46,9 +46,11 @@ public class BasePage extends Base {
     public static final String TOGGLE_SWITCH = "XCUIElementTypeSwitch";
     public static String TRIP_TYPE ;
     public static String SELECTED_AIRLINE_NAME_IN_SRP;
-    public static boolean SIGN_IN_STATUS_IOS = false;
-    public static boolean SIGN_IN_STATUS_ANDROID = false;
+    public static boolean HOTELS_SIGN_IN_STATUS_IOS = false;
+    public static boolean HOTELS_SIGN_IN_STATUS_ANDROID = false;
     public static boolean FARE_DIFFER_STATUS_IN_PAYMENT_SCREEN_ANDROID = false;
+    public static boolean IS_SELECTED_BED_ROOM_IS_NON_REFUNDABLE_ROOM = false;
+    public static boolean IS_SELECTED_PRO_ROOM_IS_NON_REFUNDABLE_ROOM = false;
     public static final String SRP_ONE_WAY_VIEW = "Rehlat.SRPOneWayView";
     public static final String SRP_TWO_WAY_VIEW = "Rehlat.SRPRoundTripView";
     public static final String NO_BUTTON = "No";
@@ -227,7 +229,7 @@ public class BasePage extends Base {
      * Scroll to an element by id // Scrolling the screen is based on screen size which are hard coded values
      * @param down
      */
-    public static void scrollToAnElementById_ANDROID(String parsingId,boolean down){
+    public static void scrollToAnElementById_ANDROID(String parsingId,boolean down,Integer maxNumberOfScrollsCount){
         try {
             if(!isElementDisplayedByIdWithOneTimeChecking(parsingId)) {
                 int counter = 0;
@@ -236,7 +238,7 @@ public class BasePage extends Base {
                         Logger.logComment(counter + "  time trying to find the calender month and year - " + parsingId +" - by scrolling down ");
                         scrollTheCalenderPageUpByAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
                         counter++;
-                        if (counter > 8) {
+                        if (counter > maxNumberOfScrollsCount-(maxNumberOfScrollsCount/2)) {
                             break;
                         }
                     }
@@ -245,7 +247,7 @@ public class BasePage extends Base {
                             Logger.logComment(counter + "  time trying to find the calender month and year - " + parsingId +" - by scrolling up ");
                             scrollTheCalenderPageDownAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
                             counter++;
-                            if (counter > 13) {
+                            if (counter > maxNumberOfScrollsCount) {
                                 break;
                             }
                         }
@@ -255,7 +257,7 @@ public class BasePage extends Base {
                         Logger.logComment(counter + "  time trying to find the calender month and year - " + parsingId +" - by scrolling up ");
                         scrollTheCalenderPageDownAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
                         counter++;
-                        if (counter > 8) {
+                        if (counter >  maxNumberOfScrollsCount-(maxNumberOfScrollsCount/2)) {
                             break;
                         }
                     }
@@ -264,7 +266,7 @@ public class BasePage extends Base {
                         while (!isElementDisplayedById(parsingId)) {
                             scrollTheCalenderPageUpByAMonthGap_Android(); // scrolling values inside the method are hardcoded for all the screens
                             counter++;
-                            if (counter > 13) {
+                            if (counter > maxNumberOfScrollsCount) {
                                 break;
                             }
                         }
@@ -469,7 +471,7 @@ public class BasePage extends Base {
         try{
             int cellIndex;
             // The below if condition is because  footer view cell number is changed to "2" when user is signed in and is "3" when user is not signed in...To handle this logic implemented below if condition.
-            if (screeName.equalsIgnoreCase("BookingPageScreen") && SIGN_IN_STATUS_IOS==true){
+            if (screeName.equalsIgnoreCase("BookingPageScreen") && HOTELS_SIGN_IN_STATUS_IOS==true){
                 footerViewCellNumber = footerViewCellNumber -1;
             }
             bookingFlightCell = driver.findElementByXPath("//XCUIElementTypeApplication[@name=\"Rehlat\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther["+footerViewCellNumber+"]");
@@ -565,5 +567,26 @@ public class BasePage extends Base {
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to scroll the screen");
         }
+    }
+
+    /**
+     * Convert the currency without country code and special characters
+     * @param parsingCurrency
+     * @return
+     */
+    public static String convertTheCurrencyWithoutCountryCodeAndSpecialCharacters(String parsingCurrency){
+        com.automation.rehlat.flights.libCommon.Logger.logAction("Converting the currency without country code and special characters");
+        try {
+            if (parsingCurrency.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
+                String priceWithoutCurrencyCode = parsingCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
+                String priceWithoutCurrencyCodeAndSpecialCharacters = priceWithoutCurrencyCode.replace(Labels_Hotels.STRING_COMMA,Labels_Hotels.STRING_NULL).trim();
+                return priceWithoutCurrencyCodeAndSpecialCharacters;
+            }else {
+                com.automation.rehlat.flights.libCommon.Logger.logError("Current currency should be in :- "+Labels_Hotels.CURRENT_USER_CURRENCY_TYPE+" but is in :- "+parsingCurrency+" currency");
+            }
+        }catch (Exception exception){
+            com.automation.rehlat.flights.libCommon.Logger.logError("Encountered error:- Unable to convert the currency without country code and special characters");
+        }
+        return null;
     }
 }

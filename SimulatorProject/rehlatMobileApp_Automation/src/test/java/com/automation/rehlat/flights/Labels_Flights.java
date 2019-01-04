@@ -23,12 +23,12 @@ public class Labels_Flights extends Base{
 
     //////  Important Capabilities//////////
     //Todo:- Please recheck on editing the below labels
-    public static String DEFAULT_PLATFORM = ANDROID;
-    public static final String CURRENT_RUNNING_DOMAIN = "SA";
+    public static String DEFAULT_PLATFORM = IOS;
+    public static final String CURRENT_RUNNING_DOMAIN = "EG";
     public static final String CURRENT_RUNNING_APP_ENVIRONMENTAL_CONFIGURATION = "Stage";
-    public static String DEVICE_NAME = "Nexus6";
+    public static String DEVICE_NAME = "iPhone6";
     public static String DEVICE_OS = "12.1"; //Todo:- Device OS needs to be changed only for iOS, for android automatically it will pick up OS while test script running.
-    public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "3"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
+    public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "1"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
     public static Integer EMAIL_ID_NUMBER_FOR_SIGN_UP_WRT_PORT_NUMBER; // This is for port two connected device [Either iOS or Android]
     public static String WDA_LOCAL_PORT_DEFAULT = "9020";
     public static final String ANDROID_CAPABILITIES_APP_PATH = "../app_debug.apk";
@@ -173,25 +173,26 @@ public class Labels_Flights extends Base{
     public static final String YEAR_IN_TRAVELLERS_PASSPORT_EXPIRY_DATE_IOS ="2020";
     public static final String PASSPORT_EXPIRY_CALENDAR ="passportExpiryDate";
     public static final String DATEOFBIRTH_CALENDAR ="dateOfBirth";
-    public static final String DEPARTURE_DATE_FOR_IOS = "Mar 2019";
-    public static final String DEPARTURE_DATE_FOR_ANDROID = "MAR 2019";
-    public static final String DEPARTURE_MONTH_IN_CALENDAR_VIEW = "Mar";
+    public static final String DEPARTURE_DATE_FOR_IOS = "Apr 2019";
+    public static final String DEPARTURE_DATE_FOR_ANDROID = "APR 2019";
+    public static final String DEPARTURE_MONTH_IN_CALENDAR_VIEW = "Apr";
     public static final String JOURNEY_YEAR = "2019";
-    public static final String MONTH_IN_TRAVELLERS_DEPARTURE_DATE_FOR_ANDROID ="March";
-    public static final String RETURN_MONTH_FOR_IOS = "Mar 2019";
-    public static final String RETURN_MONTH_FOR_ANDROID = "MAR 2019";
+    public static final String MONTH_IN_TRAVELLERS_DEPARTURE_DATE_FOR_ANDROID ="April";
+    public static final String RETURN_MONTH_FOR_IOS = "Apr 2019";
+    public static final String RETURN_MONTH_FOR_ANDROID = "APR 2019";
     public static final String KNET_PAYMENT_CARD_NUMBER="0000000001";
     public static final String KNET_PAYMENT_CARD_PIN_NUMBER="1234";
     public static final String ONE_CHARACTER_SPACE = " ";
     public static final String CONTACT_INFO_COUNTRY_NAME_IOS = "+91  India";
     public static final int SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_20_PERCENT=1443;
     public static final int SCREEN_Y_AXIS_SIZE_OF_RANGE_OF_80_PERCENT=1800;
-    public static String SELECTED_SEAT_BOOKING_COST;
+    public static String SELECTED_SEAT_BOOKING_COST_ANDROID;
+    public static String SELECTED_SEAT_BOOKING_COST_IOS;
     public static String BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN;
     public static String BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN;
     public static Integer CALENDAR_SWIPE_DURATION = 400;
     public static String CONFIGURATION_TYPE;
-    public static final String LIVE_CONFIGURATION_TYPE = "Live";
+    public static final String LIVE_CONFIGURATION_TYPE = "LiveRun";
     public static final String STAGE_CONFIGURATION_TYPE = "Stage";
 
 
@@ -211,7 +212,7 @@ public class Labels_Flights extends Base{
     public static String RETURN_DATE_BOOKING_MONTH ;
     public static String FLIGHT_BOOKING_TYPE;
 
-                                                                                    /////////////// International Country Labels_Hotels /////////////////
+                                                                                    /////////////// International Country Flights /////////////////
     public static String LANGUAGE_COUNTRY_LABEL_FOR_IOS;
     public static String LANGUAGE_COUNTRY_LABEL_FOR_ANDROID;
     public static String CURRENT_USER_COUNTRY_NAME;
@@ -225,9 +226,9 @@ public class Labels_Flights extends Base{
     public static final String INTERNATIONAL_FLIGHT_BOOKING = "International";
     public static final String UAE_CURRENCY_TYPE = "AED";
     public static final String SAUDI_ARABIA_CURRENCY_TYPE = "SAR";
-    public static final String EGYPT_CURRENCY_TYPE = "AED";
+    public static final String EGYPT_CURRENCY_TYPE = "EGP";
 
-                                                                                                 ///////////////// Domestic Country Labels_Hotels /////////////////
+                                                                                                 ///////////////// Domestic Country Flights /////////////////
 
     public static String INDIA_LANGUAGE_COUNTRY_LABEL_FOR_IOS = "INDIA";
     public static String INDIA_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID = "India";
@@ -323,7 +324,7 @@ public class Labels_Flights extends Base{
             ////////////////////////// DEPARTURE & RETURN MONTH FOR BOTH INTERNATIONAL AND DOMESTIC AIRPORTS ///////////////////////
             Labels_Flights.DEPARTURE_MONTH = DEPARTURE_DATE_FOR_ANDROID;
             Labels_Flights.RETURN_DATE_BOOKING_MONTH = RETURN_MONTH_FOR_ANDROID;
-            Integer randomDate = Base.getTheRandomValue(16);
+            Integer randomDate = Base.getTheRandomValue(12);
             if (randomDate==0){
                 randomDate = 1;
             }

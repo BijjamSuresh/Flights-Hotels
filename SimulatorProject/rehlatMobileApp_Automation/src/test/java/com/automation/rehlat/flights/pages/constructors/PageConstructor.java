@@ -13,6 +13,8 @@ import com.automation.rehlat.flights.pages.flightsSearchResults.FlightsSearchRes
 import com.automation.rehlat.flights.pages.flightsSearchResults.FlightsSearchResultsIos;
 import com.automation.rehlat.flights.pages.flightsSimilarOptionsSearchResults.FlightsSimilarOptionsSearchResultsAndroid;
 import com.automation.rehlat.flights.pages.flightsSimilarOptionsSearchResults.FlightsSimilarOptionsSearchResultsIos;
+import com.automation.rehlat.flights.pages.home.HomeAndroid;
+import com.automation.rehlat.flights.pages.home.HomeIos;
 import com.automation.rehlat.flights.pages.karam.KaramAndroid;
 import com.automation.rehlat.flights.pages.karam.KaramIos;
 import com.automation.rehlat.flights.pages.menu.MenuAndroid;
@@ -226,6 +228,16 @@ public class PageConstructor {
                     BaseTest.KaramScreen = new KaramIos();
                 }
                 break;
+            case "home":
+                if (platform.equals(Labels_Flights.ANDROID)){
+                    BasePage.HomeScreen = new HomeAndroid();
+                    BaseTest.HomeScreen = new HomeAndroid();
+                }else{
+                    BasePage.HomeScreen = new HomeIos();
+                    BaseTest.HomeScreen = new HomeIos();
+                }
+                break;
+
 
             default:
                 Assert.fail(page + "screen not found or defined" );

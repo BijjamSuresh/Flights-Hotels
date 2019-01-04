@@ -55,7 +55,7 @@ public interface BookingSummary {
      * Check the final fare calculations are correct
      * @throws Exception
      */
-    void checkFinalFareCalculationIsCorrect() throws Exception;
+    void checkFinalFareCalculationIsCorrect(boolean isRoomerFlexApplied, boolean isRoomerFlexEnabled) throws Exception;
 
     /**
      * Apply coupon code
@@ -93,5 +93,25 @@ public interface BookingSummary {
      * Tapped on change your dates button in the sold out alert
      */
     void tapOnProceedButtonInFareJumpAlert();
+
+    /**
+     * Enable the roomer flex toggle
+     */
+    void enableRoomerFlexToggle();
+
+    /**
+     * Disable the roomer flex toggle
+     */
+    void disableRoomerFlexToggle();
+
+    /**
+     * Check roomer flex amount is added correctly to final amount
+     */
+    void checkRoomerFlexAmountIsAddedCorrectlyToFinalAmount();
+
+    /**
+     * Check roomer flex amount is removed correctly from final amount
+     */
+    void checkRoomerFlexAmountIsRemovedCorrectlyFromFinalAmount();
 
 }

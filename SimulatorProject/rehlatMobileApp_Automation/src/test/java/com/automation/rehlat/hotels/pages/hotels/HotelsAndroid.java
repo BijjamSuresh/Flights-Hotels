@@ -203,7 +203,7 @@ public class HotelsAndroid extends HotelsBase {
         Logger.logAction("Checking the search text field is filled with the selected name :- "+parsingValue);
         try {
             runAppInBackground(1);
-            scrollToAnElementById_ANDROID(SEARCH_TEXT_FIELD_ID_IN_HOTELS_HOME_SCREEN,false);// This method needs to be removed after fixing the hotels layout issue on selecting the hotel from search view.ie.., Hotels Screen goes up after selecting the hotels search
+            scrollToAnElementById_ANDROID(SEARCH_TEXT_FIELD_ID_IN_HOTELS_HOME_SCREEN,false,8);// This method needs to be removed after fixing the hotels layout issue on selecting the hotel from search view.ie.., Hotels Screen goes up after selecting the hotels search
             String nameOnSearchTextField = findElementByIdAndReturnText(SEARCH_TEXT_FIELD_ID_IN_HOTELS_HOME_SCREEN);
             if (nameOnSearchTextField.equalsIgnoreCase(parsingValue)){
                 Logger.logStep("Selected country name is displayed in the search text field");

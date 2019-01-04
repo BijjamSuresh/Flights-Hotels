@@ -43,7 +43,9 @@ public class MenuAndroid extends MenuBase {
         Logger.logAction("Checking menu screen is displayed or not ?");
         try {
             if (isElementDisplayedById(NAVIGATION_MENU_VIEW)){
-                scrollTheMenuViewDown(XPATH_OF_SCROLL_VIEW_IN_MENU_SCREEN);
+                if (!(Labels_Flights.ANDROID_DEVICE_OS.equalsIgnoreCase("5.1"))){
+                    scrollTheMenuViewDown(XPATH_OF_SCROLL_VIEW_IN_MENU_SCREEN);
+                }
                 Logger.logStep("Menu screen is displayed");
             }
             else {

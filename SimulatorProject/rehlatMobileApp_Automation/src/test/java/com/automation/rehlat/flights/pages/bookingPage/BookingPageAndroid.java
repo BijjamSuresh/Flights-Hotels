@@ -41,6 +41,7 @@ public class BookingPageAndroid extends BookingPageBase {
     public static final String XPATH_OF_FIRST_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[1]";
     public static final String XPATH_OF_SECOND_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.TextView[1]";
     public static final String CONTACT_INFO_COUNTRY_NAME = "com.app.rehlat:id/contact_info_country_name_textview";
+    public static final String[] PHONE_NUMBERS_LIST_FOR_LIVE_TESTING = {"8050510545","9618912816","9030220071","9160021099","9100019990","8179167404","9581113889","8179361843","9652764696"};
     public static Double displayedActualFare;
     public static Double couponAmount ;
     public static Double karamPoints;
@@ -93,10 +94,12 @@ public class BookingPageAndroid extends BookingPageBase {
                 enterTextInEmailTextField();
                 selectTheCountryCodeByCountryName(Labels_Flights.INDIA_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID);
                 enterTextInPhoneNumberTextField();
+                closeTheKeyboard_Android();
             }else{
                 enterTextInEmailTextField();
                 selectTheCountryCodeByCountryName(Labels_Flights.INDIA_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID);
                 enterTextInPhoneNumberTextField();
+                closeTheKeyboard_Android();
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to enter the user info in the respected fields");
@@ -153,29 +156,31 @@ public class BookingPageAndroid extends BookingPageBase {
     public void enterTextInPhoneNumberTextField() {
         Logger.logAction("Entering the number "+ Labels_Flights.PHONE_NUMBER+" in number text field");
         try{
-//            String phoneNumber = General.getTheTestDataOfField("Phone_Number");
+            Integer random = getTheRandomValue(8);// Todo:- This line and below line of code needs to be enabled when the LiveRun run is going on.
+            String randomPhoneNumber = PHONE_NUMBERS_LIST_FOR_LIVE_TESTING[random];
+//            String phoneNumber = General.getTheTestDataOfField("Phone_Number");//Todo:- This line of code needs to be enabled when the test data is filled with the QA team phone numbers
             if (isElementDisplayedById(PHONENUMBER_FIELD)){
                 String phoneNumberField = driver.findElementById(PHONENUMBER_FIELD).getText();
                 if (phoneNumberField.equals(PLACEHOLDER_TEXT_OF_PHONENUMBER_TEXTFIELD)){
                     Logger.logComment("Entering the phone number:- "+ Labels_Flights.PHONE_NUMBER);
                     WebElement textField = driver.findElementById(PHONENUMBER_FIELD);
                     tapOnElementBasedOnLocation(textField,"bottomRight");
-                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
+                    sendTextById(PHONENUMBER_FIELD, randomPhoneNumber);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
                 }else if (phoneNumberField.equals(Labels_Flights.PHONE_NUMBER)){
                     Logger.logComment(Labels_Flights.PHONE_NUMBER+" :- Phone number is already entered in the text field, going to re changing to :- "+Labels_Flights.PHONE_NUMBER);
                     clearKeysByUsingKeycode(PHONENUMBER_FIELD,PHONENUMBER_FIELD.length());
-                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
+                    sendTextById(PHONENUMBER_FIELD, randomPhoneNumber);
                 } else if (phoneNumberField.equals(Labels_Flights.STRING_NULL)){
                     Logger.logComment("Entering the phone number as :- "+ Labels_Flights.PHONE_NUMBER);
-                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
+                    sendTextById(PHONENUMBER_FIELD, randomPhoneNumber);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
                 } else {
                     Logger.logComment("Replacing current phone number text "+phoneNumberField+" with "+ Labels_Flights.PHONE_NUMBER);
                     WebElement textField = driver.findElementById(PHONENUMBER_FIELD);
                     tapOnElementBasedOnLocation(textField,"bottomRight");
                     clearKeysByUsingKeycode(PHONENUMBER_FIELD,PHONENUMBER_FIELD.length());
-                    sendTextById(PHONENUMBER_FIELD, Labels_Flights.PHONE_NUMBER);
+                    sendTextById(PHONENUMBER_FIELD, randomPhoneNumber);
 //                    closeTheKeyboard_Android(); //Todo:- Once keys are sent automatically keyboard will be closed
                 }
             }else {
@@ -195,8 +200,12 @@ public class BookingPageAndroid extends BookingPageBase {
         try{
             compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout(); // After iOS is implemented by "Online Check In toggle button", this method needs to be removed from here and call it as a step of TC from workflows directly
             if (isElementDisplayedById(PAY_NOW_BUTTON)){
-                driver.findElementById(PAY_NOW_BUTTON).click();
-                Logger.logComment("Tapped on continue button");
+                boolean status = findElementByIdAndClick(PAY_NOW_BUTTON);
+                if (status == true){
+                    Logger.logComment("Tapped on continue button");
+                }else {
+                    Logger.logError("Didn't tapped on continue button");
+                }
             }else{
                 Logger.logError("Unable to tap on continue button");
             }
@@ -420,40 +429,71 @@ public class BookingPageAndroid extends BookingPageBase {
         Logger.logAction("Getting the displayed final fare");
         Double finalDisplayedFare = 0.00;
         try {
-            if (isUserIsSignedIn() && isCouponCodeAppliedSuccessfully()){
+            if (isCouponCodeAppliedSuccessfully()){
+                scrollToAnElementById_ANDROID(FINAL_FARE,true);
                 if (isElementDisplayedById(FINAL_FARE)) {
                     String amount = driver.findElementById(FINAL_FARE).getText();
                     finalDisplayedFare = Double.valueOf(amount);
                     return finalDisplayedFare;
                 } else {
                     Logger.logError(FINAL_FARE + " - element name is not displayed in the current active screen");
-                    return finalDisplayedFare;
                 }
-            }else if (isUserIsSignedIn() && !isCouponCodeAppliedSuccessfully()){
-                if (isElementDisplayedById(FINAL_FARE)) {
+            }else if (isUserIsSignedIn()){
+                if (isKaramPointsToggleSwitchEnabled()){
+                    scrollToAnElementById_ANDROID(FINAL_FARE,true);
+                    if (isElementDisplayedById(FINAL_FARE)) {
                     String amount = driver.findElementById(FINAL_FARE).getText();
                     finalDisplayedFare = Double.valueOf(amount);
                     return finalDisplayedFare;
                 } else {
-                    Logger.logComment(FINAL_FARE + " - element name is not displayed in the current active screen");
+                    Logger.logError(FINAL_FARE + " - element name is not displayed in the current active screen");
+                }
+                }else {
+                    Logger.logComment("User is neither signed in nor applied coupon code .., So the final fare will not be displayed in the current active screen");
+                    finalDisplayedFare = displayedActualFare;
                     return finalDisplayedFare;
                 }
-            }
-            else if (!isUserIsSignedIn() && isCouponCodeAppliedSuccessfully()){
-                if (isElementDisplayedById(FINAL_FARE)) {
-                    String amount = driver.findElementById(FINAL_FARE).getText();
-                    finalDisplayedFare = Double.valueOf(amount);
-                    return finalDisplayedFare;
-                } else {
-                    Logger.logComment(FINAL_FARE + " - element name is not displayed in the current active screen");
-                    return finalDisplayedFare;
-                }
-            }
-            else {
+            }else {
                 Logger.logComment("User is neither signed in nor applied coupon code .., So the final fare will not be displayed in the current active screen");
                 finalDisplayedFare = displayedActualFare;
                 return finalDisplayedFare;
             }
+
+
+//            if (isUserIsSignedIn() && isCouponCodeAppliedSuccessfully()){
+//                if (isElementDisplayedById(FINAL_FARE)) {
+//                    String amount = driver.findElementById(FINAL_FARE).getText();
+//                    finalDisplayedFare = Double.valueOf(amount);
+//                    return finalDisplayedFare;
+//                } else {
+//                    Logger.logError(FINAL_FARE + " - element name is not displayed in the current active screen");
+//                    return finalDisplayedFare;
+//                }
+//            }else if (isUserIsSignedIn() && !isCouponCodeAppliedSuccessfully()){
+//                if (isElementDisplayedById(FINAL_FARE)) {
+//                    String amount = driver.findElementById(FINAL_FARE).getText();
+//                    finalDisplayedFare = Double.valueOf(amount);
+//                    return finalDisplayedFare;
+//                } else {
+//                    Logger.logComment(FINAL_FARE + " - element name is not displayed in the current active screen");
+//                    return finalDisplayedFare;
+//                }
+//            }
+//            else if (!isUserIsSignedIn() && isCouponCodeAppliedSuccessfully()){
+//                if (isElementDisplayedById(FINAL_FARE)) {
+//                    String amount = driver.findElementById(FINAL_FARE).getText();
+//                    finalDisplayedFare = Double.valueOf(amount);
+//                    return finalDisplayedFare;
+//                } else {
+//                    Logger.logComment(FINAL_FARE + " - element name is not displayed in the current active screen");
+//                    return finalDisplayedFare;
+//                }
+//            }
+//            else {
+//                Logger.logComment("User is neither signed in nor applied coupon code .., So the final fare will not be displayed in the current active screen");
+//                finalDisplayedFare = displayedActualFare;
+//                return finalDisplayedFare;
+//            }
         } catch (Exception OtherThanElementNotFoundException) {
             Logger.logError("Encountered error: Unable to find the displayed final fare amount in the current active screen");
         }
@@ -665,8 +705,9 @@ public class BookingPageAndroid extends BookingPageBase {
                 if (checkedAttribute.equals(Labels_Flights.STATUS_TRUE)){
                     Logger.logComment("Online check in toggle button is enabled.., Going to disable by tapping on it");
                     onlineCheckInToggleButton.click();
-                    scrollTheScreenUpwards();
-                    scrollTheScreenUpwards();
+                    scrollToAnElementById_ANDROID(CONTACT_DETAILS_VIEW,true); //Todo:-  This method needs to be recheck such that it should scroll to exactly to the online check in button
+//                    scrollTheScreenUpwards();
+//                    scrollTheScreenUpwards();
                 }else {
                     Logger.logComment("Online check in toggle button is already disabled");
                 }
@@ -684,18 +725,24 @@ public class BookingPageAndroid extends BookingPageBase {
     public static void compareFinalPriceDisplayedInFooterViewWithTheFinalFareDisplayedInOffersAndDiscountLayout() {
         Logger.logAction("Comparing the final price displayed in footer view is matches with the final fare displayed in offers and discounts layout");
         try{
-            Double reviewBookingPriceInFooterView = getTheBookingPriceDisplayedInFooterView();
-            Logger.logComment("Review Booking price in footer view :- "+reviewBookingPriceInFooterView);
+            Double difference ;
+            Double bookingPriceInFooterView = getTheBookingPriceDisplayedInFooterView();
+            Logger.logComment("Booking price in footer view :- "+bookingPriceInFooterView);
             Double FinalFareAmountInBookingPage = Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
             Logger.logComment("Final Fare displayed in the offers and discounts layout :- "+ Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN);
-            if (FinalFareAmountInBookingPage == reviewBookingPriceInFooterView){
+            if (FinalFareAmountInBookingPage == bookingPriceInFooterView){
                 Logger.logStep("Final price displayed in footer view is matches with the final fare displayed in offers and discounts layout");
-            }else if(reviewBookingPriceInFooterView == Double.valueOf(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN)){
+            }else if(bookingPriceInFooterView == Double.valueOf(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN)){
                 Logger.logStep("Final price displayed in footer view is matches with the final fare displayed in offers and discounts layout");
-            }else if(reviewBookingPriceInFooterView.toString().contains(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN)){
+            }else if(bookingPriceInFooterView.toString().contains(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN)){
                 Logger.logStep("Final price displayed in footer view is matches with the final fare displayed in offers and discounts layout");
             }else {
-                Logger.logError("Final price displayed in footer view is not matches with the final fare displayed in offers and discounts layout");
+                difference = FinalFareAmountInBookingPage-bookingPriceInFooterView;
+                if (difference < 0.20){
+                    Logger.logStep("Final price displayed in footer view is not matches with the final fare displayed in offers and discounts layout but the difference :- "+difference+" is less than 0.2, so continuing to further process");
+                }else {
+                    Logger.logError("Final price displayed in footer view is not matches with the final fare displayed in offers and discounts layout");
+                }
             }
         }catch (Exception exception){
             exception.printStackTrace();

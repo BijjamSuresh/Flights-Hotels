@@ -132,37 +132,49 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
         Logger.logAction("Entering the travelling details of passengers :-"+parsingPassengerCount);
 //        boolean autoAcceptAlertStatus = false;
         try {
-            Integer enteringTravellersDetailsCount = 1;
+            Integer enteringTravellersDetailsCount = 0;
             Integer passengerCount;
             Labels_Flights.TRAVELLERS_TYPE = "Traveller1(Adult)";
             while (enteringTravellersDetailsCount < parsingPassengerCount){
                 for (passengerCount=0;passengerCount<parsingPassengerCount;passengerCount++){
                     TravellerDetailsScreen.declineAutoFillPopulateModalIfDisplayed();
                     String travellersType = getTheSelectedTravellerType(TRAVELLERS_TITTLE);
-//                    if ( Labels_Hotels.TRAVELLERS_TYPE == null){
-                    if (!Labels_Flights.TRAVELLERS_TYPE.contains("Traveller"+parsingPassengerCount)){
-                        Labels_Flights.TRAVELLERS_TYPE = travellersType;
-                        Logger.logStep("Entering the travellers details of :- "+travellersType);
-                        if (!Labels_Flights.TRAVELLERS_TYPE.contains("Travellers"+parsingPassengerCount)){
-                            TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-                            enterTravellersDetails(INTERNATIONALS_TRAVELLERS_COUNTRY_NAME);
-                            if (passengerCount!=(parsingPassengerCount-1)){
-                                TravellerDetailsScreen.tapOnSaveButton();
-                                enteringTravellersDetailsCount++;
-//                                passengerCount++;
-                            }else {
-                                continue;
-                            }
-                        }else if (Labels_Flights.TRAVELLERS_TYPE.contains("Travellers"+parsingPassengerCount)) {
-                            Logger.logStep("All the travellers details are entered");
-                            enteringTravellersDetailsCount = parsingPassengerCount++;
-                        }else {
-                            Logger.logError("In correct travellers name is displayed");
-                        }
+                    Labels_Flights.TRAVELLERS_TYPE = travellersType;
+                    Logger.logStep("Entering the travellers details of :- "+travellersType);
+                    TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
+                    enterTravellersDetails(INTERNATIONALS_TRAVELLERS_COUNTRY_NAME);
+                    if (passengerCount!=(parsingPassengerCount-1)){
+                        TravellerDetailsScreen.tapOnSaveButton();
+                        enteringTravellersDetailsCount++;
                     }else {
+                        enteringTravellersDetailsCount++;
                         Logger.logStep("Last travellers details are entered");
-                        break;
+                        continue;
                     }
+
+//                    if (!Labels_Flights.TRAVELLERS_TYPE.contains("Traveller"+parsingPassengerCount)){
+//                        Labels_Flights.TRAVELLERS_TYPE = travellersType;
+//                        Logger.logStep("Entering the travellers details of :- "+travellersType);
+//                        if (!Labels_Flights.TRAVELLERS_TYPE.contains("Travellers"+parsingPassengerCount)){
+//                            TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
+//                            enterTravellersDetails(INTERNATIONALS_TRAVELLERS_COUNTRY_NAME);
+//                            if (passengerCount!=(parsingPassengerCount-1)){
+//                                TravellerDetailsScreen.tapOnSaveButton();
+//                                enteringTravellersDetailsCount++;
+////                                passengerCount++;
+//                            }else {
+//                                continue;
+//                            }
+//                        }else if (Labels_Flights.TRAVELLERS_TYPE.contains("Travellers"+parsingPassengerCount)) {
+//                            Logger.logStep("All the travellers details are entered");
+//                            enteringTravellersDetailsCount = parsingPassengerCount++;
+//                        }else {
+//                            Logger.logError("In correct travellers name is displayed");
+//                        }
+//                    }else {
+//                        Logger.logStep("Last travellers details are entered");
+//                        break;
+//                    }
 //                    }else {
 //                        continue;
 //                    }
@@ -228,24 +240,21 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
 //                selectTravellersPassportExpiryDate();
 //                TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
 //            }else if (Labels_Hotels.FLIGHT_BOOKING_TYPE.equals(Labels_Hotels.DOMESTIC_FLIGHT_BOOKING)){
-                Logger.logStep("For domestic flights DOB, Passport and its expiry date and passport issuing country are might or might not necessary.., So filling the necessary information for the current flight ...,");
-                if (isElementDisplayedById(TRAVELLERS_DATEOFBIRTH_NAME)){
-                    enterTravellersDateOfBirth();
-                    TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-                }if (isElementDisplayedById(TRAVELLERS_NATIONALITY)){
-                    selectTravellersNationality(travellersCountry);
-                    TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-                }if (isElementDisplayedById(TRAVELLERS_PASSPORT_TEXTFIELD)){
-                    enterTravellersPassportNumber();
-//                    scrollTheScreenUpwards();
-                }if (isElementDisplayedById(TRAVELLERS_PASSPORT_ISSUING_COUNTRY)){
-                    selectPassportIssuingCountry(travellersCountry);
-                    TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-                }if (isElementDisplayedById(TRAVELLERS_PASSPORT_EXPIRY_TEXTFIELD)){
-                    selectTravellersPassportExpiryDate();
-                    TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
-                }
-//            }
+            Logger.logStep("For domestic flights DOB, Passport and its expiry date and passport issuing country are might or might not necessary.., So filling the necessary information for the current flight ...,");
+            if (isElementDisplayedById(TRAVELLERS_DATEOFBIRTH_NAME)){
+                enterTravellersDateOfBirth();
+                TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
+            }if (isElementDisplayedById(TRAVELLERS_NATIONALITY)){
+                selectTravellersNationality(travellersCountry);
+                TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
+                enterTravellersPassportNumber();
+                selectPassportIssuingCountry(travellersCountry);
+                TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
+                selectTravellersPassportExpiryDate();
+                TravellerDetailsScreen.checkTravellersDetailsScreenIsDisplayed();
+            }else {
+                Logger.logStep("Airlines doesn't need the passport expiry details, passport issuing country, travellers nationality. So not checking these details");
+            }
         }catch (Exception Exception){
             Logger.logError("Encountered error: Unable to enter the travellers details");
         }
@@ -725,14 +734,13 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
      */
     @Override
     public void tapOnSaveButton() {
-        Logger.logAction("Tapping on save travellers details button");
+        Logger.logAction("Tapping on save button in the travellers details screen");
         try{
-            if (isElementDisplayedById(SAVE_BUTTON)){
-                driver.findElementById(SAVE_BUTTON).click();
-                Logger.logComment(SAVE_BUTTON+" :- element name is selected");
+            boolean status = findElementByIdAndClick(SAVE_BUTTON);
+            if (status == true){
+                Logger.logComment(SAVE_BUTTON+" :- element name is tapped");
             }else {
-//                if (isElementDisplayedByName("Next")) // Implement a method such that should verify multiple travellers info (Verify the save button name if it is NEXT, return false and call a method that enters the other travellers info), this process needs to be continued till save button is displayed.
-                Logger.logError("Save button is not displayed in the current active screen");
+                Logger.logError("Didn't tapped on Save button");
             }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to find the save button in the current active screen");
@@ -744,17 +752,16 @@ public class TravellerDetailsAndroid extends TravellerDetailsBase {
      */
     @Override
     public void tapOnNextButton() {
-        Logger.logAction("Tapping on save travellers details button");
+        Logger.logAction("Tapping on next button in the travellers details screen");
         try{
-            if (isElementDisplayedById(SAVE_BUTTON)){
-                driver.findElementById(SAVE_BUTTON).click();
+            boolean status = findElementByIdAndClick(SAVE_BUTTON);
+            if (status == true){
                 Logger.logComment(SAVE_BUTTON+" :- element name is selected");
             }else {
-//                if (isElementDisplayedByName("Next")) // Implement a method such that should verify multiple travellers info (Verify the save button name if it is NEXT, return false and call a method that enters the other travellers info), this process needs to be continued till save button is displayed.
-                Logger.logError("Save button is not displayed in the current active screen");
+                Logger.logError("Didn't tapped on next button");
             }
         }catch (Exception exception){
-            Logger.logError("Encountered error: Unable to find the save button in the current active screen");
+            Logger.logError("Encountered error: Unable to find the next button in the current active screen");
         }
     }
 

@@ -39,8 +39,13 @@ public class SettingsIos extends SettingsBase {
     public void tapOnChangeCountryOption() {
         Logger.logAction("Tapping on change country option");
         try {
-            findElementByNameAndClick(CHANGE_COUNTRY_ICON);
-            Logger.logStep("Tapped on change country icon");
+            boolean status = findElementByNameAndClick(CHANGE_COUNTRY_ICON);
+            if (status == true){
+                Logger.logStep("Tapped on change country icon");
+            }
+            else {
+                Logger.logError("Didn't tapped on change country icon");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on change the country");
         }
@@ -53,8 +58,12 @@ public class SettingsIos extends SettingsBase {
     public void tapOnChangeCurrencyOption() {
         Logger.logAction("Tapping on change currency option");
         try {
-            findElementByNameAndClick(CHANGE_CURRENCY_ICON);
-            Logger.logStep("Tapped on change currency icon");
+            boolean status = findElementByNameAndClick(CHANGE_CURRENCY_ICON);
+            if (status == true){
+                Logger.logStep("Tapped on change currency icon");
+            }else {
+                Logger.logError("Didn't tapped on change currency icon");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on change the currency");
         }
@@ -68,8 +77,12 @@ public class SettingsIos extends SettingsBase {
     public void selectTheDomain(String parsingDomainName) {
         Logger.logAction("Selecting the domain :- "+parsingDomainName);
         try {
-            findElementByNameAndClick(parsingDomainName);
-            Logger.logStep("Selected the domain :- "+parsingDomainName);
+            boolean status = findElementByNameAndClick(parsingDomainName);
+            if (status == true){
+                Logger.logStep("Selected the domain :- "+parsingDomainName);
+            }else {
+                Logger.logError("Didn't Selected the domain :- "+parsingDomainName);
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on select the domain");
         }
@@ -83,9 +96,12 @@ public class SettingsIos extends SettingsBase {
     public void selectTheCurrencyName(String parsingCurrencyName) {
         Logger.logAction("Selecting the domain :- "+parsingCurrencyName);
         try {
-//            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Hotels.IOS_ACTIVITY_INDICATOR);
-            findElementByNameAndClick(parsingCurrencyName);
-            Logger.logStep("Selected the currency :- "+parsingCurrencyName);
+            boolean status = findElementByNameAndClick(parsingCurrencyName);
+            if (status == true){
+                Logger.logStep("Selected the currency :- "+parsingCurrencyName);
+            }else {
+                Logger.logError("Didn't selected the currency :- "+parsingCurrencyName);
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on select the domain");
         }
@@ -128,8 +144,12 @@ public class SettingsIos extends SettingsBase {
     public void tapOnContinueButton() {
         Logger.logAction("Tapping on continue button");
         try {
-           findElementByNameAndClick(CONTINUE_BUTTON);
-           Logger.logStep("Tapped on continue button");
+            boolean status = findElementByNameAndClick(CONTINUE_BUTTON);
+            if (status == true){
+                Logger.logStep("Tapped on continue button");
+            }else {
+                Logger.logError("Didn't tapped on continue button");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to tap on change the domain");
         }

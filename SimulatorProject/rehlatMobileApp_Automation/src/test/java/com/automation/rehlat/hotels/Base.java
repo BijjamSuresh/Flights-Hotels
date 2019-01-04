@@ -105,6 +105,10 @@ public class Base {
     @AfterClass
     public static void tearDown() {
         Logger.logComment("Sign Up email id used till yet :- "+ Labels_Hotels.EMAIL_ID_SIGN_UP);
+        BasePage.IS_SELECTED_PRO_ROOM_IS_NON_REFUNDABLE_ROOM = false;
+        BasePage.IS_SELECTED_BED_ROOM_IS_NON_REFUNDABLE_ROOM = false;
+        BasePage.HOTELS_SIGN_IN_STATUS_IOS = false;
+        BasePage.HOTELS_SIGN_IN_STATUS_ANDROID = false;
         driver.quit();
     }
 

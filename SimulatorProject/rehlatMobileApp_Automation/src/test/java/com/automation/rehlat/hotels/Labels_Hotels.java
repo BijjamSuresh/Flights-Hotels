@@ -11,7 +11,7 @@ import java.io.FileReader;
 
 public class Labels_Hotels extends Base {
     //////// APPIUM Capabilities /////////////////////
-    public static final String APPIUM_PORT_NUMBER_DEFAULT = "4723";
+    public static final String APPIUM_PORT_NUMBER_DEFAULT = "4790";
     public static final String DEVICE_TYPE_DEFAULT = "phone";
     public static final String PATH_OF_EMAIL_WRT_PORT_NUMBER_JSON_FILE = "/Users/rehlat/Documents/PortNumbers_WRT_EmailCount.json";
     public static final String PATH_OF_iOS_DEVICES_LIST_WRT_DEVICE_NAMES_JSON_FILE = "/Users/rehlat/Documents/iPhoneSimulatorsDevicesList.json";
@@ -26,11 +26,11 @@ public class Labels_Hotels extends Base {
     public static String DEFAULT_PLATFORM = ANDROID;
     public static final String CURRENT_RUNNING_DOMAIN = "KWI";
     public static final String CURRENT_RUNNING_APP_ENVIRONMENTAL_CONFIGURATION = "Live";
-    public static String DEVICE_NAME = "Pixel2";
-    public static String DEVICE_OS = "12.1"; //Todo:- Device OS needs to be changed only for iOS, for android automatically it will pick up OS while test script running.
-    public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "8"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
+    public static String DEVICE_NAME = "Nexus6";
+    public static String DEVICE_OS = "12.1"; //Todo:- Device OS needs to be changed only for iOS, for android automatically it will pick up the device by OS base while test script running.
+    public static String CURRENT_RUNNING_PORT_NUMBER_TYPE = "6"; // Max:10 -- If this port number is changed make sure you have an Integer w.r.t. changed port number as below Integers
     public static Integer EMAIL_ID_NUMBER_FOR_SIGN_UP_WRT_PORT_NUMBER; // This is for port two connected device [Either iOS or Android]
-    public static String WDA_LOCAL_PORT_DEFAULT = "8020";
+    public static String WDA_LOCAL_PORT_DEFAULT = "8050";
     public static final String ANDROID_CAPABILITIES_DEVICE_TYPE = "Emulator";
     public static String DEVICE_UDID ;
     public static String ANDROID_DEVICE_OS;
@@ -41,7 +41,7 @@ public class Labels_Hotels extends Base {
 
 
     /**
-     * Assigning the device UDUD that needs to be run w.r.t the device name
+     * Assigning the device UDID that needs to be run w.r.t the device name
      */
     static {
         try {
@@ -228,7 +228,7 @@ public class Labels_Hotels extends Base {
     public static String DEVICENAME;
     public static Integer CALENDAR_SWIPE_DURATION = 400;
     public static String CONFIGURATION_TYPE;
-    public static final String LIVE_CONFIGURATION_TYPE = "Live";
+    public static final String LIVE_CONFIGURATION_TYPE = "LiveRun";
     public static final String STAGE_CONFIGURATION_TYPE = "Stage";
     public static final String MINUS_WITH_IN_BRACKETS = "(-) ";
     public static final String PLUS_WITH_IN_BRACKETS = "(+) ";

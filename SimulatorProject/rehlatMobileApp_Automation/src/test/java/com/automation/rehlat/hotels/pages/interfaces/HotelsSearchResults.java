@@ -9,9 +9,9 @@ public interface HotelsSearchResults {
 
     /**
      * Get the price of an hotel and tap on its card view
-     * @param parsingCardNumber
+     * @param isRefundableHotel
      */
-    void getThePriceOfHotelAndTapOnItsCardView(Integer parsingCardNumber);
+    void getThePriceOfHotelAndTapOnItsCardView(boolean isRefundableHotel, boolean selectFirstHotel);
 
     /**
      * Check the sold outs are displayed in SRP

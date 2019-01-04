@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class PaymentOptionsAndroid extends PaymentOptionsBase {
 
-    public static final String PAYMENT_OPTIONS_TITLE = "com.app.rehlat:id/paymntgatewayListView";
+    public static final String PAYMENT_OPTIONS_TITLE = "com.app.rehlat:id/paymentheaderllyt";
     public static final String PAYMENT_RELATIVE_LAYOUT_TITLE_FOR_EG_DOMAIN = "com.app.rehlat:id/paymentRelativeLayout";
     public static final String PAYMENT_GATEWAY_SCREEN_TITLE = "com.app.rehlat:id/transactionHeaderBck";
     public static final String ACTIVITY_INDICATOR = "com.app.rehlat:id/flight_search_progressbar";
@@ -48,19 +48,20 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
             acceptTheFareDifferAlert();
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,2);
             Logger.logComment("Checking payment option screen is displayed or not ?");
-            if (Labels_Hotels.CURRENT_USER_CURRENCY_TYPE.equalsIgnoreCase(Labels_Hotels.EGYPT_CURRENCY_TYPE)){
-                if (isElementDisplayedById(PAYMENT_RELATIVE_LAYOUT_TITLE_FOR_EG_DOMAIN)){
-                    Logger.logStep("Payment options screen is displayed and moving to next step");
-                }else {
-                    Logger.logError("Payment options screen is not displayed");
-                }
-            }else {
+            //Todo:- The below if condition is commented as PG screen of all domains is same in the current running builds(in previous builds EG domain PG screen is different compared to other domains)
+//            if (Labels_Hotels.CURRENT_USER_CURRENCY_TYPE.equalsIgnoreCase(Labels_Hotels.EGYPT_CURRENCY_TYPE)){
+//                if (isElementDisplayedById(PAYMENT_RELATIVE_LAYOUT_TITLE_FOR_EG_DOMAIN)){
+//                    Logger.logStep("Payment options screen is displayed and moving to next step");
+//                }else {
+//                    Logger.logError("Payment options screen is not displayed");
+//                }
+//            }else {
                 if (isElementDisplayedById(PAYMENT_OPTIONS_TITLE)){
                     Logger.logStep("Payment options screen is displayed and moving to next step");
                 }else {
                     Logger.logError("Payment options screen is not displayed");
                 }
-            }
+//            } //Todo:- Condition ends till this line
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the screen name");
         }

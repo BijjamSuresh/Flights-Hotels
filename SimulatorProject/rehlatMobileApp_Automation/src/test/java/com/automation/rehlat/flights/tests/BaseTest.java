@@ -9,6 +9,7 @@ import com.automation.rehlat.flights.pages.bookingPage.BookingPageBase;
 import com.automation.rehlat.flights.pages.flights.FlightsBase;
 import com.automation.rehlat.flights.pages.flightsSearchResults.FlightsSearchResultsBase;
 import com.automation.rehlat.flights.pages.flightsSimilarOptionsSearchResults.FlightsSimilarOptionsSearchResultsBase;
+import com.automation.rehlat.flights.pages.home.HomeBase;
 import com.automation.rehlat.flights.pages.karam.KaramBase;
 import com.automation.rehlat.flights.pages.menu.MenuBase;
 import com.automation.rehlat.flights.pages.myProfile.MyProfileBase;
@@ -97,6 +98,8 @@ public class BaseTest extends Base {
     public static RateUsBase RateUsScreen;
     public static NotificationsBase NotificationsScreen;
     public static KaramBase KaramScreen;
+    public static HomeBase HomeScreen;
+
 
 
 
@@ -126,6 +129,8 @@ public class BaseTest extends Base {
         initializePageObject("privacyPolicy", Labels_Flights.platform);
         initializePageObject("notifications", Labels_Flights.platform);
         initializePageObject("karam", Labels_Flights.platform);
+        initializePageObject("home", Labels_Flights.platform);
+
 
 
 
@@ -144,7 +149,7 @@ public class BaseTest extends Base {
             setCountryLanguageAndAirportFromAndToLabels(domainName);
             if (parsingConfiguration.equalsIgnoreCase("Live")){
                 Labels_Flights.CONFIGURATION_TYPE = Labels_Flights.LIVE_CONFIGURATION_TYPE;
-                Labels_Flights.COUPON_CODE = "app8";
+                Labels_Flights.COUPON_CODE = "app11";
             }else if (parsingConfiguration.equalsIgnoreCase("Stage")){
                 Labels_Flights.CONFIGURATION_TYPE =  Labels_Flights.STAGE_CONFIGURATION_TYPE;
                 Labels_Flights.COUPON_CODE = "automate";
@@ -253,6 +258,7 @@ public class BaseTest extends Base {
             Logger.logComment("Execution report in html format is created :- \n"+fullHtmlReport);
             return fullHtmlReport;
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error:- Unable to create html document of execution results");
         }
         return null;
@@ -282,15 +288,19 @@ public class BaseTest extends Base {
                     htmlStringBuilder.append("<td align=\"center\"><font color=\"green\">&#10004;</td>");
                     htmlStringBuilder.append("<td></td>");
                 }else if (tcReport.contains("false")){
-                    String failureReason = tcReport.replace("false",Labels_Flights.STRING_NULL).trim();
+//                    String failureReason = tcReport.replace("false",Labels_Flights.STRING_NULL).trim();
                     htmlStringBuilder.append("<td align=\"center\"><font color=\"red\">&#10006;</td>");
-                    if (failureReason.equalsIgnoreCase("Tickets Are Sold Out In Two Attempts")){
+                    if (tcReport.contains("Sold Out")){
                         htmlStringBuilder.append("<td>For 2 Attempts - Sold Outs</td>");
-                    }else if (failureReason.contains("Knet Payment Failed")){
-                        htmlStringBuilder.append("<td>Payment Failed</td>");
                     }
-                    else if (failureReason.contains("Chekout Payment Failed")){
-                        htmlStringBuilder.append("<td>Payment Failed</td>");
+                    else if (tcReport.contains("Knet")){
+                        htmlStringBuilder.append(tcReport.replace("false Knet ","KNET - "));
+                    }
+                    else if (tcReport.contains("Card")){
+                        htmlStringBuilder.append(tcReport.replace("false Credit/Debit Card","CHECKOUT Card- "));
+                    }
+                    else if (tcReport.contains("Payment Failed")){
+                        htmlStringBuilder.append(tcReport.replace("false Payment Failed","KNET Payment Failed"));
                     }
                     else {
                         htmlStringBuilder.append("<td>Issue</td>");
@@ -319,7 +329,7 @@ public class BaseTest extends Base {
             htmlStringBuilder.append("<tr>");
             htmlStringBuilder.append("<th width=\"700\">TC'S NAMES</th>");
             htmlStringBuilder.append("<th width=\"200\">EXECUTION STATUS</th>");
-            htmlStringBuilder.append("<th width=\"200\">FAILURE REASON</th>");
+            htmlStringBuilder.append("<th width=\"400\">FAILURE REASON</th>");
             htmlStringBuilder.append("</tr>");
             htmlStringBuilder.append("</thead>");
             htmlStringBuilder.append("<tfoot>");

@@ -204,29 +204,29 @@ public class ReviewBookingAndroid extends ReviewBookingBase {
         try {
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Flights.ANDROID_ACTIVITY_INDICATOR,false);
             bookingSeatCostDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValue();
-            double selectedSeatBookingCostInFlightSearchResultsScreen = Double.parseDouble((Labels_Flights.SELECTED_SEAT_BOOKING_COST));
+            double selectedSeatBookingCostInFlightSearchResultsScreen = Double.parseDouble((Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID));
             double selectedSeatCostDisplayedInReviewBookingScreen = Double.parseDouble(bookingSeatCostDisplayedInReviewBookingScreen);
-            Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
-            if (bookingSeatCostDisplayedInReviewBookingScreen.equals(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){
-                Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+            Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID);
+            if (bookingSeatCostDisplayedInReviewBookingScreen.equals(Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID)){
+                Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID;
                 Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen.ie.., "+bookingSeatCostDisplayedInReviewBookingScreen);
             } else if(selectedSeatBookingCostInFlightSearchResultsScreen <= selectedSeatCostDisplayedInReviewBookingScreen) {
                 Logger.logComment("Selected flight booking cost in flight search results is lesser than the booking flight cost displayed in review booking screen.., So rechecking the flight cost by disabling the security check in toggle button");
                 disableSecurityCheckInToggle();
                 bookingSeatCostDisplayedInReviewBookingScreen = getTheDisplayedTicketBookingValue();
-                if (bookingSeatCostDisplayedInReviewBookingScreen.contains(Labels_Flights.SELECTED_SEAT_BOOKING_COST) || (bookingSeatCostDisplayedInReviewBookingScreen.equals(Labels_Flights.SELECTED_SEAT_BOOKING_COST))){
-                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+                if (bookingSeatCostDisplayedInReviewBookingScreen.contains(Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID) || (bookingSeatCostDisplayedInReviewBookingScreen.equals(Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID))){
+                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID;
                     Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen");
                 }else if (selectedSeatBookingCostInFlightSearchResultsScreen <= selectedSeatCostDisplayedInReviewBookingScreen){
-                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
+                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID);
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = bookingSeatCostDisplayedInReviewBookingScreen;
                     Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen, it got increased.. So continuing with the latest price : "+bookingSeatCostDisplayedInReviewBookingScreen);
                 }else if (selectedSeatBookingCostInFlightSearchResultsScreen > selectedSeatCostDisplayedInReviewBookingScreen){
-                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
+                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID);
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = bookingSeatCostDisplayedInReviewBookingScreen;
                     Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen, it got decreased.. So continuing with the latest price : "+bookingSeatCostDisplayedInReviewBookingScreen);
                 }else {
-                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST );
+                    Logger.logComment("Displayed flight booking cost in review booking screen is:- " +bookingSeatCostDisplayedInReviewBookingScreen+"\n"+"        -> Displayed selected flight booking cost in search results screen is:- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_ANDROID);
                     Logger.logError("Selected set cost in SRP and review booking is neither lesser nor greater");
                 }
             } else if (selectedSeatBookingCostInFlightSearchResultsScreen > selectedSeatCostDisplayedInReviewBookingScreen) {

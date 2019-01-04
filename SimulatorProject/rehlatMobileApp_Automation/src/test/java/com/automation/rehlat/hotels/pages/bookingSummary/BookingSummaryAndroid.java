@@ -32,7 +32,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public static final String APPLY_COUPON_CODE_LAYOUT = "com.app.rehlat:id/enterCouponCodeLayout";
     public static final String COUPON_CODE_VALIDATION_MESSAGE = "com.app.rehlat:id/couponcode_apply_layout_message_text_view";
     public static final String COUPON_INVALID_MESSAGE = "Invalid coupon";
-    public static final String GUEST_TRAVELLERS_CARD_VIEW_ID = "com.app.rehlat:id/travellerDetailsCardView";
+    public static final String GUEST_TRAVELLERS_CARD_VIEW_ID = "com.app.rehlat:id/hotelcount_recyclerview";
     public static final String SEARCH_TEXTFIELD_IN_SELECT_COUNTRY_MODAL="com.app.rehlat:id/searchFlightEditText";
     public static final String XPATH_OF_FIRST_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[1]";
     public static final String XPATH_OF_SECOND_FILTER_RESULT_IN_SELECT_COUNTRY_SCREEN ="/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.TextView[1]";
@@ -57,7 +57,8 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public static Double couponAmount ;
     public static Double karamPoints;
     public static Double finalDisplayedFare;
-    public static Double taxesAndFees;
+    public static Double taxesAndFees = 0.00;
+    public static Double roomerFlexPrice = 0.00;
 
     /**
      * Check booking summary screen is displayed
@@ -84,13 +85,14 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public boolean isUserIsSignedIn() {
         Logger.logAction("Checking the user is signed in or not ?");
         try{
-            scrollToAnElementById_ANDROID(LOGIN_BUTTON_ID_FROM_KARAM_CASH_CELL,true);
+            scrollToAnElementById_ANDROID(LOGIN_BUTTON_ID_FROM_KARAM_CASH_CELL,true,8);
             if (isElementDisplayedById(LOGIN_BUTTON_ID_FROM_KARAM_CASH_CELL)){
                 Logger.logStep("User is not signed in");
-                SIGN_IN_STATUS_ANDROID = false;
+//                HOTELS_SIGN_IN_STATUS_ANDROID = false; //Todo:- This method needs to be enabled when the sanity TC are implemented, right knew directly checking NON REFUNDABLE label in the booking page under hotel details section.
                 return false;
             }else {
                 Logger.logStep("User is signed in");
+//                HOTELS_SIGN_IN_STATUS_ANDROID = true; //Todo:- This method needs to be enabled when the sanity TC are implemented, right knew directly checking NON REFUNDABLE label in the booking page under hotel details section.
                 return true;
             }
         }catch (Exception exception){
@@ -109,10 +111,12 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
 //            TouchAction action = new TouchAction(driver);
 //            action.longPress(459, 758).moveTo(459, 50).release().perform();
 //            if (isUserIsSignedIn()){
-                enterTextInEmailTextField();
-                selectTheCountryCodeByCountryName(Labels_Hotels.INDIA_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID);
-                enterTextInPhoneNumberTextField();
-                BasePage.closeTheKeyboard_Android();
+            scrollToAnElementById_ANDROID(EMAIL_FIELD,false,8);
+            enterTextInEmailTextField();
+            scrollToAnElementById_ANDROID(PHONE_NUMBER_FIELD,false,8);
+            selectTheCountryCodeByCountryName(Labels_Hotels.INDIA_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID);
+            enterTextInPhoneNumberTextField();
+            BasePage.closeTheKeyboard_Android();
 //            }else{
 //                enterTextInEmailTextField();
 //                selectTheCountryCodeByCountryName(Labels_Hotels.INDIA_LANGUAGE_COUNTRY_LABEL_FOR_ANDROID);
@@ -134,7 +138,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
             String firstName = General.getTheTestDataOfField("First_Name");
             String lastName = General.getTheTestDataOfField("Last_Name");
             String gmailId = firstName+"."+lastName+"@gmial.cm";
-            scrollToAnElementById_ANDROID(EMAIL_FIELD,true);
+            scrollToAnElementById_ANDROID(EMAIL_FIELD,true,8);
             if (isElementDisplayedById(EMAIL_FIELD)){
                 String emailField = driver.findElementById(EMAIL_FIELD).getText();
                 if (emailField.equals(PLACEHOLDER_TEXT_OF_EMAIL_ID_TEXT_FIELD)){
@@ -264,7 +268,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void tapOnAddGuestTravellersDetailsButton() {
         Logger.logAction("Tapping on adult add guest travellers card details button");
         try{
-            scrollToAnElementById_ANDROID(TERMS_AND_CONDITIONS_ID,true);
+            scrollToAnElementById_ANDROID(TERMS_AND_CONDITIONS_ID,true,8);
             if (isElementDisplayedById(ADD_GUEST_ID)){
                 boolean status = findElementByIdAndClick(ADD_GUEST_ID);
                 if (status== true){
@@ -287,7 +291,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void tapOnLoginToUseKaramCashButton() {
         Logger.logStep("Tapping on login in to use karam cash button");
         try {
-            scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true);
+            scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true,8);
             if (isElementDisplayedById(LOGIN_BUTTON_ID_FROM_KARAM_CASH_CELL)){
                 boolean status = findElementByIdAndClick(LOGIN_BUTTON_ID_FROM_KARAM_CASH_CELL);
                 if (status == true){
@@ -308,28 +312,40 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
      * Check the final fare calculations are correct
      */
     @Override
-    public void checkFinalFareCalculationIsCorrect() {
+    public void checkFinalFareCalculationIsCorrect(boolean isRoomerFlexApplied, boolean isRoomerFlexEnabled) {
         Double finalFareInternalMathCalculation;
         DecimalFormat decimalFormat;
         Double bookingRoomCostInSelectRoomScreen;
         Logger.logAction("Checking the final fare calculation is correct or not ?");
         try {
-            scrollToAnElementById_ANDROID(ACTUAL_DISPLAYING_FARE,true);
+            scrollToAnElementById_ANDROID(ACTUAL_DISPLAYING_FARE,true,8);
             displayedActualFare = Double.valueOf(getDisplayedActualFare());
-            scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true);
+            scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true,8);
             couponAmount = Double.valueOf(getCouponAmount());
             karamPoints = Double.valueOf(getKaramPoints());
             Logger.logComment("As final fare requirement is removed, so considering the footer view price as final price");
             Double finaValuePrice = Double.valueOf(getFinalDisplayedFare());
-            taxesAndFees = getTheTaxesAndFeesAddedToFinalPriceInFooterViewOfBookingSummary();
+//            taxesAndFees = getTheTaxesAndFeesAddedToFinalPriceInFooterViewOfBookingSummary(); //Todo:- This line of code needs to be enabled after re-displaying the 'Show Details' option in the footer view of booking summary screen.
+            if (isRoomerFlexApplied == false){
+                Logger.logComment("Roomer flex is not applicable to refundable hotels");
+            }else {
+                if (isRoomerFlexEnabled == true){
+                    checkRoomerFlexAmountIsAddedCorrectlyToFinalAmount();
+                    roomerFlexPrice = getTheRoomerFlexAmountFromFareRules();
+                }else {
+                    checkRoomerFlexAmountIsRemovedCorrectlyFromFinalAmount();
+                }
+            }
             decimalFormat = new DecimalFormat("0.00");
             String finalDisplayedFareAsString = decimalFormat.format(finaValuePrice); // This line of code is because of getting final value as in two decimals because some times final price value will be shown as 19.9999999999, to avoid this implemented this line pf code
-            finalDisplayedFare = Double.parseDouble(finalDisplayedFareAsString);            Logger.logStep("Hotel booking details are :- ");
+            finalDisplayedFare = Double.parseDouble(finalDisplayedFareAsString);
+            Logger.logStep("Hotel booking details are :- ");
             Logger.logComment("Actual Fare cost of booking hotel :- "+displayedActualFare);
             Logger.logComment("Applied Coupon amount of booking hotel :- "+couponAmount);
             Logger.logComment("Applied Karam points cost of booking hotel :- "+karamPoints);
             Logger.logComment("Final Fare cost of booking hotel :- "+finalDisplayedFare);
-            Logger.logComment("Taxes and Fees for the booking hotel :- "+taxesAndFees);
+            Logger.logComment("RoomerFlex price for the booking hotel :- "+roomerFlexPrice);
+//            Logger.logComment("Taxes and Fees for the booking hotel :- "+taxesAndFees); //Todo:- This line of code needs to be enabled after re-showing the taxes and fees in fare rules pop up
             if (finalDisplayedFare == 0.0){
                 finalDisplayedFare = displayedActualFare;
             }
@@ -341,7 +357,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
                 Logger.logComment("No fare jump is happend. So checking with the room cost in select room w.r.t. the total cost in guest details screen");
             }
             if (displayedActualFare.equals(bookingRoomCostInSelectRoomScreen) || displayedActualFare == bookingRoomCostInSelectRoomScreen) {
-                finalFareInternalMathCalculation = displayedActualFare-couponAmount-karamPoints+taxesAndFees;
+                finalFareInternalMathCalculation = displayedActualFare-couponAmount-karamPoints+taxesAndFees+roomerFlexPrice;
                 decimalFormat = new DecimalFormat("0.00");
                 String finalFareInternalMathCalculationAsString = decimalFormat.format(finalFareInternalMathCalculation);
                 finalFareInternalMathCalculation = Double.parseDouble(finalFareInternalMathCalculationAsString);
@@ -431,8 +447,8 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         Double karamPoints = 0.00;
         try
         {
-            if (SIGN_IN_STATUS_ANDROID == true) {
-                scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true);
+            if (HOTELS_SIGN_IN_STATUS_ANDROID == true ) {
+                scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,false,8);
                 String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
                 if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
 
@@ -532,7 +548,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         Logger.logAction("Getting the taxes and fees in the final price in the footer view of booking summary");
         try {
             openTheFareRulesModalView();
-            String  taxesAmountWithCurrency = findElementByIdAndReturnText(FEE_AND_TAXES_VALUE_ID_IN_FARE_RULES_MODAL_VIEW);
+            String taxesAmountWithCurrency = findElementByIdAndReturnText(FEE_AND_TAXES_VALUE_ID_IN_FARE_RULES_MODAL_VIEW);
             if (taxesAmountWithCurrency.contains(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE)){
                 String taxesWithoutCurrency = taxesAmountWithCurrency.replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL);
                 closeTheFareRulesModalView();
@@ -608,8 +624,8 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         Logger.logAction("Enabling the karam points toggle");
         try
         {
-            if (SIGN_IN_STATUS_ANDROID == true){
-                scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true);
+            if (HOTELS_SIGN_IN_STATUS_ANDROID == true){
+                scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true,8);
                 String KaramWalletMessage = findElementByIdAndReturnText(KARAM_WALLET_MESSAGE_LABEL);
                 if (!(KaramWalletMessage.contains(KARAM_WALLET_MESSAGE))){
                     if (isKaramPointsToggleSwitchEnabled()){
@@ -642,8 +658,8 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         Logger.logAction("Disabling the karam points toggle");
         try
         {
-            if (SIGN_IN_STATUS_ANDROID == true){
-                scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true);
+            if (HOTELS_SIGN_IN_STATUS_ANDROID == true){
+                scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true,8);
                 closeTheKeyboard_Android();
                 if (!(isKaramPointsToggleSwitchEnabled())){
                     Logger.logComment("karam points toggle button is already disabled");
@@ -668,7 +684,7 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
     public void applyTheCouponCode() {
         Logger.logAction("Applying the coupon code");
         try {
-            scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true);
+            scrollToAnElementById_ANDROID(GUEST_TRAVELLERS_CARD_VIEW_ID,true,8);
             closeTheKeyboard_Android();
             sendKeysToCouponCodeTextField();
             tapOnApplyCouponCodeButton();
@@ -998,4 +1014,139 @@ public class BookingSummaryAndroid extends BookingSummaryBase {
         }
     }
 
+    /**
+     * Check is roomer flex is displayed por not ?
+     */
+    public static boolean isRoomerFlexIsDisplayed(){
+        Logger.logAction("Checking the roomer flex is displayed ot not?");
+        try {
+            if (IS_SELECTED_PRO_ROOM_IS_NON_REFUNDABLE_ROOM == true || IS_SELECTED_BED_ROOM_IS_NON_REFUNDABLE_ROOM == true){
+                scrollToAnElementById_ANDROID("com.app.rehlat:id/roomerFlextpercentrefundCheckbox",true,8);
+                if (isElementDisplayedById("com.app.rehlat:id/roomerFlex_checkbox") && isElementDisplayedById("com.app.rehlat:id/roomerFlexCanellationProtection")){
+                    Logger.logStep("Roomer flex is displayed");
+                    return true;
+                }else{
+                    Logger.logError("Roomer flex is not displayed though the selected rooms are non refundable");
+                }
+            }else {
+                Logger.logComment("Selected rooms are refundable, so roomer flex is not applicable to this booking..,");
+                return false;
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to check the roomer flex is displayed or not?");
+        }
+        return false;
+    }
+
+    /**
+     * Enable the roomer flex toggle
+     */
+    @Override
+    public void enableRoomerFlexToggle(){
+        Logger.logAction("Enabling the roomer flex toggle");
+        try {
+           String roomerFlexToggleStatus = driver.findElement(By.id("com.app.rehlat:id/roomerFlex_checkbox")).getAttribute(Labels_Hotels.CHECKED_ATTRIBUTE);
+           if (roomerFlexToggleStatus.equalsIgnoreCase("true")){
+               Logger.logStep("Roomer flex toggle is already enabled");
+           }else {
+               boolean status = findElementByIdAndClick("com.app.rehlat:id/roomerFlex_checkbox");
+               if (status == true){
+                   Logger.logComment("Enabled the roomer flex button");
+               }else {
+                   Logger.logError("Didn't enabled the roomer flex option");
+               }
+           }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to enable the roomer flex toggle ");
+        }
+    }
+
+    /**
+     * Disable the roomer flex toggle
+     */
+    @Override
+    public  void disableRoomerFlexToggle(){
+        Logger.logAction("Disabling the roomer flex toggle");
+        try {
+            String roomerFlexToggleStatus = driver.findElement(By.id("com.app.rehlat:id/roomerFlex_checkbox")).getAttribute(Labels_Hotels.CHECKED_ATTRIBUTE);
+            if (roomerFlexToggleStatus.equalsIgnoreCase("false")){
+                Logger.logStep("Roomer flex toggle is already disabled");
+            }else {
+                boolean status = findElementByIdAndClick("com.app.rehlat:id/roomerFlex_checkbox");
+                if (status == true){
+                    Logger.logComment("Disabled the roomer flex button");
+                }else {
+                    Logger.logError("Didn't disabled the roomer flex option");
+                }
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to disable the roomer flex toggle");
+        }
+    }
+
+    /**
+     * Get the roomer flex amount from fare rules
+     * @return
+     */
+    public static Double getTheRoomerFlexAmountFromFareRules(){
+        Logger.logAction("Getting the roomer flex amount from fare rules");
+        try {
+            openTheFareRulesModalView();
+            Double roomerFlexPrice = Double.parseDouble(findElementByIdAndReturnText("com.app.rehlat:id/roomerFlexDiaprice").replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE,Labels_Hotels.STRING_NULL).trim());
+            closeTheFareRulesModalView();
+            return roomerFlexPrice;
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to get the roomer flex amount from fare rules popup");
+        }
+        return null;
+    }
+
+    /**
+     * Check roomer flex amount is added correctly to final amount
+     */
+    @Override
+    public void checkRoomerFlexAmountIsAddedCorrectlyToFinalAmount() {
+        Logger.logAction("Checking the roomer flex amount is added correctly to final amount");
+        try {
+            if(isRoomerFlexIsDisplayed()){
+                disableRoomerFlexToggle();
+                Double finalPriceWithoutRoomerFlex = getThePriceDisplayedInTheBookingSummaryFooterView();
+                enableRoomerFlexToggle();
+                Double roomerFlexAmount = getTheRoomerFlexAmountFromFareRules();
+                Double finalPriceWithRoomerFlex = getThePriceDisplayedInTheBookingSummaryFooterView();
+                Double mathCalculation = finalPriceWithoutRoomerFlex+roomerFlexAmount;
+                if (mathCalculation == finalPriceWithRoomerFlex || mathCalculation.equals(finalPriceWithRoomerFlex)){
+                    Logger.logComment("Roomer flex amount is added correctly to the final amount");
+                }else {
+                    Logger.logError("Roomer flex amount is not added correctly");
+                }
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to check the roomer flex amount is added correctly to final amount");
+        }
+    }
+
+    /**
+     * Check roomer flex amount is removed correctly from final amount
+     */
+    @Override
+    public void checkRoomerFlexAmountIsRemovedCorrectlyFromFinalAmount() {
+        Logger.logAction("Checking the roomer flex amount is removed correctly to final amount");
+        try {
+            if(isRoomerFlexIsDisplayed()){
+                Double finalPriceWithRoomerFlex = getThePriceDisplayedInTheBookingSummaryFooterView();
+                Double roomerFlexAmount = getTheRoomerFlexAmountFromFareRules();
+                disableRoomerFlexToggle();
+                Double finalPriceWithoutRoomerFlex = getThePriceDisplayedInTheBookingSummaryFooterView();
+                Double mathCalculation = finalPriceWithoutRoomerFlex+roomerFlexAmount;
+                if (mathCalculation == finalPriceWithRoomerFlex || mathCalculation .equals(finalPriceWithRoomerFlex)){
+                    Logger.logComment("Roomer flex amount is removed correctly to the final amount");
+                }else {
+                    Logger.logError("Roomer flex amount is not removed correctly");
+                }
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error:- Unable to check the roomer flex amount is removed correctly to final amount");
+        }
+    }
 }

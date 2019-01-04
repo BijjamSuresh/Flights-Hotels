@@ -28,7 +28,10 @@ public class SignInAndroid extends SignInBase {
         try {
             if (!Labels_Hotels.ANDROID_CAPABILITIES_DEVICE_TYPE.equalsIgnoreCase("emulator")){
                 closeThePickerTitleIfDisplayed();
+                runAppInBackground(2);
+            }else {
                 runAppInBackground(1);
+                runAppInBackground(2);
             }
             if (isElementDisplayedById(LOGIN_BUTTON) && isElementDisplayedById(CREATE_ACCOUNT_BUTTON) && isElementDisplayedById(FORGET_PASSWORD_BUTTON)){
                 Logger.logStep("Sign In screen is displayed");
@@ -159,6 +162,7 @@ public class SignInAndroid extends SignInBase {
                 Logger.logComment("Tapped on login button");
                 waitTillTheProgressIndicatorIsInvisibleById_ANDROID(Labels_Hotels.ANDROID_ACTIVITY_INDICATOR,1);
                 declineTheSyncPreviousTravellersDataModalView_Android();
+
             }else {
                 Logger.logError(LOGIN_BUTTON+" - element name is not displayed in the current active screen");
             }

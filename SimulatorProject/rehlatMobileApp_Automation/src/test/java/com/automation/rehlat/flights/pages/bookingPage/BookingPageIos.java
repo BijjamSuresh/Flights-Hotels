@@ -6,6 +6,7 @@ import com.automation.rehlat.flights.libCommon.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.automation.rehlat.flights.tests.BaseTest.COUPON_CODE_APPLIED_STATUS;
@@ -36,7 +37,7 @@ public class BookingPageIos extends BookingPageBase {
     public static final String FOOTER_VIEW_PRICE_ID = "totalFare";
     public static final String SHOW_DETAILS_OPTION_ID_IN_FOOTER_VIEW = "showDetails";
     public static final String XPATH_OF_FOOTER_VIEW_PRICE_ID = "//XCUIElementTypeStaticText[@name=\"totalFare\"]";
-    public static final String TERMS_AND_CONDITIONS_URL_ID = "By clicking on Continue you agree to our Terms & Conditions";
+    public static final String TERMS_AND_CONDITIONS_URL_ID = "By clicking on Pay Now you agree to our Terms & Conditions";
     public static final String XPATH_OF_KARAM_BALANCE_MESSAGE = "//XCUIElementTypeStaticText[@name=\"karamBalanceLabel\"]";
     public static final String KARAM_TOGGLE_SWITCH = "walletSwitch";
     public static final String XPATH_OF_TERMS_AND_CONDITIONS_LABEL = "//XCUIElementTypeStaticText[@name=\"By clicking on Pay Now you agree to our Terms & Conditions\"]";
@@ -183,9 +184,10 @@ public class BookingPageIos extends BookingPageBase {
     public void tapOnAdultAddTravellersDetailsButton() {
         Logger.logStep("Tapping on adult add travellers details button");
         try{
-//            scrollToAnElementByAccessibiltiyId_IOS(TERMS_AND_CONDITIONS_URL_ID,true);//Todo:- This line of code needs to be enabled after implementing the 'Terms And Conditions' label
+            scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,false,10);//Todo:- This line of code needs to be enabled after implementing the 'Terms And Conditions' label
 //            scrollTheScreenDownwards();
-//            scrollTheScreenDownwards();
+//            if (Labels_Flights.DEVICE_NAME.contains("5")){
+//            }
             boolean status = findElementByAccessibilityIdAndClick(ADULT_TRAVELLERS_BUTTON);
             if (status == true){
                 Logger.logComment("Tapped on adult button");
@@ -318,7 +320,7 @@ public class BookingPageIos extends BookingPageBase {
                 Logger.logComment("Coupon is not applied. So for internal math calculation coupon amount is :- "+couponAmount);
             }
             if (COUPON_CODE_APPLIED_STATUS == true){
-                scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true);
+                scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true,4);
                 finalDisplayedFare = getThePriceOf("finalDisplayedFare");
                 displayedActualFare = getThePriceOf("displayedActualFare");
             }else {
@@ -333,6 +335,11 @@ public class BookingPageIos extends BookingPageBase {
                         displayedActualFare = priceDisplayedInFooterView;
                         Logger.logComment("User is logged in, but not applied the coupon nor karam. So applied final fare is equal to the fare displaying in the footer view:- "+priceDisplayedInFooterView);
                     }
+                }else {
+                    Double priceDisplayedInFooterView = getTheBookingPriceDisplayedInFooterView();
+                    finalDisplayedFare = priceDisplayedInFooterView;
+                    displayedActualFare = priceDisplayedInFooterView;
+                    Logger.logComment("User is not logged in and not applied the coupon nor karam. So applied final fare is equal to the fare displaying in the footer view:- "+priceDisplayedInFooterView);
                 }
             }
             if (isUserSignedIn == true){
@@ -354,13 +361,15 @@ public class BookingPageIos extends BookingPageBase {
             Logger.logComment("Final Fare cost of booking flight (Displaying value) :- "+finalDisplayedFare);
             Logger.logAction("All the values are ready for to calculate the math");
             if (displayedActualFare == bookingSeatCostInReviewBookingScreen || displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
-                Double finalFareMathCalculation = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)); // Internal math calculation logic
-                Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
-                if (finalFareMathCalculation.equals(finalDisplayedFare)|| finalFareMathCalculation == finalDisplayedFare){
-                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                Double finalFareMathCalculationWithoutDecimalFormat = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)); // Internal math calculation logic
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                Double finalFareMathCalculationWithTwoDecimalFormat = Double.valueOf(decimalFormat.format(finalFareMathCalculationWithoutDecimalFormat));
+                Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculationWithTwoDecimalFormat);
+                if (finalFareMathCalculationWithTwoDecimalFormat.equals(finalDisplayedFare)|| finalFareMathCalculationWithTwoDecimalFormat == finalDisplayedFare){
+                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculationWithTwoDecimalFormat);
                     Logger.logStep("Final fare calculation is correct");
-                }else if (finalFareMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
-                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                }else if (finalFareMathCalculationWithTwoDecimalFormat.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
+                    Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculationWithTwoDecimalFormat);
                     Logger.logStep("Final fare calculation is correct");
                 }else {
                     Logger.logError("Final fare calculation is in-correct");
@@ -369,13 +378,15 @@ public class BookingPageIos extends BookingPageBase {
                 Double onlineAmount = getTheOnlineCheckInAmount();
                 bookingSeatCostInReviewBookingScreen = Double.valueOf(bookingSeatCostInReviewBookingScreen + onlineAmount);
                 if (displayedActualFare == bookingSeatCostInReviewBookingScreen || displayedActualFare.equals(bookingSeatCostInReviewBookingScreen)){
-                    Double finalFareMathCalculation = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)); // Internal math calculation logic
-                    Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculation);
-                    if (finalFareMathCalculation.equals(finalDisplayedFare) || finalFareMathCalculation == finalDisplayedFare){
-                        Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                    Double finalFareMathCalculationWithoutDecimalFormat = Double.valueOf((displayedActualFare)-(couponAmount)-(karamPoints)); // Internal math calculation logic
+                    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                    Double finalFareMathCalculationWithTwoDecimalFormat = Double.valueOf(decimalFormat.format(finalFareMathCalculationWithoutDecimalFormat));
+                    Logger.logComment("Final fare math calculation value is :- "+finalFareMathCalculationWithTwoDecimalFormat);
+                    if (finalFareMathCalculationWithTwoDecimalFormat.equals(finalDisplayedFare) || finalFareMathCalculationWithTwoDecimalFormat == finalDisplayedFare){
+                        Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculationWithTwoDecimalFormat);
                         Logger.logStep("Final fare calculation is correct");
-                    }else if (finalFareMathCalculation.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
-                        Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculation);
+                    }else if (finalFareMathCalculationWithTwoDecimalFormat.toString().contains(finalDisplayedFare.toString())){ // This method is because of internal math calculation is giving more than a digit after the decimal point eg: 14.10000000000000001 which is not matching with the actual value of Eg: 14.1
+                        Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN = String.valueOf(finalFareMathCalculationWithTwoDecimalFormat);
                         Logger.logStep("Final fare calculation is correct");
                     }else {
                         Logger.logError("Final fare calculation is in-correct");
@@ -398,7 +409,7 @@ public class BookingPageIos extends BookingPageBase {
         Logger.logAction("Checking the karam points toggle is enabled");
         try
         {
-            scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true); // This logic is to for different iPhones with different sizes
+            scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true,4); // This logic is to for different iPhones with different sizes
             if ((!(isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID))) || (isElementDisplayedByAccessibilityId(SIGNED_IN_FOR_FAST_BOOKINGS_BUTTON))){
                 String walletMessage = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_KARAM_BALANCE_MESSAGE);
                 if (walletMessage.contains("Your Karam Wallet is empty")){
@@ -437,11 +448,12 @@ public class BookingPageIos extends BookingPageBase {
         Logger.logAction("Enabling the karam points toggle");
         try
         {
-            scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true); // This logic is to for different iPhones with different sizes
+            scrollToAnElementByXPath(XPATH_OF_ADD_TRAVELLERS_DETAILS_LABEL,true,4); // This logic is to for different iPhones with different sizes
             boolean status = isKaramPointsToggleSwitchEnabled();
             if (status == true) {
                 Logger.logComment("karam points toggle button is already enabled");
             } else {
+                Thread.sleep(2000);
                 if (isElementDisplayedByAccessibilityId(KARAM_WALLET_MESSAGE_ID)){
                     boolean status1 = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_KARAM_BALANCE_MESSAGE).contains("Your Karam Wallet is empty");
                     if (status1 == false){
@@ -461,6 +473,7 @@ public class BookingPageIos extends BookingPageBase {
                 }
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Logger.logError("Encountered error: Unable to enable the karam points toggle button");
         }
     }
@@ -600,6 +613,7 @@ public class BookingPageIos extends BookingPageBase {
     public static Double getTheBookingPriceDisplayedInFooterView(){
         Logger.logAction("Getting the booking price displayed in footer view");
         try{
+            Thread.sleep(1000);
             String  priceInFooterView = findElementByXpathAndReturnItsAttributeValue(XPATH_OF_FOOTER_VIEW_PRICE_ID);
 //            String hotelPriceInFooterViewWithCurrency = driver.findElementByAccessibilityId(FOOTER_VIEW_PRICE_ID).getAttribute(Labels_Flights.VALUE_ATTRIBUTE);
             String hotelPriceWithoutCurrency = priceInFooterView.replace(Labels_Flights.CURRENT_USER_CURRENCY_TYPE, Labels_Flights.STRING_NULL).trim();
@@ -645,8 +659,12 @@ public class BookingPageIos extends BookingPageBase {
     public static void tapOnContactInfoCountryName(){
         Logger.logAction("Tapping on contact info country name");
         try {
-            findElementByXPathAndClick(XPATH_OF_CONTACT_INFO_COUNTRY_CELL);
-            Logger.logComment(" Tapped on contact info country name");
+            boolean status = findElementByXPathAndClick(XPATH_OF_CONTACT_INFO_COUNTRY_CELL);
+            if (status == true){
+                Logger.logComment(" Tapped on contact info country name");
+            }else {
+                Logger.logError("Didn't tapped on contact info country name");
+            }
         }catch (Exception exception){
             Logger.logError("Encountered error: unable to tap on element name :- "+XPATH_OF_CONTACT_INFO_COUNTRY_CELL);
         }
@@ -746,7 +764,7 @@ public class BookingPageIos extends BookingPageBase {
     public static double getTheOnlineCheckInAmount(){
         Logger.logAction("Get the online check in amount");
         try {
-            scrollToAnElementByXPath(XPATH_OF_TERMS_AND_CONDITIONS_LABEL,true); //Todo:- Find a solution to check the online check in feature without scrolling to many times
+            scrollToAnElementByXPath(XPATH_OF_TERMS_AND_CONDITIONS_LABEL,true,4); //Todo:- Find a solution to check the online check in feature without scrolling to many times
             if(isElementDisplayedByAccessibilityId(ONLINE_CHECK_IN_TOGGLE_IN)){
                 tapOnShowDetailsButtonInFooterView();
                 boolean status = checkFareRulesScreenIsDisplayed();

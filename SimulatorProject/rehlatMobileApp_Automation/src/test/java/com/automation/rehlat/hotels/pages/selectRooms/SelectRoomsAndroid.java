@@ -2,6 +2,11 @@ package com.automation.rehlat.hotels.pages.selectRooms;
 
 import com.automation.rehlat.hotels.Labels_Hotels;
 import com.automation.rehlat.hotels.libCommon.Logger;
+import com.automation.rehlat.hotels.pages.BasePage;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SelectRoomsAndroid extends SelectRoomsBase {
     public static final String SELECT_ROOM_SCREEN_TITLE_LABEL = "com.app.rehlat:id/roomSelectLayoutHeadingView";
@@ -76,6 +81,9 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
                     Thread.sleep(1000);
                     String xpathOfSelectButtonOfParsingCellNumber = XPATH_OF_ROOM_CELL_WITHOUT_INDEX_BEDS+parsingRoomNumberToSelect+XPATH_OF_SELECT_BUTTON_OPTION_WITHOUT_ROOM_CELL_INDEX_BEDS;
                     findElementByXPathAndClick(xpathOfSelectButtonOfParsingCellNumber);
+//                    if (IS_SELECTED_BED_ROOM_IS_NON_REFUNDABLE_ROOM == false){ //Todo:- This method needs to be enabled when the sanity TC are implemented, right knew directly checking NON REFUNDABLE label in the booking page under hotel details section.
+//                        getTheSelectedBedRoomPolicy(roomNumberToSelect);
+//                    }
                     Logger.logStep("Tapped on select button in the room cell number :- "+parsingRoomNumberToSelect);
                     if (count >= (totalRooms-1)){
                         break;
@@ -109,6 +117,7 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
             if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_PROS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 String xpathOfRoomPriceInParsingCellNumber = XPATH_OF_ROOM_CELL_WITHOUT_INDEX_PROS+parsingRoomCellNumber+XPATH_OF_SELECTED_ROOM_PRICE_WITHOUT_ROOM_CELL_INDEX_PROS;
                 String roomPriceInParsingCellNumber = findElementByXpathAndReturnItsAttributeText(xpathOfRoomPriceInParsingCellNumber).replace(Labels_Hotels.CURRENT_USER_CURRENCY_TYPE, Labels_Hotels.STRING_NULL).trim();
+                getTheSelectedProRoomPolicy(parsingRoomCellNumber);
                 return Double.parseDouble(roomPriceInParsingCellNumber);
             }else if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_BEDS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 String xpathOfRoomPriceInParsingCellNumber = XPATH_OF_ROOM_CELL_WITHOUT_INDEX_BEDS+parsingRoomCellNumber+XPATH_OF_SELECTED_ROOM_PRICE_WITHOUT_ROOM_CELL_INDEX_BEDS;
@@ -123,12 +132,53 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
         return null;
     }
 
+
+    /**
+     * Get the parsing bed room number policy
+     */
+    public static void getTheSelectedProRoomPolicy(Integer parsingRoomCellNumber){
+        Logger.logComment("Getting the selected pro room policy");
+        try {
+            List<WebElement> listOfPolicies = driver.findElements(By.id("com.app.rehlat:id/hotelsProrateclass_txt"));
+            String policyValue = listOfPolicies.get(parsingRoomCellNumber).getText();
+            if (policyValue.equalsIgnoreCase("Non-refundable")){
+//                BasePage.IS_SELECTED_PRO_ROOM_IS_NON_REFUNDABLE_ROOM = true; Todo:- This method needs to be enabled when the sanity TC are implemented, right knew directly checking NON REFUNDABLE label in the booking page under hotel details section.
+            }else {
+//                BasePage.IS_SELECTED_PRO_ROOM_IS_NON_REFUNDABLE_ROOM = false; Todo:- This method needs to be enabled when the sanity TC are implemented, right knew directly checking NON REFUNDABLE label in the booking page under hotel details section.
+            }
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Logger.logError("Encountered error: Unable to get the selected room policy");
+        }
+    }
+
+    /**
+     * Get the parsing bed room number policy
+     */
+    public static void getTheSelectedBedRoomPolicy(Integer parsingRoomCellNumber){
+        Logger.logComment("Getting the selected bed room policy");
+        try {
+            List<WebElement> listOfPolicies = driver.findElements(By.id("com.app.rehlat:id/rateclass_txt"));
+            String policyValue = listOfPolicies.get(parsingRoomCellNumber+1).getText();
+            if (policyValue.equalsIgnoreCase("Non-refundable")){
+//                BasePage.IS_SELECTED_BED_ROOM_IS_NON_REFUNDABLE_ROOM = true; Todo:- This method needs to be enabled when the sanity TC are implemented, right knew directly checking NON REFUNDABLE label in the booking page under hotel details section.
+                Logger.logStep("Selected room is an non-refundable. So roomer flex must be applicable");
+            }else {
+//                BasePage.IS_SELECTED_BED_ROOM_IS_NON_REFUNDABLE_ROOM = false; Todo:- This method needs to be enabled when the sanity TC are implemented, right knew directly checking NON REFUNDABLE label in the booking page under hotel details section.
+                Logger.logStep("Selected room is an refundable. So roomer flex must not be applicable");
+            }
+        }catch (Exception exception){
+            Logger.logError("Encountered error: Unable to get the selected room policy");
+        }
+    }
+
     /**
      * Compare the selected room price in the selected rooms screen and in the hotels profile screen
      * @param parsingRoomNumber
      */
     @Override
     public void compareSelectedRoomPriceInSelectRoomScreenAndHotelProfileScreen(Integer parsingRoomNumber){
+        Logger.logComment("Comparing the selected room price in select rooms screen and hotel profile screen");
         try {
             if (API_RESPONSE_TYPE_IN_SELECT_ROOMS == HOTEL_PROS_API_RESPONSE_TYPE_IN_SELECT_ROOMS){
                 Double priceFromHotelProfileScreen = Double.parseDouble(Labels_Hotels.BOOKING_HOTEL_COST_DISPLAYING_IN_HOTEL_PROFILE_SCREEN);
@@ -214,9 +264,8 @@ public class SelectRoomsAndroid extends SelectRoomsBase {
     public boolean isHotelsSoldOutAlertIsDisplayed(){
         Logger.logAction("Checking the hotels sold out alert is displayed or not");
         try {
-            Thread.sleep(4000);
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(LOADING_INDICATOR_ID_IN_FOOTER_VIEW ,1); //Todo:- This method is for to wait till the sold out alert is displayed
-            if (isElementEnabledById(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE)){
+            if (isElementEnabledById("com.app.rehlat:id/hotelinformation_fare_differ")){
                 String alertMessageName = findElementByIdAndReturnText(CHANGE_YOUR_DATES_BUTTON_IN_SOLD_OUT_ALERT_MESSAGE);
                 if (alertMessageName.equalsIgnoreCase(CHANGE_YOUR_DATES_BUTTON_LABEL)){
                     Logger.logStep("SoldOut alert is displayed");

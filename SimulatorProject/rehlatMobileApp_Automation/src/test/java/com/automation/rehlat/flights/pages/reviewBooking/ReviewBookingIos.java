@@ -111,28 +111,28 @@ public class ReviewBookingIos extends ReviewBookingBase {
         Double bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen;
         try {
 //            waitTillInProgressIndicatorIsInvisible();
-            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,1);
+            waitTillTheProgressIndicatorIsInvisibleByClassName_IOS(Labels_Flights.IOS_ACTIVITY_INDICATOR,2);
              bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen = getTheBookingPriceDisplayedInFooterView();
              Logger.logComment("Selecting flight cost is :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
-            if (bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen == Double.parseDouble(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){
-                String bookingCostIncludingCurrencyName = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+            if (bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen == Double.parseDouble(Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS)){
+                String bookingCostIncludingCurrencyName = Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS;
                 Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = bookingCostIncludingCurrencyName;
-                Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
+                Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
                 Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen");
             } else {
-                Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
+                Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
                 Logger.logStep("Selected seat booking cost is not matches in review booking screen and in search results screen.., So checking the booking flight cost again by disabling the toggle button");
                 disableSecurityCheckInToggle();
 //                Thread.sleep(Labels_Hotels.WAIT_TIME_MIN);
                 bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen = getTheBookingPriceDisplayedInFooterView();
-                if (bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen == Double.parseDouble(Labels_Flights.SELECTED_SEAT_BOOKING_COST)){
-                    String bookingCostIncludingCurrencyName = Labels_Flights.SELECTED_SEAT_BOOKING_COST;
+                if (bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen == Double.parseDouble(Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS)){
+                    String bookingCostIncludingCurrencyName = Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS;
 //                    String bookingCostExcludingCurrencyName = bookingCostIncludingCurrencyName.replace("KWD ", "");
                     Labels_Flights.BOOKING_COST_DISPLAYING_IN_REVIEW_BOOKING_SCREEN = bookingCostIncludingCurrencyName;
-                    Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
+                    Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
                     Logger.logStep("Selected seat booking cost is matches in review booking screen and in search results screen");
                 }else{
-                    Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
+                    Logger.logComment("Booking seat cost in Review booking screen :- "+ Labels_Flights.SELECTED_SEAT_BOOKING_COST_IOS + "\n" +"        -> Booking seat cost in Flights Search results screen :- "+bookingSeatCostWithCurrencyTypeDisplayedInReviewBookingScreen);
                     Logger.logError("Selected seat booking cost is not matches in review booking screen and in search results screen");
                 }
             }

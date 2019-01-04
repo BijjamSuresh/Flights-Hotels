@@ -8,6 +8,7 @@ import com.automation.rehlat.flights.pages.bookingPage.BookingPageBase;
 import com.automation.rehlat.flights.pages.flights.FlightsBase;
 import com.automation.rehlat.flights.pages.flightsSearchResults.FlightsSearchResultsBase;
 import com.automation.rehlat.flights.pages.flightsSimilarOptionsSearchResults.FlightsSimilarOptionsSearchResultsBase;
+import com.automation.rehlat.flights.pages.home.HomeBase;
 import com.automation.rehlat.flights.pages.karam.KaramBase;
 import com.automation.rehlat.flights.pages.menu.MenuBase;
 import com.automation.rehlat.flights.pages.myProfile.MyProfileBase;
@@ -53,6 +54,8 @@ public class BasePage extends Base {
     public static RateUsBase RateUsScreen;
     public static NotificationsBase NotificationsScreen;
     public static KaramBase KaramScreen;
+    public static HomeBase HomeScreen;
+
 
 
 
@@ -226,6 +229,7 @@ public class BasePage extends Base {
                 if (isElementDisplayedById(parsingID)){
                     Logger.logStep("Waiting till the activity indicator is invisible in the current active screen");
                     driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(parsingID)));
+                    count = 1; //Todo:- This is to recheck the loading indicator status after 'driver wait' line execution completion because once the 20 seconds time out is finished the execution will move to next line by throwing element is not visible
                 }else {
                     Logger.logStep("Activity indicator is not displayed in the current active screen");
                 }
@@ -301,7 +305,7 @@ public class BasePage extends Base {
      * Scroll to an element by id // Scrolling the screen is based on screen size which are hard coded values
      * @param down
      */
-    public static void scrollToAnElementByAccessibiltiyId_IOS(String parsingId,boolean down){
+    public static void scrollToAnElementByAccessibilityId_IOS(String parsingId,boolean down){
         try {
             if(!isElementDisplayedByAccessibilityIdWithOneTimeChecking(parsingId)) {
                 int counter = 0;

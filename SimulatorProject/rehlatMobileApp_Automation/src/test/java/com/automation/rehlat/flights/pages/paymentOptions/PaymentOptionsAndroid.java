@@ -4,6 +4,7 @@ import com.automation.rehlat.flights.Labels_Flights;
 import com.automation.rehlat.flights.libCommon.Logger;
 import com.automation.rehlat.flights.tests.BaseTest;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 public class PaymentOptionsAndroid extends PaymentOptionsBase {
-    public static final String PAYMENT_OPTIONS_TITLE = "com.app.rehlat:id/paymntgatewayListView";
+    public static final String PAYMENT_OPTIONS_TITLE = "com.app.rehlat:id/paymentheaderllyt";
     public static final String PAYMENT_RELATIVE_LAYOUT_TITLE_FOR_EG_DOMAIN = "com.app.rehlat:id/paymentRelativeLayout";
     public static final String PAYMENT_GATEWAY_SCREEN_TITLE = "com.app.rehlat:id/transactionHeaderBck";
     public static final String ACTIVITY_INDICATOR = "com.app.rehlat:id/flight_search_progressbar";
@@ -45,22 +46,27 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
         Logger.logAction("Checking payment option screen is displayed or not ?");
         try{
             waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,false);
+            if (Labels_Flights.CONFIGURATION_TYPE.equalsIgnoreCase("Stage")){
+                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,false);
+                waitTillTheProgressIndicatorIsInvisibleById_ANDROID(ACTIVITY_INDICATOR,false);
+            }
 //            driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(ACTIVITY_INDICATOR)));
             acceptTheFareDifferAlert();
             Logger.logComment("Checking payment option screen is displayed or not ?");
-            if (Labels_Flights.CURRENT_USER_CURRENCY_TYPE.equalsIgnoreCase(Labels_Flights.EGYPT_CURRENCY_TYPE)){
-                if (isElementDisplayedById(PAYMENT_RELATIVE_LAYOUT_TITLE_FOR_EG_DOMAIN)){
-                    Logger.logStep("Payment options screen is displayed and moving to next step");
-                }else {
-                    Logger.logError("Payment options screen is not displayed");
-                }
-            }else {
+            //Todo:- The below if condition is commented as PG screen of all domains is same in the current running builds(in previous builds EG domain PG screen is different compared to other domains)
+//            if (Labels_Flights.CURRENT_USER_CURRENCY_TYPE.equalsIgnoreCase(Labels_Flights.EGYPT_CURRENCY_TYPE)){
+//                if (isElementDisplayedById(PAYMENT_RELATIVE_LAYOUT_TITLE_FOR_EG_DOMAIN)){
+//                    Logger.logStep("Payment options screen is displayed and moving to next step");
+//                }else {
+//                    Logger.logError("Payment options screen is not displayed");
+//                }
+//            }else {
                 if (isElementDisplayedById(PAYMENT_OPTIONS_TITLE)){
                     Logger.logStep("Payment options screen is displayed and moving to next step");
                 }else {
                     Logger.logError("Payment options screen is not displayed");
                 }
-            }
+//            }//Todo:- Logic ends till this line
         }catch (Exception exception){
             Logger.logError("Encountered error: Unable to check the screen name");
         }
@@ -141,6 +147,7 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
     @Override
     public void compareTheFinalPaymentDisplayedInPaymentsCheckOutScreenWithPaymentDisplayedInReviewBookingScreen() {
         String finalAmountPayablePriceInPaymentCheckOutScreen;
+        Double differnce;
         Logger.logAction("Comparing the final payment displayed in payment checkout screen with the amount displayed in review booking screen");
         try {
             if (isElementDisplayedById(FINAL_AMOUNT_PAYABLE_LINEAR_LAYOUT)){
@@ -167,7 +174,12 @@ public class PaymentOptionsAndroid extends PaymentOptionsBase {
                             Logger.logStep("Final Amount displayed in the payment check out screen is matches with booking cost displayed in review booking screen");
                         }
                         else {
-                            Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                            differnce = Double.parseDouble(Labels_Flights.BOOKING_COST_DISPLAYING_IN_BOOKING_PAGE_SCREEN) - finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen;
+                            if (differnce < 0.2){
+                                Logger.logStep("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen but the difference is very less .ie.., "+differnce+", so continuing with the final amount as :- "+finalPriceInFinalAmountPayablePriceInPaymentCheckOutScreen);
+                            }else {
+                                Logger.logError("Final Amount displayed in the payment check out screen is not matches with booking cost displayed in review booking screen");
+                            }
                         }
                     }
                 }else {
